@@ -111,17 +111,3 @@ module.exports.uploadFiles = () => {
     })      
   })
 };
-
-module.exports.uploadUnscorableFiles = async () => {
-s.readdir(DataFolder + 'unscorable/Questions', (err, files) => {
-files.forEach(file => {
-console.log(file);
-});
-});
-
-fs.readdir(DataFolder + 'unscorable/Answers', (err, files) => {
-files.forEach(file => {
-console.log(file);
-});
-});
-};
