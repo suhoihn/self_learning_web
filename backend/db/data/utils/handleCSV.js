@@ -1,19 +1,32 @@
 const fs = require("fs");
-const { parse } = require("csv-parse");
+const csv = require("csv-parser");
 
+const getData = (fileName) => {
+  let data = [];
 
-const CSV = {
-  readCSV : (fileName) => {
-    fs.createReadStream(fileName).pipe(parse({ delimiter: ",", from_line: 2 }))
+  return new Promise ((resolve, reject) => {
+    fs.createReadStream(fileName).pipe(csv({ delimiter: ",", from_line: 2 }))
     .on("data", function (row) {
-        console.log(row);
+      data.push(row)
     })
     .on("end", function () {
-        console.log("finished");
+      resolve(data)
     })
     .on("error", function (error) {
-        console.log(error.message);
+      reject(error)
+      console.log(error.message);
     });
+  })
+}
+
+const CSV = {
+  readCSV : async (fileName) => {
+    try {
+      const data = await getData(fileName)
+      return data
+    } catch (error) {
+      console.error("error occurred", error.message)
+    }
   }
 }
 
