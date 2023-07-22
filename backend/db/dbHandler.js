@@ -1,13 +1,16 @@
 const question = require("./model/Question");
 const answer = require("./model/Answer");
+const questionInfoSchema = question.questionInfoSchema;
 const ImageSchema = question.imageSchema;
 const fs = require("fs");
 const fileConvert = require("./data/utils/fileConvert")
 const CSV = require("./data/utils/handleCSV")
+const db = require('./db.js'); // db 불러오기
+
 const DataFolder = "./data/";
 
 const Collections = { questions: question, answers: answer, };
-``
+
 module.exports.GetQuestion = async (inros, collection) => {
 // infos.chapter etc.
 };
@@ -17,8 +20,9 @@ module.exports.GetAnswers = async (infos, collection) => {
 }
 
 module.exports.uploadFiles = () => {
+  db()
   CSV.readCSV(__dirname + '/data/dataInfo/Questions.csv').then((csv_data) => {
-    console.log("data: ", csv_data);
+    // console.log("data: ", csv_data);
     let questionFilePath = __dirname + '/data/images/Questions/';
     let questionFileList = fs.readdirSync(questionFilePath, { withFileTypes: true }, (err, files) => {
       if (err) console.log(err);
@@ -45,21 +49,21 @@ module.exports.uploadFiles = () => {
       }
 
       await Collections.questions.countDocuments({ 
-        questionId: data.questionId, 
-        specificQuestionID: data.specificQuestionID
+        questionId: data.questionID, 
+        specificQuestionId: data.specificQuestionID
       }).then( async (count) => {
         if (count == 1) { // exact document exist > update
           console.log(data.chapter.split(","));
           await Collections.questions.findOneAndUpdate({ 
-            questionId: data.questionId, 
+            questionId: data.questionID, 
             specificQuestionID: data.specificQuestionID
           }, {
-            questionId: data.questionId, 
-            question: new questionInfoSchema({
+            questionId: data.questionID, 
+            question: {
               questionType: data.questionType,
-              questionImage: new ImageSchema({image: questionImageFile,}),
+              questionImage: {image: questionImageFile,},
               subQuestion: [{
-                subQuestionImage: new ImageSchema({image: subQuestionImageFile}),
+                subQuestionImage: ImageSchema({image: subQuestionImageFile}),
                 specificQuestionId: data.specificQuestionID,
                 numAns: data.numAns,
                 unit: data.unit,
@@ -67,7 +71,7 @@ module.exports.uploadFiles = () => {
                 instruction: data.instruction,
                 answerSubscripts: data.chapter.split(","), // TODO::
               }],
-            }),
+            },
             chapter: [{type: Number}],              // TODO::
             difficulty: data.difficulty, // easy, medium, hard
             paper: data.paper,
@@ -80,25 +84,29 @@ module.exports.uploadFiles = () => {
           });
         } else { // no document or many exist > delete and create new doc
           await Collections.questions.deleteMany({ 
-            questionId: data.questionId, 
-            specificQuestionID: data.specificQuestionID
+            questionId: data.questionID, 
+            specificQuestionId: data.specificQuestionID
           }).then ( async () => {
-            const newDoc = new Collections[question]({
-              questionId: data.questionId, 
-              question: new questionInfoSchema({
+            // console.log("data deleted")
+            // Collections..create({key: 'hello'}, function (err) {
+            //   //
+            // });
+            const newDoc = new Collections.questions({
+              questionId: data.questionID, 
+              question: {
                 questionType: data.questionType,
-                questionImage: new ImageSchema({image: questionImageFile,}),
+                questionImage: {image: questionImageFile,},
                 subQuestion: [{
-                  subQuestionImage: new ImageSchema({image: subQuestionImageFile}),
+                  subQuestionImage: {image: subQuestionImageFile},
                   specificQuestionId: data.specificQuestionID,
                   numAns: data.numAns,
                   unit: data.unit,
                   marks: data.marks,
                   instruction: data.instruction,
-                  answerSubscripts: [{type: String}],
+                  // answerSubscripts: [{type: String}],
                 }],
-              }),
-              chapter: [{type: Number}],
+              },
+              // chapter: [{type: Number}],
               difficulty: data.difficulty, // easy, medium, hard
               paper: data.paper,
               timezone: data.timezone,

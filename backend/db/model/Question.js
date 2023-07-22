@@ -20,10 +20,9 @@ const questionInfoSchema = new mongoose.Schema({
     }],
 })
 const QuestionSchema = new mongoose.Schema({
-    questionID: {
+    questionId: {
         type: Number,
         required: true,
-        unique: true,
     },
 
     question: questionInfoSchema,
