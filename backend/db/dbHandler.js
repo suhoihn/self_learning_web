@@ -1,12 +1,12 @@
 const question = require("./model/Question");
 const answer = require("./model/Answer");
-const ImageSchema = require("./model/ImageSchema");
+const ImageSchema = question.imageSchema;
 const fs = require("fs");
 const fileConvert = require("./data/utils/fileConvert")
 const CSV = require("./data/utils/handleCSV")
 const DataFolder = "./data/";
 
-const Collections = { questions: question, answer: answer, };
+const Collections = { questions: question, answers: answer, };
 ``
 module.exports.GetQuestion = async (inros, collection) => {
 // infos.chapter etc.
@@ -18,38 +18,39 @@ module.exports.GetAnswers = async (infos, collection) => {
 
 module.exports.uploadFiles = () => {
   CSV.readCSV(__dirname + '/data/dataInfo/Questions.csv').then((csv_data) => {
+    console.log("data: ", csv_data);
     let questionFilePath = __dirname + '/data/images/Questions/';
     let questionFileList = fs.readdirSync(questionFilePath, { withFileTypes: true }, (err, files) => {
       if (err) console.log(err);
       else return files
     })
-
     csv_data.forEach(async (data) => {
-      let qfFound = questionFileList.find(element => element.name === data.questionImage)
+      let qfFound = questionFileList.find((element) => {return element.name === data.questionImage});
       if (qfFound === undefined) {
-        console.error('image name :', data.questionImage, 'is not available.')  
+        console.error('q) image name :', data.questionImage, 'is not available.')  
         return;
       } 
       let questionImageFile = fileConvert.base64_encode(questionFilePath + qfFound.name);
-
 
       let sqfFound = questionFileList.find(element => element.name === data.subQuestionImage);
       let subQuestionImageFile;
       if (sqfFound === undefined) {
         if (data.subQuestionImage === "None") subQuestionImageFile = ""
         else { 
-          console.error('image name :', data.subQuestionImage, 'is not available.')  
+          console.error('sq) image name :', data.subQuestionImage, 'is not available.')  
           return;
         }
-      } 
-      subQuestionImageFile = fileConvert.base64_encode(questionFilePath + sqfFound.name)
-      
-      await Collections[question].countDocuments({ 
+      } else{
+        subQuestionImageFile = fileConvert.base64_encode(questionFilePath + sqfFound.name)
+      }
+
+      await Collections.questions.countDocuments({ 
         questionId: data.questionId, 
         specificQuestionID: data.specificQuestionID
       }).then( async (count) => {
         if (count == 1) { // exact document exist > update
-          await Collections[question].findOneAndUpdate({ 
+          console.log(data.chapter.split(","));
+          await Collections.questions.findOneAndUpdate({ 
             questionId: data.questionId, 
             specificQuestionID: data.specificQuestionID
           }, {
@@ -64,7 +65,7 @@ module.exports.uploadFiles = () => {
                 unit: data.unit,
                 marks: data.marks,
                 instruction: data.instruction,
-                answerSubscripts: [{type: String}], // TODO::
+                answerSubscripts: data.chapter.split(","), // TODO::
               }],
             }),
             chapter: [{type: Number}],              // TODO::
@@ -78,7 +79,7 @@ module.exports.uploadFiles = () => {
             overwrite: true
           });
         } else { // no document or many exist > delete and create new doc
-          await Collections[question].deleteMany({ 
+          await Collections.questions.deleteMany({ 
             questionId: data.questionId, 
             specificQuestionID: data.specificQuestionID
           }).then ( async () => {
