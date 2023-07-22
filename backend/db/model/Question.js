@@ -16,7 +16,7 @@ const questionInfoSchema = new mongoose.Schema({
         unit: {type: String},
         marks: {type: Number},
         instruction: {type: String},
-        answerSubscripts: [{type: String}],
+        answerSubscripts: { type: Array },
     }],
 })
 const QuestionSchema = new mongoose.Schema({
@@ -26,7 +26,7 @@ const QuestionSchema = new mongoose.Schema({
     },
 
     question: questionInfoSchema,
-    chapter: [{type: Number}],
+    chapter: { type: Array },
     difficulty: {type: String}, // easy, medium, hard
     paper: {type: String},
     timezone: {type: Number},

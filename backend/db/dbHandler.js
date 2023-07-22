@@ -47,12 +47,16 @@ module.exports.uploadFiles = () => {
       } else{
         subQuestionImageFile = fileConvert.base64_encode(questionFilePath + sqfFound.name)
       }
+      
+      let answerSubscripts_ = data.answerSubscripts.split(",")
+      let chapter_ = data.chapter.split(",")
+      console.log(Array.isArray(answerSubscripts_), Array.isArray(chapter_))
 
       await Collections.questions.countDocuments({ 
         questionId: data.questionID, 
         specificQuestionId: data.specificQuestionID
       }).then( async (count) => {
-        if (count == 1) { // exact document exist > update
+        if (count > 0) { // exact document exist > update
           console.log(data.chapter.split(","));
           await Collections.questions.findOneAndUpdate({ 
             questionId: data.questionID, 
@@ -63,16 +67,16 @@ module.exports.uploadFiles = () => {
               questionType: data.questionType,
               questionImage: {image: questionImageFile,},
               subQuestion: [{
-                subQuestionImage: ImageSchema({image: subQuestionImageFile}),
+                subQuestionImage: {image: subQuestionImageFile},
                 specificQuestionId: data.specificQuestionID,
                 numAns: data.numAns,
                 unit: data.unit,
                 marks: data.marks,
                 instruction: data.instruction,
-                answerSubscripts: data.chapter.split(","), // TODO::
+                answerSubscripts: answerSubscripts_
               }],
             },
-            chapter: [{type: Number}],              // TODO::
+            chapter: chapter_,
             difficulty: data.difficulty, // easy, medium, hard
             paper: data.paper,
             timezone: data.timezone,
@@ -81,16 +85,13 @@ module.exports.uploadFiles = () => {
           }, { 
             new: true, 
             overwrite: true
-          });
+          }).then(()=>console.log("updated"));
         } else { // no document or many exist > delete and create new doc
+          console.log(count)
           await Collections.questions.deleteMany({ 
             questionId: data.questionID, 
             specificQuestionId: data.specificQuestionID
           }).then ( async () => {
-            // console.log("data deleted")
-            // Collections..create({key: 'hello'}, function (err) {
-            //   //
-            // });
             const newDoc = new Collections.questions({
               questionId: data.questionID, 
               question: {
@@ -103,17 +104,17 @@ module.exports.uploadFiles = () => {
                   unit: data.unit,
                   marks: data.marks,
                   instruction: data.instruction,
-                  // answerSubscripts: [{type: String}],
+                  answerSubscripts: answerSubscripts_,
                 }],
               },
-              // chapter: [{type: Number}],
+              chapter: chapter_,
               difficulty: data.difficulty, // easy, medium, hard
               paper: data.paper,
               timezone: data.timezone,
               season: data.season ,// W or S,
               year: data.year,
             })
-            await newDoc.save().then(() => console.log("new doc created in question collection"))
+            await newDoc.save().then(() => console.log("delete and saved"))
           })
         }
       })    
