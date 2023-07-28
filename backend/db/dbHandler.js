@@ -11,15 +11,54 @@ const DataFolder = "./data/";
 
 const Collections = { questions: question, answers: answer, };
 
-module.exports.GetQuestion = async (inros, collection) => {
-// infos.chapter etc.
+
+function filterArray(docs, array){
+  let returnArray = [];
+   array.forEach((cpt) => {
+      docs.forEach((element) => {
+          if(element.chapter.includes(cpt)){returnArray.push(element);}
+      });
+  });
+
+  return returnArray;
+}
+
+function getMultipleRandom(arr, num) {
+  const shuffeld = [...arr].sort(() => 0.5- Math.random())
+  return shuffeld.slice(0,num)
+}
+
+module.exports.getQuestions = async (infos) => {
+  // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
+  db()
+  const returned = await Collections.questions.find({
+      'question.questionType' : { $in: infos.questionType },
+      'difficulty': { $in: infos.difficulty },
+      'timezone' : {$in: infos.timezone },
+      'paper' : {$in: infos.paper} 
+  }).then((docs) => filterArray(docs, infos.chapter));
+
+
+  let result = getMultipleRandom(returned, infos.questionNumber)
+
+  console.log(result)
+  
+  return result
 };
 
 module.exports.GetAnswers = async (infos, collection) => {
+  db()
+  const result = await Collections.questions.find({
+      'answerID' : { $in: infos.answerID },
+      'answer.specificAnswerID': { $in: infos.specificAnswerID },
+  })
 
-}
+  console.log(result)
+  
+  return result
+};
 
-module.exports.uploadFiles = () => {
+module.exports.uploadFilesQuestion = () => {
   db()
   CSV.readCSV(__dirname + '/data/dataInfo/Questions.csv').then((csv_data) => {
     // console.log("data: ", csv_data);
@@ -49,7 +88,113 @@ module.exports.uploadFiles = () => {
       }
       
       let answerSubscripts_ = data.answerSubscripts.split(",")
-      let chapter_ = data.chapter.split(",")
+      let chapter_ = data.chapter.split(",").map((e) => +e)
+
+      console.log(Array.isArray(answerSubscripts_), Array.isArray(chapter_))
+
+      await Collections.questions.countDocuments({ 
+        questionId: data.questionID, 
+        specificQuestionId: data.specificQuestionID
+      }).then( async (count) => {
+        if (count > 0) { // exact document exist > update
+          console.log(data.chapter.split(","));
+          await Collections.questions.findOneAndUpdate({ 
+            questionId: data.questionID, 
+            specificQuestionID: data.specificQuestionID
+          }, {
+            questionId: data.questionID, 
+            question: {
+              questionType: data.questionType,
+              questionImage: {image: questionImageFile,},
+              subQuestion: [{
+                subQuestionImage: {image: subQuestionImageFile},
+                specificQuestionId: data.specificQuestionID,
+                numAns: data.numAns,
+                unit: data.unit,
+                marks: data.marks,
+                instruction: data.instruction,
+                answerSubscripts: answerSubscripts_
+              }],
+            },
+            chapter: chapter_,
+            difficulty: data.difficulty, // easy, medium, hard
+            paper: data.paper,
+            timezone: data.timezone,
+            season: data.season ,// W or S,
+            year: data.year,
+          }, { 
+            new: true, 
+            overwrite: true
+          }).then(()=>console.log("updated"));
+        } else { // no document or many exist > delete and create new doc
+          console.log(count)
+          await Collections.questions.deleteMany({ 
+            questionId: data.questionID, 
+            specificQuestionId: data.specificQuestionID
+          }).then ( async () => {
+            const newDoc = new Collections.questions({
+              questionId: data.questionID, 
+              question: {
+                questionType: data.questionType,
+                questionImage: {image: questionImageFile,},
+                subQuestion: [{
+                  subQuestionImage: {image: subQuestionImageFile},
+                  specificQuestionId: data.specificQuestionID,
+                  numAns: data.numAns,
+                  unit: data.unit,
+                  marks: data.marks,
+                  instruction: data.instruction,
+                  answerSubscripts: answerSubscripts_,
+                }],
+              },
+              chapter: chapter_,
+              difficulty: data.difficulty, // easy, medium, hard
+              paper: data.paper,
+              timezone: data.timezone,
+              season: data.season ,// W or S,
+              year: data.year,
+            })
+            await newDoc.save().then(() => console.log("delete and saved"))
+          })
+        }
+      })    
+    })      
+  })
+};
+
+
+module.exports.uploadFilesAnswer = () => {
+  db()
+  CSV.readCSV(__dirname + '/data/dataInfo/Answers.csv').then((csv_data) => {
+    // console.log("data: ", csv_data);
+    let answerFilePath = __dirname + '/data/images/Answers/';
+    let answerFileList = fs.readdirSync(answerFilePath, { withFileTypes: true }, (err, files) => {
+      if (err) console.log(err);
+      else return files
+    })
+    csv_data.forEach(async (data) => {
+      let qfFound = answerFileList.find((element) => {return element.name === data.answerImage});
+      if (qfFound === undefined) {
+        console.error('q) image name :', data.questionImage, 'is not available.')  
+        return;
+      } 
+      let questionImageFile = fileConvert.base64_encode(answerFilePath + qfFound.name);
+
+      let sqfFound = answerFileList.find(element => element.name === data.subQuestionImage);
+      let subQuestionImageFile;
+      if (sqfFound === undefined) {
+        if (data.subQuestionImage === "None") subQuestionImageFile = ""
+        else { 
+          console.error('sq) image name :', data.subQuestionImage, 'is not available.')  
+          return;
+        }
+      } else{
+        subQuestionImageFile = fileConvert.base64_encode(answerFilePath + sqfFound.name)
+      }
+      
+      let answerSubscripts_ = data.answerSubscripts.split(",")
+      let chapter_ = data.chapter.split(",").map((e) => +e)
+
       console.log(Array.isArray(answerSubscripts_), Array.isArray(chapter_))
 
       await Collections.questions.countDocuments({ 

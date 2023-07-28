@@ -4,7 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-// const indexRouter = require('./routes/index');
+const dataRouter = require('./routes/data');
 // const usersRouter = require('./routes/users');
 
 const app = express();
@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors()) // cool now everything is handled!
 
-// app.use('/', indexRouter);
+app.use('/api/Data', dataRouter);
 // app.use('/users', usersRouter);
 // app.use('/example', usersRouter);
 

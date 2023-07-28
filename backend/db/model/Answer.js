@@ -7,14 +7,12 @@ const imageSchema = new mongoose.Schema({
 
 const answerInfoSchema = new mongoose.Schema({
     answerType: {type: String,},
-    answers: [{
-        answerImage: imageSchema,
-        specificAnswerId: {type: String},
-        //numAns: {type: Number},
-        //unit: {type: String},
-        //marks: {type: Number
-        //instruction: {type: String},
-    }],
+    answerImage: imageSchema,
+    specificAnswerID: {type: String},
+    //numAns: {type: Number},
+    //unit: {type: String},
+    //marks: {type: Number
+    //instruction: {type: String},
 });
 const answerSchema = new mongoose.Schema({
     answerID: {
