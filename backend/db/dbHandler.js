@@ -46,16 +46,16 @@ module.exports.getQuestions = async (infos) => {
   return result
 };
 
-module.exports.GetAnswers = async (infos, collection) => {
-  db()
+module.exports.getAnswers = async (infos) => {
+  db();
   const result = await Collections.questions.find({
       'answerID' : { $in: infos.answerID },
       'answer.specificAnswerID': { $in: infos.specificAnswerID },
   })
 
-  console.log(result)
+  console.log(result);
   
-  return result
+  return result;
 };
 
 module.exports.uploadFilesQuestion = () => {
@@ -164,100 +164,58 @@ module.exports.uploadFilesQuestion = () => {
 
 
 module.exports.uploadFilesAnswer = () => {
+  // TODO : db check, getans func return check 
   db()
   CSV.readCSV(__dirname + '/data/dataInfo/Answers.csv').then((csv_data) => {
-    // console.log("data: ", csv_data);
     let answerFilePath = __dirname + '/data/images/Answers/';
     let answerFileList = fs.readdirSync(answerFilePath, { withFileTypes: true }, (err, files) => {
       if (err) console.log(err);
       else return files
     })
     csv_data.forEach(async (data) => {
-      let qfFound = answerFileList.find((element) => {return element.name === data.answerImage});
-      if (qfFound === undefined) {
-        console.error('q) image name :', data.questionImage, 'is not available.')  
+      let ansFound = answerFileList.find((element) => {return element.name === data.answerImage});
+      if (ansFound === undefined) {
+        console.error('ans) answer name :', data.answerImage, 'is not available.')  
         return;
       } 
-      let questionImageFile = fileConvert.base64_encode(answerFilePath + qfFound.name);
-
-      let sqfFound = answerFileList.find(element => element.name === data.subQuestionImage);
-      let subQuestionImageFile;
-      if (sqfFound === undefined) {
-        if (data.subQuestionImage === "None") subQuestionImageFile = ""
-        else { 
-          console.error('sq) image name :', data.subQuestionImage, 'is not available.')  
-          return;
-        }
-      } else{
-        subQuestionImageFile = fileConvert.base64_encode(answerFilePath + sqfFound.name)
-      }
+      let answerImageFile = fileConvert.base64_encode(answerFilePath + ansFound.name);
       
-      let answerSubscripts_ = data.answerSubscripts.split(",")
-      let chapter_ = data.chapter.split(",").map((e) => +e)
+      let answerSubscripts_ = data.answerSubscripts.split(",");
+      // console.log(answerSubscripts_," and ",data.answerSubscripts)
 
-      console.log(Array.isArray(answerSubscripts_), Array.isArray(chapter_))
-
-      await Collections.questions.countDocuments({ 
-        questionId: data.questionID, 
-        specificQuestionId: data.specificQuestionID
+      await Collections.answers.countDocuments({ 
+        answerID: data.answerID, 
+        specificAnswerId: data.specificAnswerID
       }).then( async (count) => {
         if (count > 0) { // exact document exist > update
-          console.log(data.chapter.split(","));
-          await Collections.questions.findOneAndUpdate({ 
-            questionId: data.questionID, 
-            specificQuestionID: data.specificQuestionID
+          await Collections.answers.findOneAndUpdate({ 
+            answerID: data.answerID, 
+            specificAnswerId: data.specificAnswerID    
           }, {
-            questionId: data.questionID, 
-            question: {
-              questionType: data.questionType,
-              questionImage: {image: questionImageFile,},
-              subQuestion: [{
-                subQuestionImage: {image: subQuestionImageFile},
-                specificQuestionId: data.specificQuestionID,
-                numAns: data.numAns,
-                unit: data.unit,
-                marks: data.marks,
-                instruction: data.instruction,
-                answerSubscripts: answerSubscripts_
-              }],
+            answerID: data.answerID, 
+            answer: {
+              answerType: data.answerType,
+              answerImage: {image: answerImageFile},
+              answerSubscripts: answerSubscripts_,
+              specificAnswerID: data.specificAnswerID,    
             },
-            chapter: chapter_,
-            difficulty: data.difficulty, // easy, medium, hard
-            paper: data.paper,
-            timezone: data.timezone,
-            season: data.season ,// W or S,
-            year: data.year,
           }, { 
             new: true, 
             overwrite: true
           }).then(()=>console.log("updated"));
         } else { // no document or many exist > delete and create new doc
-          console.log(count)
-          await Collections.questions.deleteMany({ 
-            questionId: data.questionID, 
-            specificQuestionId: data.specificQuestionID
+          await Collections.answers.deleteMany({ 
+            answerID: data.answerID, 
+            specificAnswerId: data.specificAnswerID
           }).then ( async () => {
-            const newDoc = new Collections.questions({
-              questionId: data.questionID, 
-              question: {
-                questionType: data.questionType,
-                questionImage: {image: questionImageFile,},
-                subQuestion: [{
-                  subQuestionImage: {image: subQuestionImageFile},
-                  specificQuestionId: data.specificQuestionID,
-                  numAns: data.numAns,
-                  unit: data.unit,
-                  marks: data.marks,
-                  instruction: data.instruction,
-                  answerSubscripts: answerSubscripts_,
-                }],
+            const newDoc = new Collections.answers({
+              answerID: data.answerID, 
+              answer: {
+                answerType: data.answerType,
+                answerImage: {image: answerImageFile},
+                answerSubscripts: answerSubscripts_,
+                specificAnswerID: data.specificAnswerID,    
               },
-              chapter: chapter_,
-              difficulty: data.difficulty, // easy, medium, hard
-              paper: data.paper,
-              timezone: data.timezone,
-              season: data.season ,// W or S,
-              year: data.year,
             })
             await newDoc.save().then(() => console.log("delete and saved"))
           })

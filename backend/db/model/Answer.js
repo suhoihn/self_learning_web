@@ -8,6 +8,7 @@ const imageSchema = new mongoose.Schema({
 const answerInfoSchema = new mongoose.Schema({
     answerType: {type: String,},
     answerImage: imageSchema,
+    answerSubscripts: { type: Array },
     specificAnswerID: {type: String},
     //numAns: {type: Number},
     //unit: {type: String},
@@ -18,7 +19,6 @@ const answerSchema = new mongoose.Schema({
     answerID: {
         type: Number,
         required: true,
-        unique: true,
     },
 
     answer: answerInfoSchema,
