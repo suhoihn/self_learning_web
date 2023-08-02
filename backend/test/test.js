@@ -1,4 +1,4 @@
-const { getQuestions, uploadFiles } = require("../db/dbHandler");
+const { getQuestions, uploadFilesAnswer, getAnswers } = require("../db/dbHandler");
 
 // uploadFiles()
 
@@ -11,4 +11,9 @@ const infos = {
 	questionNumber: 5
 }
 
-getQuestions(infos)
+const infos2 = {
+	"answerID": [0],
+	"specificAnswerID": ["1b"],
+};
+
+getAnswers(infos2);
