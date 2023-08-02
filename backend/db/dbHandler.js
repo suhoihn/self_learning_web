@@ -30,7 +30,6 @@ function getMultipleRandom(arr, num) {
 
 module.exports.getQuestions = async (infos) => {
   // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
-  db()
   const returned = await Collections.questions.find({
       'question.questionType' : { $in: infos.questionType },
       'difficulty': { $in: infos.difficulty },
@@ -47,8 +46,7 @@ module.exports.getQuestions = async (infos) => {
 };
 
 module.exports.getAnswers = async (infos) => {
-  db();
-  const result = await Collections.questions.find({
+  const result = await Collections.answers.find({
       'answerID' : { $in: infos.answerID },
       'answer.specificAnswerID': { $in: infos.specificAnswerID },
   })
@@ -59,7 +57,6 @@ module.exports.getAnswers = async (infos) => {
 };
 
 module.exports.uploadFilesQuestion = () => {
-  db()
   CSV.readCSV(__dirname + '/data/dataInfo/Questions.csv').then((csv_data) => {
     // console.log("data: ", csv_data);
     let questionFilePath = __dirname + '/data/images/Questions/';
@@ -165,7 +162,6 @@ module.exports.uploadFilesQuestion = () => {
 
 module.exports.uploadFilesAnswer = () => {
   // TODO : db check, getans func return check 
-  db()
   CSV.readCSV(__dirname + '/data/dataInfo/Answers.csv').then((csv_data) => {
     let answerFilePath = __dirname + '/data/images/Answers/';
     let answerFileList = fs.readdirSync(answerFilePath, { withFileTypes: true }, (err, files) => {

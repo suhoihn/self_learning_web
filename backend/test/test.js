@@ -1,7 +1,7 @@
 const { getQuestions, uploadFilesAnswer, getAnswers } = require("../db/dbHandler");
 
 // uploadFiles()
-
+// uploadFilesAnswer()
 const infos = {
 	questionType: ['multiAns'],
 	difficulty: ['1','3'],
@@ -12,8 +12,8 @@ const infos = {
 }
 
 const infos2 = {
-	"answerID": [0],
-	"specificAnswerID": ["1b"],
+	answerID: [0],
+	specificAnswerID: ["1b"],
 };
 
 getAnswers(infos2);

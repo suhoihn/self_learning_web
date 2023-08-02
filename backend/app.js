@@ -4,14 +4,11 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-const dataRouter = require('./routes/data');
-// const usersRouter = require('./routes/users');
-
 const app = express();
 var cors = require('cors')
 
 const db = require('./db/db.js'); // db 불러오기
-// const usersRouter = require('./db/api/User');
+const dataRouter = require('./routes/data');
 
 
 // view engine setup
@@ -25,11 +22,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors()) // cool now everything is handled!
 
-app.use('/api/Data', dataRouter);
-// app.use('/users', usersRouter);
-// app.use('/example', usersRouter);
-
 db(); // db 실행
+
+app.use('/api/Data', dataRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
