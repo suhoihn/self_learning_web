@@ -15,10 +15,12 @@ export default function PageLayout ({ children }) {
     return (
         <Layout>
             <Sider color={color}/>
-            <Affix>
-                <Header color={color}/>
-            </Affix>
-            <Content> { children } </Content>
+            <Layout>
+                <Affix> 
+                    <Header color={color}/> 
+                </Affix>
+                <Content> { children } </Content>
+            </Layout>
         </Layout>
     )
 }
