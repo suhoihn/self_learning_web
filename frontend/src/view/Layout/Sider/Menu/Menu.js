@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import {Menu} from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
-import { HomeOutlined, FormOutlined } from '@ant-design/icons'
+import { HomeOutlined, FormOutlined, UnorderedListOutlined, LikeOutlined, BookOutlined, HistoryOutlined } from '@ant-design/icons'
 
 const getItem = (url, label, icon, children) => {
     return {
@@ -15,14 +15,17 @@ const getItem = (url, label, icon, children) => {
 
 const items = [
     getItem('/Main', 'Main', <HomeOutlined/>),
-    getItem('/Review', 'Review', <FormOutlined/>),
-    getItem('/Reference', 'Reference', <FormOutlined/>),
-    getItem('/Recommended', 'Recommended', <FormOutlined/>)
+    getItem('/Review', 'Review', <FormOutlined/>, [
+        getItem("/Review/Bookmark","Bookmark", <BookOutlined />),
+        getItem("/Review/History","History", <HistoryOutlined />),
+    ]),
+    getItem('/Reference', 'Reference', <UnorderedListOutlined />),
+    getItem('/Recommended', 'Recommended', <LikeOutlined />)
 ]
 
 export default function SiderMenu () {
     const navigate = useNavigate()
-
+    const Location = useLocation();
 
     const handleMenuClick = (e) => {
         console.log('key :', e.key)
@@ -39,12 +42,23 @@ export default function SiderMenu () {
             case '/Recommended':
                 navigate('/Recommended')
                 break
+            case "/Review/Bookmark":
+                navigate('/Review/Bookmark');
+                break;
+            case "/Review/History":
+                navigate("/Review/History");
+                break;
+            default:
+                navigate(e.key);
+                break;
+    
         }
     }
 
     return (
         <Menu
             defaultSelectedKeys={'/Main'}
+            selectedKeys = {["/Review","/Review/Bookmark"]}
             mode={'inline'}
             items={items}
             onClick={handleMenuClick}
