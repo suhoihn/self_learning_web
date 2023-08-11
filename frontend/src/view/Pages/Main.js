@@ -48,28 +48,30 @@ export default function Main () {
   
     return (
         <>
-            <Row gutter={{xs: 8, sm: 16}} style={{backgroundColor: 'blue'}}>
+            <Row style={{backgroundColor: 'blue'}}>
                 <Col>
                   <Title>Configuration</Title>
                 </Col>
             </Row>
 
-            <Row gutter={{xs: 8, sm: 16}} style={{backgroundColor: 'red'}}>
-              <Col style={{backgroundColor: 'green'}}>
+            <Row style={{backgroundColor: 'red'}}>
+              <Col style={{backgroundColor: 'white'}}>
                 <div>
                   <Dropdown menu={{ items, }}>
                       <a onClick={(e) => e.preventDefault()}>
-                        <Space> Hover me <DownOutlined /> </Space>
+                        <Space> Hover me 1<DownOutlined /> </Space>
                       </a>
                   </Dropdown>
                 </div>
+
                 <div>
                   <Dropdown menu={{ items, }}>
                       <a onClick={(e) => e.preventDefault()}>
-                        <Space> Hover me <DownOutlined /> </Space>
+                        <Space> Hover me 2<DownOutlined /> </Space>
                       </a>
                   </Dropdown>
                 </div>
+
                 <div style={{backgroundColor:'brown'}}>
                   <Dropdown menu={{ items, }}>
                       <a onClick={(e) => e.preventDefault()}>
@@ -77,6 +79,7 @@ export default function Main () {
                       </a>
                   </Dropdown>
                 </div>
+
               </Col>
             </Row>
 
