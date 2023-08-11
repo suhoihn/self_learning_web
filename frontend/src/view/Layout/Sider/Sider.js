@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Typography, Space, Row, Layout, Col } from 'antd'
 
-// import Menu from './Menu'
+import Menu from './Menu/Menu'
 // import logo from '../././'
 
 const { Sider } = Layout
@@ -35,6 +35,7 @@ export default function DefaultSlider({color}) {
                         </Col>
                     </Row>
                 </Link>
+                <Menu />
         </Sider>
     )
 }
