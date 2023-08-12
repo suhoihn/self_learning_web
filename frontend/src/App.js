@@ -16,7 +16,7 @@ function App() {
                 <Layout>
                     <Routes>
                         <Route exact path="/Main" element={<Main />}/>
-                        <Route path="/Review" element={<Navigate replace to="/Review/Bookmark"/>}/>
+                        <Route exact path="/Review" element={<Navigate replace to="/Review/Bookmark"/>}/>
                         <Route exact path="/Review/Bookmark" element={<Bookmark />}/>
                         <Route exact path="/Review/History" element={<History />}/>
                         <Route exact path="/Reference" element={<TestPage/>}/>

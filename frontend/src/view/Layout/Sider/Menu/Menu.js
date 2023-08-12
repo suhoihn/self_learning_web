@@ -26,16 +26,19 @@ const items = [
 export default function SiderMenu () {
     const navigate = useNavigate()
     const Location = useLocation();
-
+    console.log(Location)
+    let pathSnippets = Location.pathname.split('/')
+    // pathSnippets = pathSnippets.filter((i) => i)
+    console.log(pathSnippets)
     const handleMenuClick = (e) => {
         console.log('key :', e.key)
         switch(e.key) {
             case '/Main':
                 navigate('/')
                 break
-            case '/Review':
-                navigate('/Review')
-                break
+            // case '/Review':
+            //     navigate('/Review')
+            //     break
             case '/Reference':
                 navigate('/Reference')
                 break
@@ -58,7 +61,7 @@ export default function SiderMenu () {
     return (
         <Menu
             defaultSelectedKeys={'/Main'}
-            selectedKeys = {["/Review","/Review/Bookmark"]}
+            selectedKeys = {Location.pathname}
             mode={'inline'}
             items={items}
             onClick={handleMenuClick}
