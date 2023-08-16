@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, Col, Card, Switch, Space, Select, Typography } from 'antd';
 
 const {Text, Title} = Typography
 
-export default function CardTitle({text}){
+export default function CardTitle({text, onChange}){
 
     return (
         <Row>
@@ -11,7 +11,7 @@ export default function CardTitle({text}){
                 <Text>{text}</Text>
             </Col>
             <Col span={12} style={{textAlign: 'right'}}>
-                <Switch />
+                <Switch onChange={onChange}/>
             </Col>
         </Row>
     )
