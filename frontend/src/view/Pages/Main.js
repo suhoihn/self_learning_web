@@ -1,36 +1,59 @@
 import React, { useState } from 'react';
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
-import { Row, Col, Button, Card, Space, Radio, Typography, List } from 'antd';
-import ChapterCard from '../Component/OptionCard/Chapter'
-import DifficultyCard from '../Component/OptionCard/Difficulty'
-import PaperCard from '../Component/OptionCard/Paper'
-import TimezoneCard from '../Component/OptionCard/Timezone'
+import { Row, Col, Button, Card, Alert, Radio, Typography, List } from 'antd';
+import OptionCard from '../Component/Card/OptionCard'
 
-const { Title } = Typography;
+const { Text, Title } = Typography;
 
 
 export default function Main () {
+  
+  // TODO::useSelector, actions, saga, etc 
+  const items = [
+      {
+          value: '1',
+          label: 'Chapter1'
+      },
+      {
+          value: '2',
+          label: 'Chapter2'
+      },
+  ];
     
-    return (
-      <>
-      <Card title={<Title>Configuration</Title>}>
-        <Row gutter={16}>
-          <Col span={6}>
-            <ChapterCard/>
-          </Col>
-          <Col span={6}>
-            <DifficultyCard/>
-          </Col>
-          <Col span={6}>
-            <TimezoneCard/>
-          </Col>
-          <Col span={6}>
-            <PaperCard/>
-          </Col>
-        </Row>
-      </Card>
-      </>    
-    )
+  const style={margin: 20}
+  return (
+    <>
+    <Card title={<Text>Configuration</Text>}>
+      <Row>
+        <Col span={12}>
+          <Row>
+            <Col span={6} style={style}>
+              <OptionCard items={items} title={'Chapter'}/>
+            </Col>
+            <Col span={6} style={style}>
+              <OptionCard items={items} title={'Difficulty'}/>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={6} style={style}>
+              <OptionCard items={items} title={'Paper'}/>
+            </Col>
+            <Col span={6} style={style}>
+              <OptionCard items={items} title={'Timezone'}/>
+            </Col>
+          </Row>
+        </Col>
+        <Col>
+          <Row>
+            <Col span={24} style={style}>
+              <Alert message="Instrunction" type="info" showIcon />            
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </Card>
+    </>    
+  )
 }
 
 

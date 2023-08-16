@@ -1,28 +1,14 @@
 import React from 'react';
-import { Card, Space, Select, Typography } from 'antd';
-
-const {Text, Title} = Typography
-
-const items = [
-    {
-        value: '1',
-        label: 'Chapter1'
-    },
-    {
-        value: '2',
-        label: 'Chapter2'
-    },
-];
+import { Row, Col, Card, Switch, Space, Select, Typography } from 'antd';
+import Title from './Title/Title'
 
 const { Meta } = Card;
 
-export default function ChapterCard() {
-
+export default function OptionCard({items, title}) {
 
     return(
         <>
-            <Card title={<div></div>} size='small'>
-            
+            <Card title={<Title text={title}/>} size='small'>
                 <Space wrap>
                     <Select
                     defaultValue="1"
