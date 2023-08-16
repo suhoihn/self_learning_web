@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 import { Row, Col, Button, Card, Alert, Radio, Typography, List } from 'antd';
 import OptionCard from '../Component/Card/OptionCard'
+import ProblemModal from '../Component/Modal/ProblemModal';
 
 const { Text, Title } = Typography;
 
 
 export default function Main () {
+  // Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const onClosed= ()=> {setIsModalOpen(false)}
 
   // TODO::useSelector, actions, saga, etc 
   const items = [
@@ -19,8 +23,14 @@ export default function Main () {
           label: 'Chapter2'
       },
   ];
+
+  // Button
+  const onSubmitClicked = () => {
+    // TODO:: add action for data fetching
+    setIsModalOpen(true)
+  }
     
-  const style={margin: 20}
+  const style={margin: 10}
 
   return (
     <div>
@@ -46,8 +56,8 @@ export default function Main () {
         </Col>
 
         <Col span={12}>
-          <Row span={24} style = {{margin: 10}}> 
-            <Col span={24} style = {{margin: 10}}>
+          <Row span={24}> 
+            <Col span={23} style={style}>
               <Alert message="Instrunction" type="info" showIcon />   
               <br />       
               <Text>- You can customise your search using the categories in the dropdown</Text><br />
@@ -59,10 +69,11 @@ export default function Main () {
       </Row>
       <Row span={24}>
         <Col span={24} style={{textAlign: 'right'}}>
-          <Button>Submit</Button>
+          <Button onClick={onSubmitClicked}>Submit</Button>
         </Col>
       </Row>
     </Card>
+    <ProblemModal open={isModalOpen} onClosed={onClosed}/>
     </div>    
   )
 }
