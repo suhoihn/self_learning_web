@@ -20,7 +20,7 @@ export default function Main () {
       },
   ];
     
-  const style={margin: 10}
+  const style={margin: 20}
 
   return (
     <div>
@@ -46,8 +46,8 @@ export default function Main () {
         </Col>
 
         <Col span={12}>
-          <Row span={24}> 
-            <Col span={24}>
+          <Row span={24} style = {{margin: 10}}> 
+            <Col span={24} style = {{margin: 10}}>
               <Alert message="Instrunction" type="info" showIcon />   
               <br />       
               <Text>- You can customise your search using the categories in the dropdown</Text><br />
