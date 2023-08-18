@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Modal, Button, Steps, Checkbox, message, Row, Col, Tabs, Divider } from 'antd'
+import { Modal, Button, Steps, Row, Col, Tabs, Divider } from 'antd'
 import { useSelector } from 'react-redux'
 
 export default function ProblemModal({open, onClosed, onCleared }) { 
@@ -28,10 +28,7 @@ export default function ProblemModal({open, onClosed, onCleared }) {
         setCurrent(current - 1);
     };
     const done = () => {
-        message.success('All problems cleared!')
-        if(!window.confirm('Check answer?')) return;
         onClosed()
-        onCleared()
     }
     const items = steps.map((item) => ({
         key: item.title,
@@ -54,9 +51,6 @@ export default function ProblemModal({open, onClosed, onCleared }) {
 
     const footer = 
     <div style={{ marginTop: 24, display: 'flex'}}>
-        <div style={{textAlign: 'left'}}>
-            <Checkbox>Bookmark</Checkbox>
-        </div>
         <div style={{width: '100%', textAlign:'right'}}>
         {current > 0 && (
             <Button
@@ -93,7 +87,7 @@ export default function ProblemModal({open, onClosed, onCleared }) {
                     <Row span={24}>
                         <Col>
                             <Tabs size='small' tabPosition={'left'} style={{ height: '100%'}}
-                                items={tabsItems}  activeKey={current} onChange={onTabsChanged}
+                                items={tabsItems} activeKey={current} onChange={onTabsChanged}
                             />
                         </Col>
                         <Col>      

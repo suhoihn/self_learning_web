@@ -3,14 +3,19 @@ import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 import { Row, Col, Button, Card, Alert, Radio, Typography, List } from 'antd';
 import OptionCard from '../Component/Card/OptionCard'
 import ProblemModal from '../Component/Modal/ProblemModal';
-
+import AnswerModal from '../Component/Modal/AnswerModal'
 const { Text, Title } = Typography;
 
 
 export default function Main () {
   // Modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const onClosed= ()=> {setIsModalOpen(false)}
+  const [isProblemModalOpen, setIsProblemModalOpen] = useState(false);
+  const onProblemModalClosed = ()=> setIsProblemModalOpen(false)
+
+  const [isAnswerModalOpen, setIsAnswerModalOpen] = useState(false);
+  const onAnswerModalClosed = ()=> setIsAnswerModalOpen(false)
+
+  const onProblemCleared = () => setIsAnswerModalOpen(true)
 
   // TODO::useSelector, actions, saga, etc 
   const items = [
@@ -27,7 +32,7 @@ export default function Main () {
   // Button
   const onSubmitClicked = () => {
     // TODO:: add action for data fetching
-    setIsModalOpen(true)
+    setIsProblemModalOpen(true)
   }
     
   const style={margin: 10}
@@ -73,7 +78,8 @@ export default function Main () {
         </Col>
       </Row>
     </Card>
-    <ProblemModal open={isModalOpen} onClosed={onClosed}/>
+    <ProblemModal open={isProblemModalOpen} onClosed={onProblemModalClosed} onCleared={onProblemCleared}/>
+    <AnswerModal open={isAnswerModalOpen} onClosed={onAnswerModalClosed} />
     </div>    
   )
 }
