@@ -28,6 +28,11 @@ function getMultipleRandom(arr, num) {
   return shuffeld.slice(0,num)
 }
 
+
+module.exports.getQuestionInfo = async () => {
+// TODO:: questionType
+}
+
 module.exports.getQuestions = async (infos) => {
   // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
   const returned = await Collections.questions.find({

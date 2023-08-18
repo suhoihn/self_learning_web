@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
+import {useDispatch} from 'react-redux'
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 import { Row, Col, Button, Card, Alert, Radio, Typography, List } from 'antd';
 import OptionCard from '../Component/Card/OptionCard'
 import ProblemModal from '../Component/Modal/ProblemModal';
 import AnswerModal from '../Component/Modal/AnswerModal'
+
+import {Actions as dataAction} from '../../store/actions/dataActions'
 const { Text, Title } = Typography;
 
 
 export default function Main () {
+  const dispatch = useDispatch()
+
   // Modal
   const [isProblemModalOpen, setIsProblemModalOpen] = useState(false);
   const onProblemModalClosed = ()=> setIsProblemModalOpen(false)
@@ -31,7 +36,11 @@ export default function Main () {
 
   // Button
   const onSubmitClicked = () => {
-    // TODO:: add action for data fetching
+    dispatch(dataAction.getQuestions({
+      //TODO::
+      questionType: '',
+      difficulty: [],
+    }))
     setIsProblemModalOpen(true)
   }
     

@@ -1,9 +1,9 @@
 import { combineReducers } from "redux"
 
-import exampleReducer from "./reducers/exampleReducer"
+import dataReducer from "./reducers/dataReducer"
 
 const rootReducer = combineReducers({
-    example: exampleReducer
+    data: dataReducer
 });
 
 export default rootReducer;

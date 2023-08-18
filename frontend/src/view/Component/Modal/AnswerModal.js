@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { Modal, Button, Steps, Row, Col, Tabs, Divider } from 'antd'
 import { useSelector } from 'react-redux'
 
-export default function ProblemModal({open, onClosed, onCleared }) { 
+export default function AnswerModal({open, onClosed, onCleared }) { 
 
     // steps(data fetched by useSelector >>> steps
     const steps = [
