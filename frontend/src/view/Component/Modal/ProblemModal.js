@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Modal, Button, Steps, theme, message } from 'antd'
+import { Modal, Button, Steps, theme, message, Row, Col, List } from 'antd'
 import { useSelector } from 'react-redux'
 
 export default function ProblemModal({open, onClosed}) { 
@@ -21,6 +21,8 @@ export default function ProblemModal({open, onClosed}) {
             content:<Button >3</Button>,
         },
     ];
+
+    const data = [1,2,3];
 
     const { token } = theme.useToken();
     const [current, setCurrent] = useState(0);
@@ -69,8 +71,33 @@ export default function ProblemModal({open, onClosed}) {
     return (
         <Modal title="Basic Modal" open={open} onCancel={onModalClosed}
                 footer={footer}>
-            <Steps size="small" current={current} items={items} />
-            <div style={contentStyle}>{steps[current].content}</div>
+            <div>
+                <Row>
+                    <Col span={24} style={{ textAlign: 'center' }}>      
+                        <Steps size="small" current={current} items={items}/>        
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col span = {4} style={contentStyle}>
+                        <List
+                            bordered
+                            dataSource={data}
+                            renderItem={item => (
+                                <List.Item onClick={() => {setCurrent(item - 1)}}>
+                                    {item}
+                                </List.Item>
+                            )}
+                            />
+                    </Col>
+                    
+                    <Col span = {20}>
+                        {/* {steps[current].content} */}
+                        <div style={contentStyle}>{steps[current].content}</div>
+                    </Col>
+                </Row>
+
+            </div>
         </Modal>
     )
 }
