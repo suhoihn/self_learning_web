@@ -38,8 +38,12 @@ export default function Main () {
   const onSubmitClicked = () => {
     dispatch(dataAction.getQuestions({
       //TODO::
-      questionType: '',
-      difficulty: [],
+      questionNumber: 5,
+      questionType: 'singleAns',
+      difficulty: [1, 2],
+      timezone: [1],
+      paper: [1],
+      chapter: [1]
     }))
     setIsProblemModalOpen(true)
   }

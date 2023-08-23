@@ -2,9 +2,9 @@ export const Types = {
     GET_DATA: "GET_DATA",
     GET_DATA_SUCCESS: "GET_DATA_SUCCESS",
     GET_DATA_FAIL: "GET_DATA_FAIL",
-    GET_QUESTIONS: "GET_DATA",
-    GET_QUESTIONS_SUCCESS: "GET_DATA_SUCCESS",
-    GET_QUESTIONS_FAIL: "GET_DATA_FAIL"
+    GET_QUESTIONS: "GET_QUESTIONS",
+    GET_QUESTIONS_SUCCESS: "GET_QUESTIONS_SUCCESS",
+    GET_QUESTIONS_FAIL: "GET_QUESTIONS_FAIL"
 };
 
 // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }

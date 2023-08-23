@@ -37,8 +37,12 @@ router.get('/UploadAnswer', async (req, res) => {
 // QuestionInfos = { questionType: ['multiAns'], difficulty: ['1','3'], paper: ['1'], 
 //                   timezone: [1, 2], chapter: [2, 7], questionNumber: 5 }
 router.get('/getQuestions', async (req, res) => {
+  console.log('API called', req.query.infos)
+  req.query.infos.timezone = req.query.infos.timezone.map((e) => +e)
+  console.log(req.query.infos.timezone)
   try {
-    const questions = await getQuestions(req.body.params.infos)
+    const questions = await getQuestions(req.query.infos)
+    console.log('returned', questions)
     res.status(200).json(questions)
   } catch (error) {
     console.log(error)
@@ -50,7 +54,7 @@ router.get('/getQuestions', async (req, res) => {
 // AnswerInfos = { answerID: [0], specificAnswerID: ["1b"], };
 router.get('/getAnswers', async (req, res) => {
   try {
-    const answers = await getAnswers(req.body.params.infos)
+    const answers = await getAnswers(req.query.infos)
     res.status(200).json(answers)
   } catch (error) {
     console.log(error)

@@ -1,7 +1,7 @@
-const { getQuestions, uploadFilesAnswer, getAnswers } = require("../db/dbHandler");
+const { getQuestions, uploadFilesAnswer, uploadFilesQuestion, getAnswers } = require("../db/dbHandler");
 
-// uploadFiles()
-// uploadFilesAnswer()
+uploadFilesQuestion()
+uploadFilesAnswer()
 const infos = {
 	questionType: ['multiAns'],
 	difficulty: ['1','3'],
@@ -16,4 +16,4 @@ const infos2 = {
 	specificAnswerID: ["1b"],
 };
 
-getAnswers(infos2);
+//getAnswers(infos2);
