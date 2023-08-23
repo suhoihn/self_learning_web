@@ -37,15 +37,13 @@ router.get('/UploadAnswer', async (req, res) => {
 // QuestionInfos = { questionType: ['multiAns'], difficulty: ['1','3'], paper: ['1'], 
 //                   timezone: [1, 2], chapter: [2, 7], questionNumber: 5 }
 router.get('/getQuestions', async (req, res) => {
-  console.log('API called', req.query.infos)
   req.query.infos.timezone = req.query.infos.timezone.map((e) => +e)
-  console.log(req.query.infos.timezone)
+  req.query.infos.questionNumber = parseInt(req.query.infos.questionNumber)
+
   try {
     const questions = await getQuestions(req.query.infos)
-    console.log('returned', questions)
     res.status(200).json(questions)
   } catch (error) {
-    console.log(error)
     res.status(400).json({
       msg: error.message
     })

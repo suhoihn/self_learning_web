@@ -16,7 +16,7 @@ function* onGetData({payload: id}) {
 
 function* onGetQuestions({payload: info}) {
     try {
-        console.log("data saga get data");
+        console.log("data saga get questions");
         const response = yield call(getQuestions, info);
         console.log('response :',response);
         yield put(dataActions.getQuestionsSuccess(response));

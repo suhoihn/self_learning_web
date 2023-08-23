@@ -15,7 +15,9 @@ const Collections = { questions: question, answers: answer, };
 function filterArray(docs, array){
   let returnArray = [];
    array.forEach((cpt) => {
+    console.log('cpt', cpt)
       docs.forEach((element) => {
+        console.log('element',element)
           if(element.chapter.includes(cpt)){returnArray.push(element);}
       });
   });
@@ -34,6 +36,7 @@ module.exports.getQuestionInfo = async () => {
 }
 
 module.exports.getQuestions = async (infos) => {
+  console.log('getQuestions:',infos)
   // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
   const returned = await Collections.questions.find({
       'question.questionType' : { $in: infos.questionType },
@@ -42,6 +45,7 @@ module.exports.getQuestions = async (infos) => {
       'paper' : {$in: infos.paper} 
   }).then((docs) => filterArray(docs, infos.chapter));
 
+  console.log('getQuestion',returned)
 
   let result = getMultipleRandom(returned, infos.questionNumber)
 

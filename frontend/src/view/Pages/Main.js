@@ -39,11 +39,11 @@ export default function Main () {
     dispatch(dataAction.getQuestions({
       //TODO::
       questionNumber: 5,
-      questionType: 'singleAns',
+      questionType: ['singleAns'],
       difficulty: [1, 2],
-      timezone: [1],
-      paper: [1],
-      chapter: [1]
+      timezone: [1, 2, 3],
+      paper: [1, 2, 3],
+      chapter: [2, 7]
     }))
     setIsProblemModalOpen(true)
   }
