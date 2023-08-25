@@ -93,7 +93,7 @@ export default function ProblemModal({open, onClosed, onCleared }) {
                     <Row span={24}>
                         <Col>
                             <Tabs size='small' tabPosition={'left'} style={{ height: '100%'}}
-                                items={tabsItems}  activeKey={current} onChange={onTabsChanged}
+                                items={tabsItems} activeKey={current} onChange={onTabsChanged}
                             />
                         </Col>
                         <Col>      

@@ -1,19 +1,61 @@
 import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Button, Avatar, List, Space } from 'antd';
+import { useDispatch } from 'react-redux'
+import { Actions as dataAction } from '../../../store/actions/dataActions'
 
+export default function ProblemList ({onItemClicked, setModalContent}) {
+    const dispatch = useDispatch();
+    const getContents = () => {
+      dispatch(dataAction.getQuestions({
+        questionNumber: 5,
+        questionType: ['singleAns'],
+        difficulty: [1, 2],
+        timezone: [1, 2, 3],
+        paper: [1, 2, 3],
+        chapter: [2, 7]
+      }))
+    }
+    //const data2 = useSelector((state) => state.data);
+    //console.log(data2);
 
-export default function ProblemList (onItemClicked) {
     const data = Array.from({
         length: 23,
       }).map((_, i) => ({
-        href: 'https://ant.design',
-        title: `ant design part ${i}`,
-        avatar: `https://xsgames.co/randomusers/avatar.php?g=pixel&key=${i}`,
-        description:
-          'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-        content:
-          'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+        questionId: 0,
+        question: {
+          questionType: "singleAns",
+
+          questionImage: <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0KRhmiZkQ4peCGROLwxVaadDUwgUdr6NGTQ&usqp=CAU"/>,
+          subQuestion: [{
+              subQuestionImage: <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0KRhmiZkQ4peCGROLwxVaadDUwgUdr6NGTQ&usqp=CAU"/>,
+              specificQuestionId: "3a",
+              numAns: 1,
+              unit: 'None',
+              marks: '2',
+              instruction: "Hello",
+              answerSubscripts: "x",
+          }],
+        },
+        chapter: [1],
+        difficulty: "0", // easy, medium, hard
+        paper: "1",
+        timezone: "1",
+    
+        // undetermined
+        // season: {type: String} ,// W or S,
+        // year: {type: Number},
+
+
+        // id: i,
+        // title: `Question ${i}`,
+        // description:
+        //   'S22 Paper 1 Q3', // S22 Paper 1 Q3
+        // content:
+        //   'What chapter? Difficulty?',
+        // questionImage:
+        // <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0KRhmiZkQ4peCGROLwxVaadDUwgUdr6NGTQ&usqp=CAU"/>
       }));
       const IconText = ({ icon, text }) => (
         <Space>
@@ -21,6 +63,20 @@ export default function ProblemList (onItemClicked) {
           {text}
         </Space>
       );
+
+    // const onSubmitClicked = () => {
+    //   dispatch(dataAction.getQuestions({
+    //     //TODO::
+    //     questionNumber: 5,
+    //     questionType: ['singleAns'],
+    //     difficulty: [1, 2],
+    //     timezone: [1, 2, 3],
+    //     paper: [1, 2, 3],
+    //     chapter: [2, 7]
+    //   }))
+    //   setIsProblemModalOpen(true)
+    // }
+        
     
     return (
         <List itemLayout="vertical" size="large" dataSource={data}
@@ -37,10 +93,19 @@ export default function ProblemList (onItemClicked) {
                 renderItem={(item) => (
                 <List.Item
                     key={item.title}
+                    onClick={() => {
+                      setModalContent(<>
+                        <p>Question {item.questionId}</p>
+                        
+                        {item.question.questionImage}
+                      </>)
+                      onItemClicked()
+                      //console.log("item ", item.id, "clicked")
+                    }}
                     actions={[
-                    <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
-                    <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
-                    <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+                    // submit icon
+                    <IconText icon={StarOutlined} text="for something" key="list-vertical-star-o" />,
+                    
                     ]}
                     extra={
                     <img
@@ -51,11 +116,16 @@ export default function ProblemList (onItemClicked) {
                     }
                 >
                     <List.Item.Meta
-                        avatar={<Avatar src={item.avatar} />}
                         title={<a href={item.href}>{item.title}</a>}
-                        description={item.description}
-                        />
-                        {item.content}
+                        description={
+                          "Question Type: " + item.question.questionType + "\n" + 
+                          "Chapters: " + item.chapter + "\n" + 
+                          "Difficulty: " + item.difficulty + "\n" + 
+                          "Paper " + item.paper + " timezone " + item.timezone
+                        }
+                    />
+                      
+                        
                     </List.Item>
                 )}
         />

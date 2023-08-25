@@ -3,11 +3,15 @@ import ProblemList from '../../Component/List/List'
 import BookmarkModal from "../../Component/Modal/BookmarkModal"
 
 export default function Bookmark () {
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
+    const [modalContent, setModalContent] = useState(<></>);
+
+    const closeBookmarkModal = () => {setIsBookmarkModalOpen(false)};
+    
     return (
         <>
-        <ProblemList onItemClicked={()=>setIsModalOpen(true)}/>
-        <BookmarkModal open={isModalOpen} onClosed={()=>{}}/>
+        <ProblemList onItemClicked={()=>setIsBookmarkModalOpen(true)} setModalContent={setModalContent}/>
+        <BookmarkModal open={isBookmarkModalOpen} onClosed={closeBookmarkModal} modalContent = {modalContent}/>
         </>
     )
 }
