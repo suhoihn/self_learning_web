@@ -1,13 +1,16 @@
 import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { Button, Avatar, List, Space } from 'antd';
+import React, {useState, useEffect } from 'react';
+import { useSelector, shallowEqual } from 'react-redux';
+import { Button, Avatar, List, Space, Typography} from 'antd';
 import { useDispatch } from 'react-redux'
 import { Actions as dataAction } from '../../../store/actions/dataActions'
 
+const { Text } = Typography
+
 export default function ProblemList ({onItemClicked, setModalContent}) {
     const dispatch = useDispatch();
-    const getContents = () => {
+
+    useEffect(()=>{
       dispatch(dataAction.getQuestions({
         questionNumber: 5,
         questionType: ['singleAns'],
@@ -16,8 +19,16 @@ export default function ProblemList ({onItemClicked, setModalContent}) {
         paper: [1, 2, 3],
         chapter: [2, 7]
       }))
-    }
-    //const data2 = useSelector((state) => state.data);
+    }, [])
+
+
+    const { data_ } = useSelector((state) => {
+      let data = state.data
+      console.log('data:', data)
+      return { 
+          data_: data ? data : undefined, 
+        }
+    }, shallowEqual)
     //console.log(data2);
 
     const data = Array.from({
@@ -79,7 +90,8 @@ export default function ProblemList ({onItemClicked, setModalContent}) {
         
     
     return (
-        <List itemLayout="vertical" size="large" dataSource={data}
+      data_ && <>
+        <List itemLayout="vertical" size="large" dataSource={data_.data}
                 pagination={{
                 onChange: (page) => { console.log(page); },
                 pageSize: 3,
@@ -118,10 +130,13 @@ export default function ProblemList ({onItemClicked, setModalContent}) {
                     <List.Item.Meta
                         title={<a href={item.href}>{item.title}</a>}
                         description={
-                          "Question Type: " + item.question.questionType + "\n" + 
-                          "Chapters: " + item.chapter + "\n" + 
-                          "Difficulty: " + item.difficulty + "\n" + 
-                          "Paper " + item.paper + " timezone " + item.timezone
+                          <div>
+                            <Text>Question Type: {item.question.questionType}</Text><br/>
+                            <Text>Chapters: {item.chapter}</Text><br/>
+                            <Text>Difficulty: {item.difficulty}</Text><br/>
+                            <Text>Paper: {item.paper}</Text><br/>
+                            <Text>timezone: {item.timezone}</Text>
+                          </div>
                         }
                     />
                       
@@ -129,5 +144,6 @@ export default function ProblemList ({onItemClicked, setModalContent}) {
                     </List.Item>
                 )}
         />
+        </>
     )
 }

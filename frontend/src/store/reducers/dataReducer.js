@@ -1,7 +1,7 @@
 import { Types } from "../actions/dataActions"
 
 const initialState = {
-    data: "",
+    data: [],
     loadingData: false,
     error: {
         message: "",
