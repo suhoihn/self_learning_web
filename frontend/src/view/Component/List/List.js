@@ -1,7 +1,7 @@
 import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
-import React, {useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Button, Avatar, List, Space, Typography} from 'antd';
+import { Button, Avatar, List, Space, Typography, Image } from 'antd';
 import { useDispatch } from 'react-redux'
 import { Actions as dataAction } from '../../../store/actions/dataActions'
 
@@ -106,11 +106,13 @@ export default function ProblemList ({onItemClicked, setModalContent}) {
                 <List.Item
                     key={item.title}
                     onClick={() => {
+                      console.log("Item set");
+                      console.log(item)
                       setModalContent(<>
                         <p>Question {item.questionId}</p>
-                        
-                        {item.question.questionImage}
-                      </>)
+                        <Image src={`data:image/png;base64, ${item.question.questionImage.image}`} />
+                      </>);
+
                       onItemClicked()
                       //console.log("item ", item.id, "clicked")
                     }}

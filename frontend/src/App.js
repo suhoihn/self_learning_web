@@ -6,8 +6,10 @@ import Main from './view/Pages/Main'
 import Bookmark from './view/Pages/Review/Bookmark';
 import History from './view/Pages/Review/History';
 import TestPage from './view/Pages/TestPage'
+import Reference from './view/Pages/Reference'
 
-import Layout from './view/Layout/Layout'
+import Layout from './view/Layout/Layout';
+
 
 function App() {
     return (
@@ -19,7 +21,7 @@ function App() {
                         <Route exact path="/Review" element={<Navigate replace to="/Review/Bookmark"/>}/>
                         <Route exact path="/Review/Bookmark" element={<Bookmark />}/>
                         <Route exact path="/Review/History" element={<History />}/>
-                        <Route exact path="/Reference" element={<TestPage/>}/>
+                        <Route exact path="/Reference" element={<Reference/>}/>
                         <Route exact path="/Recommended" element={<TestPage />}/>
                         <Route path="/" element={<Navigate replace to="/Main"/>}/>
                     </Routes>                    
