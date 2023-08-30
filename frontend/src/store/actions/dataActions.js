@@ -4,7 +4,10 @@ export const Types = {
     GET_DATA_FAIL: "GET_DATA_FAIL",
     GET_QUESTIONS: "GET_QUESTIONS",
     GET_QUESTIONS_SUCCESS: "GET_QUESTIONS_SUCCESS",
-    GET_QUESTIONS_FAIL: "GET_QUESTIONS_FAIL"
+    GET_QUESTIONS_FAIL: "GET_QUESTIONS_FAIL",
+    GET_REF_ANSWER: "GET_REF_ANSWER",
+    GET_REF_ANSWER_SUCCESS: "GET_REF_ANSWER_SUCCESS",
+    GET_REF_ANSWER_FAIL: "GET_REF_ANSWER_FAIL",
 };
 
 // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
@@ -35,4 +38,17 @@ export const Actions = {
         console.log("get question failed: ", error); 
         return {type: Types.GET_QUESTIONS_FAIL, payload: error}
     },
+
+    getRefAnswer: (info) => {
+        console.log("get ref answer action")
+        return {type: Types.GET_REF_ANSWER, payload: info}
+    },
+    getRefAnswerSuccess: (data) => {
+        console.log("get ref answer success")
+        return {type: Types.GET_REF_ANSWER_SUCCESS, payload: data}
+    },
+    getRefAnswerFail: (error) => {
+        console.log("get ref answer failed: ", error)
+        return {type: Types.GET_REF_ANSWER_FAIL, payload: error}
+    }
 };

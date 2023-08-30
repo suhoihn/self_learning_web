@@ -1,8 +1,14 @@
 import React, {useState} from 'react'
 import { Modal, Button, Steps, Checkbox, message, Row, Col, Tabs, Divider } from 'antd'
-import { useSelector } from 'react-redux'
+import { useSelector, shallowEqual } from 'react-redux'
 
 export default function ProblemModal({open, onClosed, onCleared }) { 
+
+    const { data } = useSelector((state) => {
+        let data = state.data
+        console.log('data:', data)
+        return { data: data ? data : undefined, }
+    }, shallowEqual)
 
     // steps(data fetched by useSelector >>> steps
     const steps = [

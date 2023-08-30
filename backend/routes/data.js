@@ -50,7 +50,8 @@ router.get('/getQuestions', async (req, res) => {
   }
 })
 // AnswerInfos = { answerID: [0], specificAnswerID: ["1b"], };
-router.get('/getAnswers', async (req, res) => {
+router.get('/getRefAnswer', async (req, res) => {
+  console.log('get Ref Answers called', req.query)
   try {
     const answers = await getAnswers(req.query.infos)
     res.status(200).json(answers)

@@ -1,5 +1,5 @@
 import React, {useState} from "react"
-import ProblemList from '../../Component/List/List'
+import ProblemList from '../../Component/List/ProblemList'
 import BookmarkModal from "../../Component/Modal/BookmarkModal"
 
 export default function Bookmark () {
