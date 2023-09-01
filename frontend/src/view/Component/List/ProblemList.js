@@ -23,10 +23,19 @@ export default function ProblemList ({onItemClicked, setModalContent }) {
   }, [])
 
   const { data } = useSelector((state) => {
-    let data = state.data
-    console.log('data:', data)
+    console.log("STATE", state)
+    let data = state.data;
     return { data: data ? data : undefined, }
   }, shallowEqual)
+
+  const { answerData } = useSelector((state) => {
+    let data = state.data.refAnswer;
+    
+    console.log('state in answerdata: ', state);
+    console.log("data in answerData: ", data);
+    return data;
+  }, shallowEqual)
+
 
   const IconText = ({ icon, text }) => (
     <Space>
@@ -46,7 +55,17 @@ export default function ProblemList ({onItemClicked, setModalContent }) {
       answerID: item.questionId,
       specificAnswerID: item.question.subQuestion[0].specificQuestionId
     }))
+
+    console.log("The Input is ", text);
+    // const { data } = useSelector((state) => {
+    //   let answerData = state.data.refAnswer;  
+      
+    //   console.log('DATA IN USESELECTOR:', answerData);
+    //   return { data: data ? data : undefined, }
+    // }, shallowEqual)
+
   }
+
   const onRenderListItem = (item) => (
     <List.Item
       key={item.title}
@@ -56,12 +75,18 @@ export default function ProblemList ({onItemClicked, setModalContent }) {
             <p>Question {item.questionId}</p>
             <Image src={`data:image/png;base64, ${item.question.questionImage.image}`} />
             <Image src={`data:image/png;base64, ${item.question.subQuestion[0].subQuestionImage.image}`} />
-            <Space>    
-              <Space.Compact style={{ width: '100%',}}>
-                <Input placeholder="Write your answer here." onChange={onInputChange}/>
-                <Button type="primary" onClick={onSubmitClicked(item)}>Submit</Button>
-              </Space.Compact>
-            </Space>
+            {console.log("Answer Data: ", answerData)}
+
+            { answerData[0].answerSubscripts.map((answerSubscript) => (
+              <Space>    
+                <Space.Compact style={{ width: '100%',}}>
+                  <Text>{answerSubscript}</Text>
+                  <Input placeholder="Write your answer here." onChange={onInputChange}/>
+                  <Button type="primary" onClick={onSubmitClicked(item)}>Submit</Button>
+                </Space.Compact>
+              </Space>
+            ))}
+
           </>
         );
         onItemClicked()
