@@ -4,9 +4,9 @@ import Title from './Title/Title'
 
 const { Meta } = Card;
 
-export default function OptionCard({items, title}) {
+export default function OptionCard({items, title, update}) {
     // Select enable/disable - Title switch
-    const [isDisabled, setIsDisabled] = useState(true)
+    const [isDisabled, setIsDisabled] = useState(false);
     const onTitleSwitchChanged = () => setIsDisabled(!isDisabled)
 
     
@@ -16,11 +16,11 @@ export default function OptionCard({items, title}) {
                 <Space wrap>
                     <Select
                         disabled={isDisabled}
-                        defaultValue="1"
+                        defaultValue={items[0]}
                         style={{
                             width: 120,
                         }}
-                        onChange={()=>{}}
+                        onChange={(value) => {update(value)}} // Update the value
                         options={items}
                     />
                 </Space>        

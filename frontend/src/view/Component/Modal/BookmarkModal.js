@@ -11,11 +11,6 @@ export default function BookmarkModal ({open, onClosed, modalContent}) {
     <Modal title="Basic Modal" open={open} onCancel = {onModalClosed} onOk = {onModalOk}>
         {/* {console.log(modalContent)} */}
         {modalContent}
-        {/* <Image src={`data:image/png;base64, ${modalContent.props.children[1].image}`} /> */}
-
-        {/* {console.log(modalContent)}
-        {modalContent} */}
-
     </Modal>
     )
 }

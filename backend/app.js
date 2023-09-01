@@ -7,7 +7,7 @@ const logger = require('morgan');
 const app = express();
 var cors = require('cors')
 
-const db = require('./db/db.js'); // db 불러오기
+const db = require('./db/db.js'); // load db
 const dataRouter = require('./routes/data');
 
 
@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors()) // cool now everything is handled!
 
-db(); // db 실행
+db(); // run db
 
 app.use('/api/Data', dataRouter);
 

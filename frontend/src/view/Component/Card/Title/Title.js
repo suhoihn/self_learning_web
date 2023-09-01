@@ -11,7 +11,7 @@ export default function CardTitle({text, onChange}){
                 <Text>{text}</Text>
             </Col>
             <Col span={12} style={{textAlign: 'right'}}>
-                <Switch onChange={onChange}/>
+                <Switch defaultChecked = {true} onChange={onChange}/>
             </Col>
         </Row>
     )
