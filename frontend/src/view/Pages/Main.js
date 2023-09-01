@@ -85,17 +85,15 @@ export default function Main () {
     console.log("STEP 1: DISPATCH CALLED");
     console.log("diff, tz, paper, chpt");
     console.log(difficultyValue, timezoneValue, paperValue, chapterValue);
-    // 1,1,1,10
+    
     dispatch(dataAction.getQuestions({
-      
       // FIXME: Only single values inputted
-
       questionNumber: 5, // How many questions
       questionType: ['singleAns'],
-      difficulty: [difficultyValue],
-      timezone: [timezoneValue],
-      paper: [paperValue],
-      chapter: [chapterValue]
+      difficulty: Array.isArray(difficultyValue)? difficultyValue: new Array(difficultyValue),
+      timezone: Array.isArray(timezoneValue)? timezoneValue: new Array(timezoneValue),
+      paper: Array.isArray(paperValue)? paperValue: new Array(paperValue),
+      chapter: Array.isArray(chapterValue)? chapterValue: new Array(chapterValue) 
     }));
 
     setIsProblemModalOpen(true);

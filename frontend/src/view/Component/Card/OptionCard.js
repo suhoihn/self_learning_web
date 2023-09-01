@@ -15,12 +15,13 @@ export default function OptionCard({items, title, update}) {
             <Card title={<Title text={title} onChange={onTitleSwitchChanged}/>} size='small'>
                 <Space wrap>
                     <Select
+                        mode="multiple"
                         disabled={isDisabled}
                         defaultValue={items[0]}
                         style={{
                             width: 120,
                         }}
-                        onChange={(value) => {update(value)}} // Update the value
+                        onChange={(value) => update(value)} // Update the value
                         options={items}
                     />
                 </Space>        

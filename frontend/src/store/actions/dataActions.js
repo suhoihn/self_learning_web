@@ -8,6 +8,9 @@ export const Types = {
     GET_REF_ANSWER: "GET_REF_ANSWER",
     GET_REF_ANSWER_SUCCESS: "GET_REF_ANSWER_SUCCESS",
     GET_REF_ANSWER_FAIL: "GET_REF_ANSWER_FAIL",
+    GET_RELOAD_DB: "GET_RELOAD_DB",
+    GET_RELOAD_DB_SUCCESS: "GET_RELOAD_DB_SUCCESS",
+    GET_RELOAD_DB_FAIL: "GET_RELOAD_DB_FAIL"
 };
 
 // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
@@ -50,5 +53,18 @@ export const Actions = {
     getRefAnswerFail: (error) => {
         console.log("get ref answer failed: ", error)
         return {type: Types.GET_REF_ANSWER_FAIL, payload: error}
+    },
+
+    getReloadDB: (info) => {
+        console.log("get reload db action")
+        return {type: Types.GET_RELOAD_DB, payload: info}
+    },
+    getReloadDBSuccess: (data) => {
+        console.log("get reload db success")
+        return {type: Types.GET_RELOAD_DB_SUCCESS, payload: data}
+    },
+    getReloadDBFail: (error) => {
+        console.log("get reload db failed: ", error)
+        return {type: Types.GET_RELOAD_DB_FAIL, payload: error}
     }
 };

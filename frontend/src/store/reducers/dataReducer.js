@@ -43,8 +43,21 @@ const DataReducer = (state = initialState, action) => {
             state = {...state, loadingData: false, refAnswer: action.payload}
             break;
         case Types.GET_REF_ANSWER_FAIL:
-            console.log('reducer get quetions failed')
+            console.log('reducer get answer failed')
             state = {...state, error: { message: "ERROR" }, loadingData: false};
+            break;
+        case Types.GET_RELOAD_DB:
+            console.log("reducer get reload received")
+            state = {...state, reloadDB: true}
+            break;
+        case Types.GET_RELOAD_DB_SUCCESS:
+            console.log("reducer get reload success")
+            state = {...state, reloadDB: false}
+            break;
+        case Types.GET_RELOAD_DB_FAIL:
+            console.log('reducer get reload failed')
+            state = {...state, error: { message: "ERROR" }, reloadDB: false};
+            break;
         default:
             state = {...state};
             break;

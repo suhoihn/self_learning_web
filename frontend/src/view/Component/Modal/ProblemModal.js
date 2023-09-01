@@ -23,7 +23,6 @@ export default function ProblemModal({open, onClosed, onCleared }) {
     return returnData;
   }, shallowEqual)
 
-
   if (steps == undefined || steps.length == 0) {
     steps = [{
       title: 'quesiton does not exist',

@@ -1,7 +1,7 @@
 import { takeLatest, put, call } from "redux-saga/effects"
 import { Types, Actions as dataActions } from "../actions/dataActions"
 
-import { getData, getQuestions, getRefAnswer} from "./fetchHelper/dataHelper"
+import { getData, getQuestions, getRefAnswer, getReloadDBAnswer, getReloadDBQuestion} from "./fetchHelper/dataHelper"
 
 function* onGetData({payload: id}) {
     try {
@@ -36,10 +36,26 @@ function* onGetRefAnswer({payload: info}) {
     }
 }
 
+function* onGetReloadDB({payload: info}) {
+    try {
+        console.log("data saga get reload db question");
+        const res_question = yield call(getReloadDBQuestion, info);
+        console.log('reload question response :',res_question);
+        const res_answer = yield call(getReloadDBAnswer, info);
+        console.log('reload answer response :',res_answer);
+        const response = res_answer && res_question
+        yield put(dataActions.getReloadDBSuccess(response));
+    } catch (error) {
+        yield put(dataActions.getReloadDBFail(error.response));
+    }
+}
+
 function* dataSaga() {
     yield takeLatest(Types.GET_DATA, onGetData)
     yield takeLatest(Types.GET_QUESTIONS, onGetQuestions)
     yield takeLatest(Types.GET_REF_ANSWER, onGetRefAnswer)
+    yield takeLatest(Types.GET_RELOAD_DB, onGetReloadDB)
+    
 }
 
 export default dataSaga;
