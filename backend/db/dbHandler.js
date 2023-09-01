@@ -171,6 +171,7 @@ module.exports.uploadFilesQuestion = () => {
 
 module.exports.uploadFilesAnswer = () => {
   // TODO : db check, getans func return check 
+  //db();
   CSV.readCSV(__dirname + '/data/dataInfo/Answers.csv').then((csv_data) => {
     let answerFilePath = __dirname + '/data/images/Answers/';
     let answerFileList = fs.readdirSync(answerFilePath, { withFileTypes: true }, (err, files) => {
@@ -186,7 +187,8 @@ module.exports.uploadFilesAnswer = () => {
       let answerImageFile = fileConvert.base64_encode(answerFilePath + ansFound.name);
       
       let answerSubscripts_ = data.answerSubscripts.split(",");
-      // console.log(answerSubscripts_," and ",data.answerSubscripts)
+      let answerValues = data.answerValues.split(",");
+      console.log(answerValues, " and ", data.answerValues);
 
       await Collections.answers.countDocuments({ 
         answerID: data.answerID, 
@@ -203,6 +205,7 @@ module.exports.uploadFilesAnswer = () => {
               answerImage: {image: answerImageFile},
               answerSubscripts: answerSubscripts_,
               specificAnswerID: data.specificAnswerID,    
+              answerValues: answerValues,
             },
           }, { 
             new: true, 
@@ -219,7 +222,8 @@ module.exports.uploadFilesAnswer = () => {
                 answerType: data.answerType,
                 answerImage: {image: answerImageFile},
                 answerSubscripts: answerSubscripts_,
-                specificAnswerID: data.specificAnswerID,    
+                specificAnswerID: data.specificAnswerID,
+                answerValues: answerValues,    
               },
             })
             await newDoc.save().then(() => console.log("delete and saved"))

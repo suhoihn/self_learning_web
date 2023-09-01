@@ -10,6 +10,7 @@ const answerInfoSchema = new mongoose.Schema({
     answerImage: imageSchema,
     answerSubscripts: { type: Array },
     specificAnswerID: {type: String},
+    answerValues: { type: Array },
     //numAns: {type: Number},
     //unit: {type: String},
     //marks: {type: Number

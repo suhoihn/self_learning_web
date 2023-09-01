@@ -1,6 +1,6 @@
 const { getQuestions, uploadFilesAnswer, uploadFilesQuestion, getAnswers } = require("../db/dbHandler");
 
-uploadFilesQuestion()
+//uploadFilesQuestion()
 uploadFilesAnswer()
 const infos = {
 	questionType: ['multiAns'],
