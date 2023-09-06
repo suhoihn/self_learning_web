@@ -74,7 +74,7 @@ export default function AnswerModal({open, onClosed, onCleared }) {
     </div>
 
     return (
-        <Modal title="Basic Modal" open={open} onCancel={onModalClosed}
+        <Modal title="Answers" open={open} onCancel={onModalClosed}
                 footer={footer}>
             <Row span={24}>
                 <Col span={24}>

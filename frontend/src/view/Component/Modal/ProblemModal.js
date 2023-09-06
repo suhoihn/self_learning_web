@@ -1,7 +1,10 @@
 import React, {useState} from 'react'
-import { Modal, Button, Steps, Checkbox, message, Row, Col, Tabs, Divider, Image } from 'antd'
+import { Modal, Button, Steps, Checkbox, message, Input,
+          Row, Col, Tabs, Divider, Image, Space, Typography } from 'antd'
 import { useSelector, shallowEqual } from 'react-redux'
 import UndefinedImage from './undefinedImage'
+
+const {Text} = Typography
 export default function ProblemModal({open, onClosed, onCleared }) { 
 
   // Data fetched from the backend
@@ -73,7 +76,7 @@ export default function ProblemModal({open, onClosed, onCleared }) {
     </div>
 
   return (
-    <Modal title="Basic Modal" open={open} onCancel={onModalClosed} footer={footer}>
+    <Modal title="Problems" open={open} onCancel={onModalClosed} footer={footer}>
       <Row span={24}>
         <Col span={24}>
           <Row span={24}>
@@ -92,6 +95,13 @@ export default function ProblemModal({open, onClosed, onCleared }) {
         </Col>
       </Row>
       <Divider/>
+      <Space>    
+        <Space.Compact style={{ width: '100%',}}>
+          <Text> TODO:: answerSubscript</Text>
+          <Input placeholder="Write your answer here."/>
+          <Button type="primary">Submit</Button>
+        </Space.Compact>
+      </Space>
     </Modal>
   )
 }

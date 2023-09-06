@@ -4,7 +4,7 @@ import Title from './Title/Title'
 
 const { Meta } = Card;
 
-export default function OptionCard({items, title, update}) {
+export default function OptionCard({items, title, update, isSingleSelect}) {
     // Select enable/disable - Title switch
     const [isDisabled, setIsDisabled] = useState(false);
     const onTitleSwitchChanged = () => setIsDisabled(!isDisabled)
@@ -15,12 +15,10 @@ export default function OptionCard({items, title, update}) {
             <Card title={<Title text={title} onChange={onTitleSwitchChanged}/>} size='small'>
                 <Space wrap>
                     <Select
-                        mode="multiple"
+                        mode={isSingleSelect? "default" : "multiple"}
                         disabled={isDisabled}
                         defaultValue={items[0]}
-                        style={{
-                            width: 120,
-                        }}
+                        style={{ width: 120, }}
                         onChange={(value) => update(value)} // Update the value
                         options={items}
                     />

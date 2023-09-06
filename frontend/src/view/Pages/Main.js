@@ -28,67 +28,48 @@ export default function Main () {
   const [difficultyValue, setDifficultyValue] = useState([1]);
   const [paperValue, setPaperValue] = useState([1]);
   const [timezoneValue, setTimezoneValue] = useState([1]);
+  const [problemNumber, setProblemNumber] = useState(1); 
 
 
   // Define items to be used on the cards
   const MAX_CHAPTER = 12;
-  const chapterItems = [];
-  for(let i = 1; i <= MAX_CHAPTER; i++){
-      chapterItems.push({
-        value: i,
-        label: "Chapter " + i,
-      })  
+  const MAX_PROBLEM = 50;
+  
+  const chapter = [];
+  for(let i = 1; i <= MAX_CHAPTER; i++) {
+      chapter.push({ value: i, label: "Chapter " + i, })  
   };
-  const difficultyItems = [
-    {
-      value: 1,
-      label: "Easy",
-    },
-    {
-      value: 2,
-      label: "Normal",
-    },
-    {
-      value: 3,
-      label: "Hard",
-    }
-  ];
 
-  const paperItems = [
-    {
-      value: 1,
-      label: "Paper 1 (Short-ans)",
-    },
-    {
-      value: 2,
-      label: "Paper 2 (Long-ans)",
-    },
-  ];
-
-  const timezoneItems = [
-    {
-      value: 1,
-      label: "Timezone 1",
-    },
-    {
-      value: 2,
-      label: "Timezone 2",
-    },
-    {
-      value: 3,
-      label: "Timezone 3",
-    }
-  ];
+  const problemNum = [];
+  for(let i = 1; i <= MAX_PROBLEM; i++) {
+    problemNum.push({ value: i, label: i, })
+  }
+  
+  const infos = {
+    chapterItems: chapter,
+    difficultyItems: [
+      { value: 1, label: "Easy", },
+      { value: 2, label: "Normal", },
+      { value: 3, label: "Hard", }
+    ],
+    paperItems: [
+      { value: 1, label: "Paper 1 (Short-ans)", },
+      { value: 2, label: "Paper 2 (Long-ans)", },
+    ],
+    timezoneItems: [
+      { value: 1, label: "Timezone 1", },
+      { value: 2, label: "Timezone 2", },
+      { value: 3, label: "Timezone 3", }
+    ],
+    problemNumItems: problemNum
+  }
 
   // Dispatch the actions when button is pressed
   const onSubmitClicked = () => {
-    console.log("STEP 1: DISPATCH CALLED");
-    console.log("diff, tz, paper, chpt");
-    console.log(difficultyValue, timezoneValue, paperValue, chapterValue);
+    console.log("getQuestions called in Main");
     
     dispatch(dataAction.getQuestions({
-      // FIXME: Only single values inputted
-      questionNumber: 5, // How many questions
+      questionNumber: problemNumber, // How many questions
       questionType: ['singleAns'],
       difficulty: Array.isArray(difficultyValue)? difficultyValue: new Array(difficultyValue),
       timezone: Array.isArray(timezoneValue)? timezoneValue: new Array(timezoneValue),
@@ -109,18 +90,23 @@ export default function Main () {
         <Col span={12}>
           <Row span={24}>
             <Col span={10} style={style}>
-              <OptionCard items={chapterItems} title={'Chapter'} update={setChapterValue}/>
+              <OptionCard items={infos.chapterItems} title={'Chapter'} update={setChapterValue}/>
             </Col>
             <Col span={10} style={style}>
-              <OptionCard items={difficultyItems} title={'Difficulty'} update={setDifficultyValue}/>
+              <OptionCard items={infos.difficultyItems} title={'Difficulty'} update={setDifficultyValue}/>
             </Col>
           </Row>
           <Row span={24}>
             <Col span={10} style={style}>
-              <OptionCard items={paperItems} title={'Paper'} update={setPaperValue}/>
+              <OptionCard items={infos.paperItems} title={'Paper'} update={setPaperValue}/>
             </Col>
             <Col span={10} style={style}>
-              <OptionCard items={timezoneItems} title={'Timezone'} update={setTimezoneValue}/>
+              <OptionCard items={infos.timezoneItems} title={'Timezone'} update={setTimezoneValue}/>
+            </Col>
+          </Row>
+          <Row span={24}>
+            <Col span={10} style={style}>
+              <OptionCard items={infos.problemNumItems} title={'Problem Number'} update={setProblemNumber} isSingleSelect={true}/>
             </Col>
           </Row>
         </Col>
