@@ -1,7 +1,7 @@
 import { takeLatest, put, call } from "redux-saga/effects"
 import { Types, Actions as dataActions } from "../actions/dataActions"
 
-import { getData, getQuestions, getRefAnswer, getReloadDBAnswer, getReloadDBQuestion} from "./fetchHelper/dataHelper"
+import { getData, getQuestions, getRefAnswer, getReloadDBAnswer, getReloadDBQuestion, getHistory } from "./fetchHelper/dataHelper"
 
 function* onGetData({payload: id}) {
     try {
@@ -21,7 +21,7 @@ function* onGetQuestions({payload: info}) {
         console.log('response :',response);
         yield put(dataActions.getQuestionsSuccess(response));
     } catch (error) {
-        yield put(dataActions.getQuestionsFail(error.response));
+        yield put(dataActions.getQuestionsFail(error));
     }
 }
 
@@ -46,7 +46,18 @@ function* onGetReloadDB({payload: info}) {
         const response = res_answer && res_question
         yield put(dataActions.getReloadDBSuccess(response));
     } catch (error) {
-        yield put(dataActions.getReloadDBFail(error.response));
+        yield put(dataActions.getReloadDBFail(error));
+    }
+}
+
+function* onGetHistory() {
+    try {
+        console.log("data saga get history called");
+        const response = yield call(getHistory);
+        console.log("response: ", response);
+        yield put(dataActions.getHistorySuccess(response));
+    } catch (error) {
+        yield put(dataActions.getHistoryFail(error.response));
     }
 }
 
@@ -55,7 +66,7 @@ function* dataSaga() {
     yield takeLatest(Types.GET_QUESTIONS, onGetQuestions)
     yield takeLatest(Types.GET_REF_ANSWER, onGetRefAnswer)
     yield takeLatest(Types.GET_RELOAD_DB, onGetReloadDB)
-    
+    yield takeLatest(Types.GET_HISTORY, onGetHistory);
 }
 
 export default dataSaga;

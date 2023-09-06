@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const { uploadFilesQuestion, uploadFilesAnswer, getAnswers, getQuestions } = require('../db/dbHandler')
+const { uploadFilesQuestion, uploadFilesAnswer, getAnswers, getQuestions, getHistory } = require('../db/dbHandler');
 
 // xxx.xxx.xxx.xxx:PORT/api/Data/<url>
 router.get('/', async (req, res) => {
@@ -41,7 +41,8 @@ router.get('/getQuestions', async (req, res) => {
   req.query.infos.questionNumber = parseInt(req.query.infos.questionNumber)
 
   try {
-    const questions = await getQuestions(req.query.infos)
+    const questions = await getQuestions(req.query.infos);
+    console.log("questions in data.js: ", questions);
     res.status(200).json(questions)
   } catch (error) {
     res.status(400).json({
@@ -55,6 +56,20 @@ router.get('/getRefAnswer', async (req, res) => {
   try {
     const answers = await getAnswers(req.query.infos)
     res.status(200).json(answers)
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({
+      msg: error.message
+    })
+  }
+})
+
+
+router.get('/getHistory', async (req, res) => {
+  console.log('get history called in backend');
+  try {
+    const history = await getHistory();
+    res.status(200).json(history)
   } catch (error) {
     console.log(error)
     res.status(400).json({

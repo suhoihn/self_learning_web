@@ -46,11 +46,8 @@ module.exports.getQuestions = async (infos) => {
   }).then((docs) => filterArray(docs, infos.chapter));
 
   console.log('getQuestion',returned)
-
   let result = getMultipleRandom(returned, infos.questionNumber)
-
   console.log(result)
-  
   return result
 };
 
@@ -128,6 +125,8 @@ module.exports.uploadFilesQuestion = () => {
             timezone: data.timezone,
             season: data.season ,// W or S,
             year: data.year,
+            wrong: "false",
+            bookmarked: "false",
           }, { 
             new: true, 
             overwrite: true
@@ -159,6 +158,8 @@ module.exports.uploadFilesQuestion = () => {
               timezone: data.timezone,
               season: data.season ,// W or S,
               year: data.year,
+              wrong: "false",
+              bookmarked: "false",
             })
             await newDoc.save().then(() => console.log("delete and saved"))
           })

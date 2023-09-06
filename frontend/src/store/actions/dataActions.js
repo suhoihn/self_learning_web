@@ -10,7 +10,10 @@ export const Types = {
     GET_REF_ANSWER_FAIL: "GET_REF_ANSWER_FAIL",
     GET_RELOAD_DB: "GET_RELOAD_DB",
     GET_RELOAD_DB_SUCCESS: "GET_RELOAD_DB_SUCCESS",
-    GET_RELOAD_DB_FAIL: "GET_RELOAD_DB_FAIL"
+    GET_RELOAD_DB_FAIL: "GET_RELOAD_DB_FAIL",
+    GET_HISTORY: "GET_HISTORY_DB",
+    GET_HISTORY_SUCCESS: "GET_HISTORY_SUCCESS",
+    GET_HISTORY_FAIL: "GET_HISTORY_FAIL",
 };
 
 // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
@@ -66,5 +69,18 @@ export const Actions = {
     getReloadDBFail: (error) => {
         console.log("get reload db failed: ", error)
         return {type: Types.GET_RELOAD_DB_FAIL, payload: error}
+    },
+
+    getHistory: () => {
+        console.log("get history action")
+        return {type: Types.GET_HISTORY}
+    },
+    getHistorySuccess: (data) => {
+        console.log("get history success")
+        return {type: Types.GET_HISTORY_SUCCESS, payload: data}
+    },
+    getHistoryFail: (error) => {
+        console.log("get history failed: ", error)
+        return {type: Types.GET_HISTORY_FAIL, payload: error}
     }
 };
