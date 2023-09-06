@@ -77,7 +77,7 @@ export default function ProblemList ({onItemClicked, setModalContent }) {
             <Image src={`data:image/png;base64, ${item.question.subQuestion[0].subQuestionImage.image}`} />
             {console.log("Answer Data: ", answerData)}
 
-            { answerData[0].answerSubscripts.map((answerSubscript) => (
+            { answerData && answerData[0].answerSubscripts.map((answerSubscript) => (
               <Space>    
                 <Space.Compact style={{ width: '100%',}}>
                   <Text>{answerSubscript}</Text>

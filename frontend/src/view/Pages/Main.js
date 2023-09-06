@@ -24,10 +24,10 @@ export default function Main () {
 
 
   // Question Infos
-  const [chapterValue, setChapterValue] = useState(1);
-  const [difficultyValue, setDifficultyValue] = useState(1);
-  const [paperValue, setPaperValue] = useState(1);
-  const [timezoneValue, setTimezoneValue] = useState(1);
+  const [chapterValue, setChapterValue] = useState([1]);
+  const [difficultyValue, setDifficultyValue] = useState([1]);
+  const [paperValue, setPaperValue] = useState([1]);
+  const [timezoneValue, setTimezoneValue] = useState([1]);
 
 
   // Define items to be used on the cards
