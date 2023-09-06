@@ -34,6 +34,8 @@ const QuestionSchema = new mongoose.Schema({
     // undetermined
     season: {type: String} ,// W or S,
     year: {type: Number},
+    wrong: {type: String},
+    bookmarked: {type: String},
 })
 
 module.exports = mongoose.model("question", QuestionSchema, "Questions")

@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { Modal, Button, Steps, Checkbox, message, Row, Col, Tabs, Divider, Image } from 'antd'
 import { useSelector, shallowEqual } from 'react-redux'
 import UndefinedImage from './undefinedImage'
-export default function ProblemModal({open, onClosed, onCleared }) { 
+export default function ProblemModal({ open, onClosed, onCleared }) { 
 
   // Data fetched from the backend
   let steps = useSelector((state) => {
