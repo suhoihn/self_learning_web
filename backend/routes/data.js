@@ -45,6 +45,7 @@ router.get('/getQuestions', async (req, res) => {
     console.log("questions in data.js: ", questions);
     res.status(200).json(questions)
   } catch (error) {
+    console.log(error)
     res.status(400).json({
       msg: error.message
     })

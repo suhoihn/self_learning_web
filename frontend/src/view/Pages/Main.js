@@ -70,16 +70,15 @@ export default function Main () {
     
     dispatch(dataAction.getQuestions({
       questionNumber: problemNumber, // How many questions
-      questionType: ['singleAns'],
       difficulty: Array.isArray(difficultyValue)? difficultyValue: new Array(difficultyValue),
       timezone: Array.isArray(timezoneValue)? timezoneValue: new Array(timezoneValue),
       paper: Array.isArray(paperValue)? paperValue: new Array(paperValue),
-      chapter: Array.isArray(chapterValue)? chapterValue: new Array(chapterValue) 
+      chapter: Array.isArray(chapterValue)? chapterValue: new Array(chapterValue),
+      wrong: 0,
     }));
 
     setIsProblemModalOpen(true);
-  }
-    
+  } 
 
   const style={margin: 10}
 

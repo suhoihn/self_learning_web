@@ -34,7 +34,7 @@ const QuestionSchema = new mongoose.Schema({
     // undetermined
     season: {type: String} ,// W or S,
     year: {type: Number},
-    wrong: {type: String},
+    wrong: {type: Number},
     bookmarked: {type: String},
 })
 

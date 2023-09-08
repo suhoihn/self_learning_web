@@ -7,19 +7,19 @@ import { Actions as dataAction } from '../../../store/actions/dataActions'
 
 const { Text } = Typography
 
-export default function ProblemList ({onItemClicked, setModalContent}) {
+export default function BookmarkedList ({onItemClicked, setModalContent}) {
   const dispatch = useDispatch();
 
   useEffect(()=>{
-    console.log('getQuestion called in ProblemList')
+    console.log('getQuestion called in BookmarkedList')
     dispatch(dataAction.getQuestions({
       questionNumber: 5,
-      questionType: ['singleAns'],
       difficulty: [1, 2],
       timezone: [1, 2, 3],
       paper: [1, 2, 3],
       chapter: [2, 7],
-      bookmarked: "false",
+      wrong: 0,
+      bookmarked: "true",
     }))
   }, [])
 
@@ -32,8 +32,6 @@ export default function ProblemList ({onItemClicked, setModalContent}) {
   const { answerData } = useSelector((state) => {
     let data = state.data.refAnswer;
     
-    console.log('state in answerdata: ', state);
-    console.log("data in answerData: ", data);
     return data;
   }, shallowEqual)
 

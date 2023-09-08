@@ -12,7 +12,7 @@ const DataFolder = "./data/";
 const Collections = { questions: question, answers: answer, };
 
 
-function filterArray(docs, array){
+function filterByChapter(docs, array){
   let returnArray = [];
    array.forEach((cpt) => {
     console.log('cpt', cpt)
@@ -23,6 +23,15 @@ function filterArray(docs, array){
   });
 
   return returnArray;
+}
+
+function filterByBookmark(docs, bookmarked) {
+  let returnArray = [];
+  docs.forEach((element) => {
+    if(element.bookmarked === bookmarked) returnArray.push(element)
+  })
+
+  return returnArray
 }
 
 function getMultipleRandom(arr, num) {
@@ -39,11 +48,15 @@ module.exports.getQuestions = async (infos) => {
   console.log('getQuestions:',infos)
   // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
   const returned = await Collections.questions.find({
-      'question.questionType' : { $in: infos.questionType },
       'difficulty': { $in: infos.difficulty },
       'timezone' : {$in: infos.timezone },
-      'paper' : {$in: infos.paper} 
-  }).then((docs) => filterArray(docs, infos.chapter));
+      'paper' : {$in: infos.paper},
+      'wrong' : {$gte: infos.wrong},
+  }).then((docs) => {
+    let result = filterByChapter(docs, infos.chapter)
+    if (infos.bookmarked !== undefined) result = filterByBookmark(result, infos.bookmarked)
+    return result
+  });
 
   console.log('getQuestion',returned)
   let result = getMultipleRandom(returned, infos.questionNumber)
@@ -159,9 +172,8 @@ module.exports.uploadFilesQuestion = () => {
               timezone: data.timezone,
               season: data.season ,// W or S,
               year: data.year,
-              wrong: "false",
+              wrong: 0,
               bookmarked: "false",
-              wrongCount: 0,
             })
             await newDoc.save().then(() => console.log("delete and saved"))
           })

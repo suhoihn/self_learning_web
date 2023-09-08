@@ -19,7 +19,7 @@ export default function RecommendedList({onItemClicked, setModalContent}) {
       timezone: [1, 2, 3],
       paper: [1, 2, 3],
       chapter: [1,2,3,4,5,6,7,8,9,10,11,12],
-      wrong: "false", // need to be true
+      wrong: 0, // need to be true
       bookmarked: "false",
     }))
   }, [])

@@ -14,12 +14,11 @@ export default function HistoryList({onItemClicked, setModalContent}) {
     console.log('getQuestion called in HistoryList')
     dispatch(dataAction.getQuestions({
       questionNumber: 5,
-      questionType: ['unscorable'],
       difficulty: [1, 2, 3],
       timezone: [1, 2, 3],
       paper: [1, 2, 3],
       chapter: [1,2,3,4,5,6,7,8,9,10,11,12],
-      wrong: "false",
+      wrong: 1,
       bookmarked: "false",
     }))
   }, [])

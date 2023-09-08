@@ -1,5 +1,5 @@
 import React, {useState} from "react"
-import ProblemList from '../../Component/List/ProblemList'
+import BookmarkedList from '../../Component/List/BookmarkedList'
 import BookmarkModal from "../../Component/Modal/BookmarkModal"
 
 export default function Bookmark () {
@@ -10,7 +10,7 @@ export default function Bookmark () {
     
     return (
         <>
-        <ProblemList onItemClicked={()=>setIsBookmarkModalOpen(true)} setModalContent={setModalContent}/>
+        <BookmarkedList onItemClicked={()=>setIsBookmarkModalOpen(true)} setModalContent={setModalContent}/>
         <BookmarkModal open={isBookmarkModalOpen} onClosed={closeBookmarkModal} modalContent = {modalContent}/>
         </>
     )
