@@ -4,7 +4,7 @@ const API_HOST = "http://localhost:3001";
 
 const axiosApi = axios.create({
     baseURL: API_HOST,
-    timeout: 1000
+    timeout: 10000
 })
 
 
@@ -14,7 +14,7 @@ axios.interceptors.request.use(function (config){
 
 axiosApi.interceptors.response.use(
     (response) => response,
-    (error) => PromiseRejectionEvent.reject(error)
+    (error) => Promise.reject(error)
 );
 
 // url: /users/register, /users/save
