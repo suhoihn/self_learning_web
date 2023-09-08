@@ -10,20 +10,6 @@ const { Text } = Typography
 export default function RecommendedList({onItemClicked, setModalContent, listContent}) {
   const dispatch = useDispatch();
 
-  useEffect(()=>{
-    console.log('getQuestion called in RecommendedList')
-    dispatch(dataAction.getQuestions({
-      questionNumber: 5,
-      questionType: ['unscorable'],
-      difficulty: [1, 2, 3],
-      timezone: [1, 2, 3],
-      paper: [1, 2, 3],
-      chapter: [1,2,3,4,5,6,7,8,9,10,11,12],
-      wrong: 0, // need to be true
-      bookmarked: "false",
-    }))
-  }, [])
-
   let { data } = useSelector((state) => {
     console.log("STATE", state)
     let data = state.data;
@@ -32,9 +18,7 @@ export default function RecommendedList({onItemClicked, setModalContent, listCon
 
   const { answerData } = useSelector((state) => {
     let data = state.data.refAnswer;
-    
-    console.log('state in answerdata: ', state);
-    console.log("data in answerData: ", data);
+
     return data;
   }, shallowEqual)
 

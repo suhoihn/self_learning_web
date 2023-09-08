@@ -13,25 +13,23 @@ export default function BookmarkedList ({onItemClicked, setModalContent}) {
   useEffect(()=>{
     console.log('getQuestion called in BookmarkedList')
     dispatch(dataAction.getQuestions({
-      questionNumber: 5,
-      difficulty: [1, 2],
+      difficulty: [1, 2, 3],
       timezone: [1, 2, 3],
       paper: [1, 2, 3],
-      chapter: [2, 7],
+      chapter: [1,2,3,4,5,6,7,8,9,10,11,12],
       wrong: 0,
-      bookmarked: "true",
+      bookmarked: "false",
     }))
   }, [])
 
   const { data } = useSelector((state) => {
-    console.log("STATE", state)
     let data = state.data;
     return { data: data ? data : undefined, }
   }, shallowEqual)
 
   const { answerData } = useSelector((state) => {
     let data = state.data.refAnswer;
-    
+
     return data;
   }, shallowEqual)
 

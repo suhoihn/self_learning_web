@@ -15,9 +15,7 @@ const Collections = { questions: question, answers: answer, };
 function filterByChapter(docs, array){
   let returnArray = [];
    array.forEach((cpt) => {
-    console.log('cpt', cpt)
       docs.forEach((element) => {
-        console.log('element',element)
           if(element.chapter.includes(cpt)){returnArray.push(element);}
       });
   });
@@ -45,8 +43,7 @@ module.exports.getQuestionInfo = async () => {
 }
 
 module.exports.getQuestions = async (infos) => {
-  console.log("getQuestion is called in the backend!")
-  console.log('getQuestions:',infos)
+  console.log('getQuestions, infos:',infos)
   // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
   const returned = await Collections.questions.find({
       'difficulty': { $in: infos.difficulty },
@@ -59,9 +56,10 @@ module.exports.getQuestions = async (infos) => {
     return result
   });
 
-  console.log('getQuestion',returned)
-  let result = getMultipleRandom(returned, infos.questionNumber)
-  console.log(result)
+  let result = isNaN(infos.questionNumber) ? 
+                returned : 
+                getMultipleRandom(returned, infos.questionNumber)
+  console.log('getQuestions, ',result)
   return result
 };
 
