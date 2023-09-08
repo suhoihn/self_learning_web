@@ -7,7 +7,7 @@ import { Actions as dataAction } from '../../../store/actions/dataActions'
 
 const { Text } = Typography
 
-export default function RecommendedList({onItemClicked, setModalContent}) {
+export default function RecommendedList({onItemClicked, setModalContent, listContent}) {
   const dispatch = useDispatch();
 
   useEffect(()=>{
@@ -24,7 +24,7 @@ export default function RecommendedList({onItemClicked, setModalContent}) {
     }))
   }, [])
 
-  const { data } = useSelector((state) => {
+  let { data } = useSelector((state) => {
     console.log("STATE", state)
     let data = state.data;
     return { data: data ? data : undefined, }
@@ -118,8 +118,9 @@ export default function RecommendedList({onItemClicked, setModalContent}) {
   )
 
   return (
+    // Updated when button is pressed
     data && <>
-      <List itemLayout="vertical" size="large" dataSource={data.data}
+      <List itemLayout="vertical" size="large" dataSource={listContent}
               pagination={{
               onChange: (page) => { console.log(page); },
               pageSize: 3,

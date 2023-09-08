@@ -45,6 +45,7 @@ module.exports.getQuestionInfo = async () => {
 }
 
 module.exports.getQuestions = async (infos) => {
+  console.log("getQuestion is called in the backend!")
   console.log('getQuestions:',infos)
   // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
   const returned = await Collections.questions.find({
