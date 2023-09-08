@@ -23,7 +23,7 @@ router.get('/UploadQuestion', async (req, res) => {
 
 router.get('/UploadAnswer', async (req, res) => {
   try {
-    const answers = uploadFilesAnswer()
+    uploadFilesAnswer()
     res.status(200).json("upload Answer complete")
   } catch (error) {
     console.log(error)

@@ -9,6 +9,7 @@ import TestPage from './view/Pages/TestPage'
 import Reference from './view/Pages/Reference'
 
 import Layout from './view/Layout/Layout';
+import Recommend from './view/Pages/Recommend'
 
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
                         <Route exact path="/Review/Bookmark" element={<Bookmark />}/>
                         <Route exact path="/Review/History" element={<History />}/>
                         <Route exact path="/Reference" element={<Reference/>}/>
-                        <Route exact path="/Recommended" element={<TestPage />}/>
+                        <Route exact path="/Recommended" element={<Recommend />}/>
                         <Route path="/" element={<Navigate replace to="/Main"/>}/>
                     </Routes>                    
                 </Layout>

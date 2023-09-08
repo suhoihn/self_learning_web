@@ -127,6 +127,7 @@ module.exports.uploadFilesQuestion = () => {
             year: data.year,
             wrong: "false",
             bookmarked: "false",
+            wrongCount: 0,
           }, { 
             new: true, 
             overwrite: true
@@ -160,6 +161,7 @@ module.exports.uploadFilesQuestion = () => {
               year: data.year,
               wrong: "false",
               bookmarked: "false",
+              wrongCount: 0,
             })
             await newDoc.save().then(() => console.log("delete and saved"))
           })
