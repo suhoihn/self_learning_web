@@ -49,6 +49,17 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     return data;
   }, shallowEqual)
 
+  useEffect(() => {     
+    console.log("Get Ref Answer called in ProblemModal through updateAnswer");
+    data.length > 0 &&
+    dispatch(dataAction.getRefAnswer({
+      answerId: data[current].questionId ? data[current].questionId: undefined,
+      specificAnswerId: data[current].question.subQuestion[0].specificQuestionId ?
+                          data[current].question.subQuestion[0].specificQuestionId : 
+                          undefined
+    }))
+  }, [data])
+
   // CRITICAL: doesn't work when only 1 question
   // + Answer save?
   // Why subQuestion[0] only?
@@ -76,7 +87,6 @@ export default function ProblemModal({open, onClosed, onCleared}) {
 
     console.log("datacurrent checked in updateanswer:",data[current2])
     setCheckboxState(data[current2].bookmarked);
-     
   };
   //useEffect(() => { updateAnswer() }, [answerData])
   useEffect(() => { setCurrentAnswer(answerData) }, [answerData])
@@ -148,7 +158,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     </div>
   </div>
 
-  return (
+  return ( data &&
     <Modal title="Problems" open={open} onCancel={onModalClosed} footer={footer}>
       <Row span={24}>
         <Col span={24}>

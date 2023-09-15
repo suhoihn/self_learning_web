@@ -3,7 +3,7 @@ import { Row, Col, Card, Switch, Space, Select, Typography } from 'antd';
 
 const {Text, Title} = Typography
 
-export default function CardTitle({text, onChange}){
+export default function CardTitle({text, onChange, useSwitch}){
 
     return (
         <Row>
@@ -11,7 +11,7 @@ export default function CardTitle({text, onChange}){
                 <Text>{text}</Text>
             </Col>
             <Col span={12} style={{textAlign: 'right'}}>
-                <Switch defaultChecked = {true} onChange={onChange}/>
+                {useSwitch && <Switch defaultChecked = {true} onChange={onChange}/>}
             </Col>
         </Row>
     )

@@ -61,10 +61,10 @@ export default function Recommend () {
           <Col span={12}>
             <Row span={24}>
               <Col span={10} style={style}>
-                <OptionCard items={problemNum} title={'Problem Number'} update={setProblemNumber} isSingleSelect={true}/>
+                <OptionCard useSwitch={false} items={problemNum} title={'Problem Number'} update={setProblemNumber} isSingleSelect={true}/>
               </Col>
               <Col span={10} style={style}>
-                <OptionCard items={wrongNum} title={'Wrongs'} update={setWrongCount} isSingleSelect={true}/>
+                <OptionCard useSwitch={false} items={wrongNum} title={'Wrongs'} update={setWrongCount} isSingleSelect={true}/>
               </Col>
             </Row>  
           </Col>

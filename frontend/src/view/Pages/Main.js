@@ -22,6 +22,21 @@ export default function Main () {
 
   const onProblemCleared = () => setIsAnswerModalOpen(true);
 
+  // Dispatch the actions when button is pressed
+  const onSubmitClicked = () => {
+    console.log("getQuestions called in Main");
+    
+    dispatch(dataAction.getQuestions({
+      questionNumber: problemNumber, // How many questions
+      difficulty: Array.isArray(difficultyValue)? difficultyValue: new Array(difficultyValue),
+      timezone: Array.isArray(timezoneValue)? timezoneValue: new Array(timezoneValue),
+      paper: Array.isArray(paperValue)? paperValue: new Array(paperValue),
+      chapter: Array.isArray(chapterValue)? chapterValue: new Array(chapterValue),
+      wrong: 0, 
+    }));
+
+    setIsProblemModalOpen(true);
+  }
 
   // Question Infos
   const [chapterValue, setChapterValue] = useState([1]);
@@ -64,24 +79,6 @@ export default function Main () {
     problemNumItems: problemNum
   }
 
-  // Dispatch the actions when button is pressed
-  const onSubmitClicked = () => {
-    console.log("getQuestions called in Main");
-    
-    dispatch(dataAction.getQuestions({
-      questionNumber: problemNumber, // How many questions
-      questionType: ['singleAns'],
-      difficulty: Array.isArray(difficultyValue)? difficultyValue: new Array(difficultyValue),
-      timezone: Array.isArray(timezoneValue)? timezoneValue: new Array(timezoneValue),
-      paper: Array.isArray(paperValue)? paperValue: new Array(paperValue),
-      chapter: Array.isArray(chapterValue)? chapterValue: new Array(chapterValue),
-      wrong: 0, 
-    }));
-
-    setIsProblemModalOpen(true);
-  }
-    
-
   const style={margin: 10}
 
   return (
@@ -91,23 +88,28 @@ export default function Main () {
         <Col span={12}>
           <Row span={24}>
             <Col span={10} style={style}>
-              <OptionCard items={infos.chapterItems} title={'Chapter'} update={setChapterValue}/>
+              <OptionCard items={infos.chapterItems} title={'Chapter'} update={setChapterValue} 
+                          valueDisabled={[1,2,3,4,5,6,7,8,9,10,11,12]}/>
             </Col>
             <Col span={10} style={style}>
-              <OptionCard items={infos.difficultyItems} title={'Difficulty'} update={setDifficultyValue}/>
-            </Col>
-          </Row>
-          <Row span={24}>
-            <Col span={10} style={style}>
-              <OptionCard items={infos.paperItems} title={'Paper'} update={setPaperValue}/>
-            </Col>
-            <Col span={10} style={style}>
-              <OptionCard items={infos.timezoneItems} title={'Timezone'} update={setTimezoneValue}/>
+              <OptionCard items={infos.difficultyItems} title={'Difficulty'} update={setDifficultyValue}
+                          valueDisabled={[1,2,3]}/>
             </Col>
           </Row>
           <Row span={24}>
             <Col span={10} style={style}>
-              <OptionCard items={infos.problemNumItems} title={'Problem Number'} update={setProblemNumber} isSingleSelect={true}/>
+              <OptionCard items={infos.paperItems} title={'Paper'} update={setPaperValue}
+                          valueDisabled={[1,2]}/>
+            </Col>
+            <Col span={10} style={style}>
+              <OptionCard items={infos.timezoneItems} title={'Timezone'} update={setTimezoneValue}
+                          valueDisabled={[1,2,3]}/>
+            </Col>
+          </Row>
+          <Row span={24}>
+            <Col span={10} style={style}>
+              <OptionCard items={infos.problemNumItems} title={'Problem Number'} update={setProblemNumber} 
+                          isSingleSelect={true} useSwitch={false}/>
             </Col>
           </Row>
         </Col>
