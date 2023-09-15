@@ -17,8 +17,9 @@ export default function BookmarkedList ({onItemClicked, setModalContent}) {
       timezone: [1, 2, 3],
       paper: [1, 2, 3],
       chapter: [1,2,3,4,5,6,7,8,9,10,11,12],
-      wrong: 0,
-      bookmarked: "false",
+      wrong: -1,
+      bookmarked: 'true',
+      questionNumber: 100
     }))
   }, [])
 

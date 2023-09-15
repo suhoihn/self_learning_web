@@ -18,7 +18,7 @@ export default function OptionCard({items, title, update, isSingleSelect}) {
                         mode={isSingleSelect? "default" : "multiple"}
                         disabled={isDisabled}
                         defaultValue={items[0]}
-                        style={{ width: 120, }}
+                        style={{ width: 250, }}
                         onChange={(value) => update(value)} // Update the value
                         options={items}
                     />

@@ -70,15 +70,17 @@ export default function Main () {
     
     dispatch(dataAction.getQuestions({
       questionNumber: problemNumber, // How many questions
+      questionType: ['singleAns'],
       difficulty: Array.isArray(difficultyValue)? difficultyValue: new Array(difficultyValue),
       timezone: Array.isArray(timezoneValue)? timezoneValue: new Array(timezoneValue),
       paper: Array.isArray(paperValue)? paperValue: new Array(paperValue),
       chapter: Array.isArray(chapterValue)? chapterValue: new Array(chapterValue),
-      wrong: 0,
+      wrong: 0, 
     }));
 
     setIsProblemModalOpen(true);
-  } 
+  }
+    
 
   const style={margin: 10}
 
@@ -113,7 +115,7 @@ export default function Main () {
         <Col span={12}>
           <Row span={24}> 
             <Col span={23} style={style}>
-              <Alert message="Instrunction" type="info" showIcon />   
+              <Alert message="Instruction" type="info" showIcon />   
               <br />       
               <Text>- You can customise your search using the categories in the dropdown</Text><br />
               <Text>- If you do not want to filter on a specific category, turn off the switch.</Text><br />

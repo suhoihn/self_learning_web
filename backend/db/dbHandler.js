@@ -15,7 +15,9 @@ const Collections = { questions: question, answers: answer, };
 function filterByChapter(docs, array){
   let returnArray = [];
    array.forEach((cpt) => {
+    console.log('cpt', cpt)
       docs.forEach((element) => {
+        console.log('element',element)
           if(element.chapter.includes(cpt)){returnArray.push(element);}
       });
   });
@@ -43,7 +45,8 @@ module.exports.getQuestionInfo = async () => {
 }
 
 module.exports.getQuestions = async (infos) => {
-  console.log('getQuestions, infos:',infos)
+  console.log("getQuestion is called in the backend!")
+  console.log('getQuestions:',infos)
   // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
   const returned = await Collections.questions.find({
       'difficulty': { $in: infos.difficulty },
@@ -56,22 +59,43 @@ module.exports.getQuestions = async (infos) => {
     return result
   });
 
-  let result = isNaN(infos.questionNumber) ? 
-                returned : 
-                getMultipleRandom(returned, infos.questionNumber)
-  console.log('getQuestions, ',result)
+  console.log('getQuestion',returned)
+  let result = getMultipleRandom(returned, infos.questionNumber)
+  console.log(result)
   return result
 };
 
-module.exports.getAnswers = async (infos) => {
-  const result = await Collections.answers.find({
-      'answerID' : { $in: infos.answerID },
-      'answer.specificAnswerID': { $in: infos.specificAnswerID },
-  })
 
-  console.log(result);
+module.exports.getAnswers = async (infos) => {
+
+  // Divide the case with and without specificAnswerId
+  let result = [];
+  if(infos.specificAnswerId == undefined){
+    result = await Collections.answers.find({
+      'answerID' : { $in: infos.answerId },
+    })
+  }
+  else{
+    result = await Collections.answers.find({
+      'answerID' : { $in: infos.answerId },
+      'answer.specificAnswerID': { $in: infos.specificAnswerId },
+    })
+  }
+
+  console.log("A INFO:", infos)
+  console.log("This is what getAnswers in background found: ", result);
   
   return result;
+};
+
+module.exports.saveQuestion = async (infos) => {
+  console.log("save question called in background");
+  var myquery = { 
+    "questionId": infos.questionId,
+  };
+  var newvalues = { $set: {bookmarked: infos.bookmarked} };
+
+  Collections.questions.updateOne(myquery, newvalues).then(() => {console.log("SAVE QUESTION WORKING")});
 };
 
 module.exports.uploadFilesQuestion = () => {

@@ -11,9 +11,9 @@ export const Types = {
     GET_RELOAD_DB: "GET_RELOAD_DB",
     GET_RELOAD_DB_SUCCESS: "GET_RELOAD_DB_SUCCESS",
     GET_RELOAD_DB_FAIL: "GET_RELOAD_DB_FAIL",
-    GET_HISTORY: "GET_HISTORY_DB",
-    GET_HISTORY_SUCCESS: "GET_HISTORY_SUCCESS",
-    GET_HISTORY_FAIL: "GET_HISTORY_FAIL",
+    GET_SAVE_QUESTION: "GET_SAVE_QUESTION",
+    GET_SAVE_QUESTION_SUCCESS: "GET_SAVE_QUESTION_SUCCESS",
+    GET_SAVE_QUESTION_FAIL: "GET_SAVE_QUESTION_FAIL",
 };
 
 // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
@@ -71,16 +71,16 @@ export const Actions = {
         return {type: Types.GET_RELOAD_DB_FAIL, payload: error}
     },
 
-    getHistory: () => {
-        console.log("get history action")
-        return {type: Types.GET_HISTORY}
+    getSaveQuestion: (info) => {
+        console.log("get save question action")
+        return {type: Types.GET_SAVE_QUESTION, payload: info}
     },
-    getHistorySuccess: (data) => {
-        console.log("get history success")
-        return {type: Types.GET_HISTORY_SUCCESS, payload: data}
+    getSaveQuestionSuccess: (data) => {
+        console.log("get save question success")
+        return {type: Types.GET_SAVE_QUESTION_SUCCESS, payload: data}
     },
-    getHistoryFail: (error) => {
-        console.log("get history failed: ", error)
-        return {type: Types.GET_HISTORY_FAIL, payload: error}
+    getSaveQuestionFail: (error) => {
+        console.log("get save question failed: ", error)
+        return {type: Types.GET_SAVE_QUESTION_FAIL, payload: error}
     }
 };

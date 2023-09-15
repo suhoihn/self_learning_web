@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const { uploadFilesQuestion, uploadFilesAnswer, getAnswers, getQuestions, getHistory } = require('../db/dbHandler');
+const { uploadFilesQuestion, uploadFilesAnswer, getAnswers, getQuestions, saveQuestion } = require('../db/dbHandler');
 
 // xxx.xxx.xxx.xxx:PORT/api/Data/<url>
 router.get('/', async (req, res) => {
@@ -42,7 +42,7 @@ router.get('/getQuestions', async (req, res) => {
 
   try {
     const questions = await getQuestions(req.query.infos);
-    console.log("questions in data.js: ", questions);
+    //console.log("questions in data.js: ", questions);
     res.status(200).json(questions)
   } catch (error) {
     console.log(error)
@@ -53,7 +53,7 @@ router.get('/getQuestions', async (req, res) => {
 })
 // AnswerInfos = { answerID: [0], specificAnswerID: ["1b"], };
 router.get('/getRefAnswer', async (req, res) => {
-  console.log('get Ref Answers called', req.query)
+  console.log('get Ref Answers called in routes!', req.query)
   try {
     const answers = await getAnswers(req.query.infos)
     res.status(200).json(answers)
@@ -66,11 +66,11 @@ router.get('/getRefAnswer', async (req, res) => {
 })
 
 
-router.get('/getHistory', async (req, res) => {
-  console.log('get history called in backend');
+router.get('/saveQuestion', async (req, res) => {
+  console.log('get save question called in backend. DATA: ', req.query);
   try {
-    const history = await getHistory();
-    res.status(200).json(history)
+    saveQuestion(req.query.infos);
+    res.status(200).json("save question complete")
   } catch (error) {
     console.log(error)
     res.status(400).json({

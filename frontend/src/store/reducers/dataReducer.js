@@ -58,17 +58,17 @@ const DataReducer = (state = initialState, action) => {
             console.log('reducer get reload failed')
             state = {...state, error: { message: "ERROR" }, reloadDB: false};
             break;
-        case Types.GET_HISTORY_FAIL:
-            console.log('reducer get history failed')
+        case Types.GET_SAVE_QUESTION_FAIL:
+            console.log('reducer get save question failed')
             state = {...state, error: { message: "ERROR" }, loadingData: false};
             break;
-        case Types.GET_HISTORY:
-            console.log('reducer get history received')
+        case Types.GET_SAVE_QUESTION:
+            console.log('reducer get save question received')
             state = {...state, loadingData: true};
             break;
-        case Types.GET_HISTORY_SUCCESS:
-            console.log('reducer get reload success')
-            state = {...state, data: action.payload, loadingData: false};
+        case Types.GET_SAVE_QUESTION_SUCCESS:
+            console.log('reducer get save question success')
+            state = {...state, loadingData: false};
             break;
         default:
             state = {...state};
