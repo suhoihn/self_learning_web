@@ -179,7 +179,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
         {/* <Space.Compact style={{ width: '100%',}}> */}
             {answerData[0] && console.log("Hi: ",current,answerData[0],"length:",answerData[0].answer.answerSubscripts.length)}
             {answerData[0] && answerData[0].answer.answerSubscripts.map((i, idx) => (
-              <Row>
+            answerData[0].answer.answerValues[0] != "None" && <Row>
                 <Col span={4}>
                   <Text>{(i == "None") ? "Answer: " : i}</Text>
                 </Col>
@@ -190,12 +190,17 @@ export default function ProblemModal({open, onClosed, onCleared}) {
             ))}
         {/* </Space.Compact> */}
       {/* </Space> */}
-      <Row>
-          <Col span={24}>
-            {console.log(steps[current].title)}
-            {steps[current].title !== "quesiton does not exist" && <Button type="primary" onClick={answerSubmit}>Submit</Button>}
-          </Col>
-      </Row>
+      {answerData[0].answer.answerValues[0] != "None" && <>
+        <Row style={{marginTop: 10}}>
+          <Col span={24} style={{textAlign: 'right'}}>
+              {console.log(steps[current].title)}
+              {steps[current].title !== "quesiton does not exist" && <Button type="primary" onClick={answerSubmit}>Submit</Button>}
+            </Col>
+        </Row>
+        <Divider/>
+      </>}
+      
+      
     </Modal>
   )
 }
