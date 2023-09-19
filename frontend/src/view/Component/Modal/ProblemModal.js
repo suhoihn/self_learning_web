@@ -175,22 +175,18 @@ export default function ProblemModal({open, onClosed, onCleared}) {
         </Col>
       </Row>
       <Divider/>
-      {/* <Space>     */}
-        {/* <Space.Compact style={{ width: '100%',}}> */}
-            { answerData && answerData[0].answer.answerSubscripts.map((i, idx) => (
-                answerData[0].answer.answerValues[0] != "None" && <Row>
-                  <Col span={4}>
-                    <Text>{(i == "None") ? "Answer: " : i}</Text>
-                  </Col>
-                  <Col span={20}>
-                    <Input key={idx} value={textArray[idx]} placeholder="Write your answer here." onChange={(e) => {onInputChange(e,idx)}}/>
-                  </Col>
-                </Row>
-              ))
-            }
-        {/* </Space.Compact> */}
-      {/* </Space> */}
-      {answerData && answerData[0].answer.answerValues[0] != "None" && <>
+      { answerData && answerData[0].answer.answerSubscripts.map((i, idx) => (
+          answerData[0].answer.answerValues[0] != "None" && <Row>
+            <Col span={4}>
+              <Text>{(i == "None") ? "Answer: " : i}</Text>
+            </Col>
+            <Col span={20}>
+              <Input key={idx} value={textArray[idx]} placeholder="Write your answer here." onChange={(e) => {onInputChange(e,idx)}}/>
+            </Col>
+          </Row>
+        ))
+      }
+      { answerData && answerData[0].answer.answerValues[0] != "None" && <>
         <Row style={{marginTop: 10}}>
           <Col span={24} style={{textAlign: 'right'}}>
               {console.log(steps[current].title)}
