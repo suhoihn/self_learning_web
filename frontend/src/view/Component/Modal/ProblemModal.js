@@ -166,7 +166,8 @@ export default function ProblemModal({open, onClosed, onCleared}) {
   }
 
   // Modal management
-  const onModalClosed = ()=> { 
+  const onModalClosed = ()=> {
+    updateAnswer(current);
     onClosed(); 
     setBookmarkState(new Array(MAX_QUESTIONS).fill(false));
     setWrongCountList(new Array(MAX_QUESTIONS).fill(0));
