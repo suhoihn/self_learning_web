@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const { uploadFilesQuestion, uploadFilesAnswer, getAnswers, getQuestions, saveQuestion } = require('../db/dbHandler');
+const { uploadFilesQuestion, uploadFilesAnswer, getAnswers, getQuestions, saveQuestion, getMultipleAnswers } = require('../db/dbHandler');
 
 // xxx.xxx.xxx.xxx:PORT/api/Data/<url>
 router.get('/', async (req, res) => {
@@ -71,6 +71,19 @@ router.get('/saveQuestion', async (req, res) => {
   try {
     saveQuestion(req.query.infos);
     res.status(200).json("save question complete")
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({
+      msg: error.message
+    })
+  }
+})
+
+router.get('/getAnswers', async (req, res) => {
+  console.log('get answers called in backend. query: ', req.query);
+  try {
+    const answerList = getMultipleAnswers(req.query.infos);
+    res.status(200).json(answerList);
   } catch (error) {
     console.log(error)
     res.status(400).json({

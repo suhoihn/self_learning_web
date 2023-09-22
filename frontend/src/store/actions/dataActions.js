@@ -2,18 +2,27 @@ export const Types = {
     GET_DATA: "GET_DATA",
     GET_DATA_SUCCESS: "GET_DATA_SUCCESS",
     GET_DATA_FAIL: "GET_DATA_FAIL",
+    
     GET_QUESTIONS: "GET_QUESTIONS",
     GET_QUESTIONS_SUCCESS: "GET_QUESTIONS_SUCCESS",
     GET_QUESTIONS_FAIL: "GET_QUESTIONS_FAIL",
+    
     GET_REF_ANSWER: "GET_REF_ANSWER",
     GET_REF_ANSWER_SUCCESS: "GET_REF_ANSWER_SUCCESS",
     GET_REF_ANSWER_FAIL: "GET_REF_ANSWER_FAIL",
+    
     GET_RELOAD_DB: "GET_RELOAD_DB",
     GET_RELOAD_DB_SUCCESS: "GET_RELOAD_DB_SUCCESS",
     GET_RELOAD_DB_FAIL: "GET_RELOAD_DB_FAIL",
+    
     GET_SAVE_QUESTION: "GET_SAVE_QUESTION",
     GET_SAVE_QUESTION_SUCCESS: "GET_SAVE_QUESTION_SUCCESS",
     GET_SAVE_QUESTION_FAIL: "GET_SAVE_QUESTION_FAIL",
+    
+    // Get Answers
+    GET_ANSWERS: "GET_ANSWERS",
+    GET_ANSWERS_SUCCESS: "GET_ANSWERS_SUCCESS",
+    GET_ANSWERS_FAIL: "GET_ANSWERS_FAIL",
 };
 
 // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
@@ -82,5 +91,19 @@ export const Actions = {
     getSaveQuestionFail: (error) => {
         console.log("get save question failed: ", error)
         return {type: Types.GET_SAVE_QUESTION_FAIL, payload: error}
-    }
+    },
+
+    // Get Answers (multiple)
+    getAnswers: (info) => {
+        console.log("get answers action")
+        return {type: Types.GET_ANSWERS, payload: info}
+    },
+    getAnswersSuccess: (data) => {
+        console.log("get answers success")
+        return {type: Types.GET_ANSWERS_SUCCESS, payload: data}
+    },
+    getAnswersFail: (error) => {
+        console.log("get answers failed: ", error)
+        return {type: Types.GET_ANSWERS_FAIL, payload: error}
+    },
 };

@@ -6,7 +6,8 @@ const initialState = {
     error: {
         message: "",
     },
-    refAnswer: ''
+    refAnswer: '',
+    answers: []
 };
 
 const DataReducer = (state = initialState, action) => {
@@ -70,6 +71,21 @@ const DataReducer = (state = initialState, action) => {
             console.log('reducer get save question success')
             state = {...state, loadingData: false};
             break;
+
+        // Get Answers
+        case Types.GET_ANSWERS_FAIL:
+            console.log('reducer get answer failed')
+            state = {...state, error: { message: "ERROR" }, loadingData: false};
+            break;
+        case Types.GET_ANSWERS:
+            console.log('reducer get answers received')
+            state = {...state, answers: action.payload, loadingData: true};
+            break;
+        case Types.GET_ANSWERS_SUCCESS:
+            console.log('reducer get answers success')
+            state = {...state, loadingData: false};
+            break;
+
         default:
             state = {...state};
             break;
