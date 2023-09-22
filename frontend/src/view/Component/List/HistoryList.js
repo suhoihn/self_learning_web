@@ -19,7 +19,6 @@ export default function HistoryList({onItemClicked, setModalContent}) {
       paper: [1, 2, 3],
       chapter: [1,2,3,4,5,6,7,8,9,10,11,12],
       wrong: 1,
-      bookmarked: "false",
     }))
   }, [])
 
@@ -94,11 +93,7 @@ export default function HistoryList({onItemClicked, setModalContent}) {
       }}
       actions={[<IconText icon={StarOutlined} text="for something" key="list-vertical-star-o" />,]}
       extra={
-        <img
-            width={272}
-            alt="logo"
-            src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-        />
+        <Image src={`data:image/png;base64, ${item.question.questionImage.image}`} />
       }
     >
       <List.Item.Meta
@@ -109,7 +104,8 @@ export default function HistoryList({onItemClicked, setModalContent}) {
               <Text>Chapters: {item.chapter}</Text><br/>
               <Text>Difficulty: {item.difficulty}</Text><br/>
               <Text>Paper: {item.paper}</Text><br/>
-              <Text>timezone: {item.timezone}</Text>
+              <Text>timezone: {item.timezone}</Text><br/>
+              <Text>wrong: {item.wrong}</Text>
             </div>
           }
       />          
