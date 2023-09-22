@@ -1,7 +1,7 @@
 import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Button, Input, List, Space, Typography, Image } from 'antd';
+import { Button, Input, List, Space, Typography, Image, Divider, Row, Col } from 'antd';
 import { useDispatch } from 'react-redux'
 import { Actions as dataAction } from '../../../store/actions/dataActions'
 
@@ -29,6 +29,7 @@ export default function BookmarkedList ({onItemClicked, setModalContent}) {
   }, shallowEqual)
 
   const { answerData } = useSelector((state) => {
+    console.log("answerData in declaration", state);
     let data = state.data.refAnswer;
 
     return data;
@@ -47,7 +48,7 @@ export default function BookmarkedList ({onItemClicked, setModalContent}) {
     // setInputText(e.target.value)
     text = e.target.value
   }
-  const onSubmitClicked = (item) => {
+  const answerSubmit = (item) => {
     console.log(item.questionId, item.question.subQuestion)
     dispatch(dataAction.getRefAnswer({
       answerID: item.questionId,
@@ -64,39 +65,53 @@ export default function BookmarkedList ({onItemClicked, setModalContent}) {
 
   }
 
+  const callAnswer = (item) => {
+    console.log("Get Ref Answer called");
+    dispatch(dataAction.getRefAnswer({
+      answerId: item.questionId ? item.questionId: undefined,
+      specificAnswerId: item.question.subQuestion[0].specificQuestionId ?
+      item.question.subQuestion[0].specificQuestionId : undefined
+    }))
+  }
+
   const onRenderListItem = (item) => (
     <List.Item
       key={item.title}
       onClick={() => {
+        callAnswer(item);
         setModalContent(
           <>
             <p>Question {item.questionId}</p>
-            <Image src={`data:image/png;base64, ${item.question.questionImage.image}`} />
-            <Image src={`data:image/png;base64, ${item.question.subQuestion[0].subQuestionImage.image}`} />
-            {console.log("Answer Data: ", answerData)}
-
-            { answerData && answerData[0].answerSubscripts.map((answerSubscript) => (
-              <Space>    
-                <Space.Compact style={{ width: '100%',}}>
-                  <Text>{answerSubscript}</Text>
-                  <Input placeholder="Write your answer here." onChange={onInputChange}/>
-                  <Button type="primary" onClick={onSubmitClicked(item)}>Submit</Button>
-                </Space.Compact>
-              </Space>
+            <>   
+              {item.question.questionImage.image && <Image src={`data:image/png;base64, ${item.question.questionImage.image}`} />}
+              {item.question.subQuestion[0].subQuestionImage.image && <Image src={`data:image/png;base64, ${item.question.subQuestion[0].subQuestionImage.image}`} />}
+            </>
+            <Divider/>
+            {answerData && answerData[0].answer.answerSubscripts.map((i, idx) => (
+            answerData[0].answer.answerValues[0] != "None" && <Row>
+                <Col span={4}>
+                  <Text>{(i == "None") ? "Answer: " : i}</Text>
+                </Col>
+                <Col span={20}>
+                  <Input key={idx} value={text} placeholder="Write your answer here." onChange={(e) => {onInputChange(e,idx)}}/>
+                </Col>
+              </Row>
             ))}
+          {answerData && answerData[0].answer.answerValues[0] != "None" && <>
+            <Row style={{marginTop: 10}}>
+              <Col span={24} style={{textAlign: 'right'}}>
+                  {<Button type="primary" onClick={answerSubmit}>Submit</Button>}
+                </Col>
+            </Row>
+            <Divider/>
+          </>}
 
           </>
         );
-        onItemClicked()
+        onItemClicked();
       }}
-      actions={[<IconText icon={StarOutlined} text="for something" key="list-vertical-star-o" />,]}
-      extra={
-        <img
-            width={272}
-            alt="logo"
-            src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-        />
-      }
+      actions={[<IconText icon={StarOutlined} text="Bookmarked" key="list-vertical-star-o" />,]}
+      extra={<Image src={`data:image/png;base64, ${item.question.questionImage.image}`} />}
     >
       <List.Item.Meta
           title={<a href={item.href}>{item.title}</a>}

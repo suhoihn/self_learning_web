@@ -93,7 +93,7 @@ module.exports.saveQuestion = async (infos) => {
   var myquery = { 
     "questionId": infos.questionId,
   };
-  var newvalues = { $set: {bookmarked: infos.bookmarked} };
+  var newvalues = { $set: {bookmarked: infos.bookmarked, wrong: infos.wrong} };
 
   Collections.questions.updateOne(myquery, newvalues).then(() => {console.log("SAVE QUESTION WORKING")});
 };

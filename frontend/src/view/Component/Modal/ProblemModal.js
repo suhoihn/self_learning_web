@@ -9,13 +9,26 @@ import {Actions as dataAction} from '../../../store/actions/dataActions'
 
 const {Text} = Typography
 export default function ProblemModal({open, onClosed, onCleared}) { 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
+  // Maximum questions that can be loaded
+  const MAX_QUESTIONS = 100;
+
+  // This is assuming there are maximum of 100 questions!
+  const [bookmarkState, setBookmarkState] = useState(new Array(MAX_QUESTIONS).fill(false));
+  const [wrongCountList, setWrongCountList] = useState(new Array(MAX_QUESTIONS).fill(0));
+  
+  const [bookmarkCheckbox, setBookmarkCheckbox] = useState(
+    <Checkbox checked={false} onChange={() => {toggleBookmark()}}>Bookmark</Checkbox>
+  );
 
   // Data fetched from the backend
   let {data, steps} = useSelector((state) => {
+    console.log("THE VERY BEGINNING");
     let data = state.data.data;
     let returnData = new Array(data.length);
-    console.log("datawenfiwenfo", data)
+    
+    console.log("datawenfiwenfo", data);
     for(let i = 0; i < data.length; i++) {
       let generalQuestionImage = data[i].question.questionImage.image
       let subQuestionImage = data[i].question.subQuestion[0].subQuestionImage.image
@@ -32,24 +45,33 @@ export default function ProblemModal({open, onClosed, onCleared}) {
         title: 'quesiton does not exist',
         content: <UndefinedImage/> 
       },] : returnData
-
+    
     return { steps: returnData, data: data}
   }, shallowEqual)
 
   const [current, setCurrent] = useState(0);
   const [currentAnswer, setCurrentAnswer] = useState([]);
 
-  const [checkboxState, setCheckboxState] = useState(false);
-
-  // Always 1 bc unique
+  // Always 1 answerData exists bc unique
   const answerData = useSelector((state) => {
     let data = state.data.refAnswer;
     console.log("Main(Problem Modal) refAnswer:", data);
-    //updateAnswer();
     return data;
   }, shallowEqual)
 
-  useEffect(() => {     
+  // When "data" changes, answer is requested from backend
+  useEffect(() => {
+
+    let returnBookmarkData = new Array(MAX_QUESTIONS).fill(false);
+    let returnWrongCountList = new Array(MAX_QUESTIONS).fill(0);
+    for(let i = 0; i < data.length; i++) {
+      // NOTE: data[i].bookmarked is not a boolean true, but a string "true"....
+      returnBookmarkData[i] = (data[i].bookmarked == "true");
+      returnWrongCountList[i] = data[i].wrong;
+    }
+    setBookmarkState(returnBookmarkData);
+    setWrongCountList(returnWrongCountList);
+
     console.log("Get Ref Answer called in ProblemModal through updateAnswer");
     data.length > 0 &&
     dispatch(dataAction.getRefAnswer({
@@ -60,23 +82,22 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     }))
   }, [data])
 
-  // CRITICAL: doesn't work when only 1 question
-  // + Answer save?
-  // Why subQuestion[0] only?
+  // TODO: Why subQuestion[0] only?
   function updateAnswer(current2){
+    // TODO: fix input clear when moving to next/prev Q
     clearInputs();
+
     // The bookmark status is saved before updating "current"
     dispatch(dataAction.getSaveQuestion({
       questionId: data[current].questionId,
-      bookmarked: checkboxState
-      //specificQuestionId: data[current].question.subQuestion[0].specificQuestionId 
+      bookmarked: bookmarkState[current],
+      wrong: wrongCountList[current],
     }))
-    data[current].bookmarked = checkboxState;
 
+    // "current" is changed to "current2"
     setCurrent(current2);
-
-    console.log("Get Ref Answer called in ProblemModal through updateAnswer");
-    console.log("Here is data query: ",current,data[current2].questionId, data[current2].question.subQuestion[0].specificQuestionId)
+    
+    // Get new answer for the loaded question
     data.length > 0 &&
     dispatch(dataAction.getRefAnswer({
       answerId: data[current2].questionId ? data[current2].questionId: undefined,
@@ -85,11 +106,17 @@ export default function ProblemModal({open, onClosed, onCleared}) {
                           undefined
     }))
 
-    console.log("datacurrent checked in updateanswer:",data[current2])
-    setCheckboxState(data[current2].bookmarked);
-  };
-  //useEffect(() => { updateAnswer() }, [answerData])
+
+    // Update the checkbox state according to the bookmark state
+  }
+
+  // Unknown functionality
   useEffect(() => { setCurrentAnswer(answerData) }, [answerData])
+  useEffect(() => { 
+    setBookmarkCheckbox(
+      <Checkbox checked={bookmarkState[current]} onChange={() => {toggleBookmark()}}>Bookmark</Checkbox>
+    );
+  }, [bookmarkState, current]);
 
   // Tabs
   const tabsItems = steps.map((_, i) => {
@@ -99,7 +126,8 @@ export default function ProblemModal({open, onClosed, onCleared}) {
       key: i,
     }
   })
-  // All "setCurrent" repleaced with updateAnswer bc processing difficulties
+  
+  // All "setCurrent" repleaced with updateAnswer
   const onTabsChanged = (key) => {updateAnswer(key);}
   
   // Input with multiple answer subscripts
@@ -128,12 +156,21 @@ export default function ProblemModal({open, onClosed, onCleared}) {
       if(answerArray[i] != textArray[i]){correct = false; break;}
     }
 
-    correct? message.success('Good job'): message.success('Try again')
-
+    if(correct){message.success('Good job');}
+    else{
+      message.success('Try again');
+      setWrongCountList(wrongCountList.map((q,idx) => (
+        idx === current ? wrongCountList[current] + 1: wrongCountList[idx]
+      )));
+    }
   }
 
-  // Modal
-  const onModalClosed = ()=> { onClosed() }
+  // Modal management
+  const onModalClosed = ()=> { 
+    onClosed(); 
+    setBookmarkState(new Array(MAX_QUESTIONS).fill(false));
+    setWrongCountList(new Array(MAX_QUESTIONS).fill(0));
+  }
 
   const next = () => { updateAnswer(current + 1); }
   const prev = () => { updateAnswer(current - 1); }
@@ -145,11 +182,16 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     onCleared()
   }
 
+  const toggleBookmark = () => {
+    setBookmarkState(bookmarkState.map((q,idx) =>
+      idx === current ? !bookmarkState[current] : bookmarkState[idx]
+    ));
+  }
 
   const footer = 
   <div style={{ marginTop: 24, display: 'flex'}}>
     <div style={{textAlign: 'left'}}> 
-      {steps[current].title !== "quesiton does not exist" && <Checkbox checked={checkboxState} onChange={() => setCheckboxState(!checkboxState)}>Bookmark</Checkbox>}
+      {steps[current].title !== "quesiton does not exist" && bookmarkCheckbox}
     </div>
     <div style={{width: '100%', textAlign:'right'}}>
       {current > 0 && <Button style={{margin: '0 8px',}} onClick={() => prev()}> Previous </Button>}
@@ -158,6 +200,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     </div>
   </div>
 
+  // Actual page
   return ( data &&
     <Modal title="Problems" open={open} onCancel={onModalClosed} footer={footer}>
       <Row span={24}>
@@ -175,22 +218,18 @@ export default function ProblemModal({open, onClosed, onCleared}) {
         </Col>
       </Row>
       <Divider/>
-      {/* <Space>     */}
-        {/* <Space.Compact style={{ width: '100%',}}> */}
-            {answerData[0] && console.log("Hi: ",current,answerData[0],"length:",answerData[0].answer.answerSubscripts.length)}
-            {answerData[0] && answerData[0].answer.answerSubscripts.map((i, idx) => (
-            answerData[0].answer.answerValues[0] != "None" && <Row>
-                <Col span={4}>
-                  <Text>{(i == "None") ? "Answer: " : i}</Text>
-                </Col>
-                <Col span={20}>
-                  <Input key={idx} value={textArray[idx]} placeholder="Write your answer here." onChange={(e) => {onInputChange(e,idx)}}/>
-                </Col>
-              </Row>
-            ))}
-        {/* </Space.Compact> */}
-      {/* </Space> */}
-      {answerData[0].answer.answerValues[0] != "None" && <>
+        {answerData[0] && console.log("Hi: ",current,answerData[0],"length:",answerData[0].answer.answerSubscripts.length)}
+        {answerData[0] && answerData[0].answer.answerSubscripts.map((i, idx) => (
+        steps[current].title !== "quesiton does not exist" && answerData[0].answer.answerValues[0] != "None" && <Row>
+            <Col span={4}>
+              <Text>{(i == "None") ? "Answer: " : i}</Text>
+            </Col>
+            <Col span={20}>
+              <Input key={idx} value={textArray[idx]} placeholder="Write your answer here." onChange={(e) => {onInputChange(e,idx)}}/>
+            </Col>
+          </Row>
+        ))}
+      {answerData[0] && answerData[0].answer.answerValues[0] != "None" && <>
         <Row style={{marginTop: 10}}>
           <Col span={24} style={{textAlign: 'right'}}>
               {console.log(steps[current].title)}
