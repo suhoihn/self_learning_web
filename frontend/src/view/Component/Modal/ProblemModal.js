@@ -6,7 +6,6 @@ import UndefinedImage from './undefinedImage'
 
 import {Actions as dataAction} from '../../../store/actions/dataActions'
 
-
 const {Text} = Typography
 export default function ProblemModal({open, onClosed, onCleared}) { 
   const dispatch = useDispatch();
@@ -24,7 +23,6 @@ export default function ProblemModal({open, onClosed, onCleared}) {
 
   // Data fetched from the backend
   let {data, steps} = useSelector((state) => {
-    console.log("THE VERY BEGINNING");
     let data = state.data.data;
     let returnData = new Array(data.length);
     
@@ -177,10 +175,22 @@ export default function ProblemModal({open, onClosed, onCleared}) {
   const prev = () => { updateAnswer(current - 1); }
   const done = () => {
     console.log(currentAnswer);
-    message.success('All problems cleared!')
+    message.success('All problems cleared!');
     if(!window.confirm('Check answer?')) return;
-    onClosed()
-    onCleared()
+    onClosed();
+    onCleared();
+
+    console.log("Checking the data that is about to be sent to the backend via the getAnswers action: ", data);
+
+    const queryList = [];
+    for(let i = 0; i < data.length; i++){
+      queryList.push({
+        answerId: data[i].questionId,
+        specificAnswerId: data[i].question.subQuestion[0].specificQuestionId
+      });
+    }
+    dispatch(dataAction.getAnswers(queryList));
+
   }
 
   const toggleBookmark = () => {

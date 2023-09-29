@@ -82,7 +82,8 @@ router.get('/saveQuestion', async (req, res) => {
 router.get('/getAnswers', async (req, res) => {
   console.log('get answers called in backend. query: ', req.query);
   try {
-    const answerList = getMultipleAnswers(req.query.infos);
+    const answerList = await getMultipleAnswers(req.query.infos);
+    console.log("answerList in backend:", answerList);
     res.status(200).json(answerList);
   } catch (error) {
     console.log(error)

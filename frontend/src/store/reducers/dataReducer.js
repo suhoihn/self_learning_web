@@ -79,11 +79,11 @@ const DataReducer = (state = initialState, action) => {
             break;
         case Types.GET_ANSWERS:
             console.log('reducer get answers received')
-            state = {...state, answers: action.payload, loadingData: true};
+            state = {...state, loadingData: true};
             break;
         case Types.GET_ANSWERS_SUCCESS:
-            console.log('reducer get answers success')
-            state = {...state, loadingData: false};
+            console.log('reducer get answers success', action.payload);
+            state = {...state, loadingData: false, answers: action.payload};
             break;
 
         default:

@@ -99,7 +99,7 @@ export const Actions = {
         return {type: Types.GET_ANSWERS, payload: info}
     },
     getAnswersSuccess: (data) => {
-        console.log("get answers success")
+        console.log("get answers success", data);
         return {type: Types.GET_ANSWERS_SUCCESS, payload: data}
     },
     getAnswersFail: (error) => {

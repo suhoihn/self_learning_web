@@ -76,18 +76,19 @@ module.exports.getMultipleAnswers = async (infos) => {
   for(let i = 0; i < infos.length; i++){
     let result = "";
     infos.specificAnswerId == undefined? 
-      result = await Collections.answers.find({
+      result = await Collections.answers.findOne({
         'answerID' : { $in: infos[i].answerId },
       }) :
 
-      result = await Collections.answers.find({
+      result = await Collections.answers.findOne({
         'answerID' : { $in: infos[i].answerId },
         'answer.specificAnswerID': { $in: infos[i].specificAnswerId },
       })
 
       returnList.push(result);
   }
-
+  //?
+  console.log("getMultipleAnswers found", returnList);
   return returnList;
 };
 

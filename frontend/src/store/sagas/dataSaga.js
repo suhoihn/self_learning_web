@@ -64,6 +64,7 @@ function* onGetAnswers({payload: info}) {
     try {
         console.log("data saga get answers called");
         const response = yield call(getAnswers, info);
+        console.log("response: ", response);
         yield put(dataActions.getAnswersSuccess(response));
     } catch (error) {
         yield put(dataActions.getAnswersFail(error.response));
