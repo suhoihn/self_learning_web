@@ -75,7 +75,7 @@ module.exports.getMultipleAnswers = async (infos) => {
   const returnList = [];
   for(let i = 0; i < infos.length; i++){
     let result = "";
-    infos.specificAnswerId == undefined? 
+    infos[i].specificAnswerId == undefined? 
       result = await Collections.answers.findOne({
         'answerID' : { $in: infos[i].answerId },
       }) :

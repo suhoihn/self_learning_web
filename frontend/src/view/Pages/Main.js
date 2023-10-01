@@ -15,7 +15,7 @@ export default function Main () {
 
   // Modal
   const [isProblemModalOpen, setIsProblemModalOpen] = useState(false);
-  const onProblemModalClosed = ()=> setIsProblemModalOpen(false)
+  const onProblemModalClosed = () => setIsProblemModalOpen(false);
 
   const [isAnswerModalOpen, setIsAnswerModalOpen] = useState(false);
   const onAnswerModalClosed = ()=> setIsAnswerModalOpen(false)

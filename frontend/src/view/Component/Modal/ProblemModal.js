@@ -166,7 +166,8 @@ export default function ProblemModal({open, onClosed, onCleared}) {
   // Modal management
   const onModalClosed = ()=> {
     updateAnswer(current);
-    onClosed(); 
+    onClosed();
+    setCurrent(0);
     setBookmarkState(new Array(MAX_QUESTIONS).fill(false));
     setWrongCountList(new Array(MAX_QUESTIONS).fill(0));
   }
@@ -179,6 +180,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     if(!window.confirm('Check answer?')) return;
     onClosed();
     onCleared();
+    setCurrent(0);
 
     console.log("Checking the data that is about to be sent to the backend via the getAnswers action: ", data);
 
