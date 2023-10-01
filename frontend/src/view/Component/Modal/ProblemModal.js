@@ -213,7 +213,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
 
   // Actual page
   return ( data &&
-    <Modal title="Problems" open={open} onCancel={onModalClosed} footer={footer}>
+    <Modal title="Problems" open={open} onCancel={onModalClosed} footer={footer} width={1000}>
       <Row span={24}>
         <Col span={24}>
           <Row span={24}>
