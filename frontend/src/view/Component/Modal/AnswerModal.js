@@ -31,7 +31,7 @@ export default function AnswerModal({open, onClosed, onCleared }) {
   const tabsItems = steps.map((_, i) => {
     const id = String(i + 1);
     return {
-      label: 'Problem' + id,
+      label: 'Answer' + id,
       key: i,
     }
   })
@@ -78,9 +78,9 @@ export default function AnswerModal({open, onClosed, onCleared }) {
         <Col span={24}>
           <Row span={24}>
             <Col span={24}>
-                <Tabs size='small' style={{ height: '100%'}}
-                    items={tabsItems} activeKey={current} onChange={onTabsChanged}
-                />
+              <Tabs size='small' style={{ height: '100%'}}
+                  items={tabsItems} activeKey={current} onChange={onTabsChanged}
+              />
             </Col>
           </Row>
           <Row span={24}>

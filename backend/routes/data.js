@@ -79,10 +79,19 @@ router.get('/saveQuestion', async (req, res) => {
   }
 })
 
+const handleUnexpectedObj = (data) => {
+  let returnData = []
+  for (const [key, value] of Object.entries(data)) returnData.push(value)
+
+  console.log("parsed : ", returnData)
+  return returnData
+}
+
 router.get('/getAnswers', async (req, res) => {
   console.log('get answers called in backend. query: ', req.query);
+  const data = Array.isArray(req.query.infos) ? req.query.infos : handleUnexpectedObj(req.query.infos)
   try {
-    const answerList = await getMultipleAnswers(req.query.infos);
+    const answerList = await getMultipleAnswers(data);
     console.log("answerList in backend:", answerList);
     res.status(200).json(answerList);
   } catch (error) {
