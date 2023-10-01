@@ -83,7 +83,6 @@ const handleUnexpectedObj = (data) => {
   let returnData = []
   for (const [key, value] of Object.entries(data)) returnData.push(value)
 
-  console.log("parsed : ", returnData)
   return returnData
 }
 

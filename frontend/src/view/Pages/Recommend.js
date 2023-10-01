@@ -43,7 +43,7 @@ export default function Recommend () {
       paper: [1, 2, 3],
       chapter: [1,2,3,4,5,6,7,8,9,10,11,12],
       bookmarked: "false",
-      wrong: wrongCount,
+      wrong: parseInt(wrongCount[0]),
     }))
   }
 
@@ -75,7 +75,7 @@ export default function Recommend () {
           </Col>            
         </Row>
         <Row>
-          <Col>
+          <Col span={24} style={{textAlign: 'right'}}>
             <Button onClick={onSubmitClicked}>Submit</Button>
           </Col>
         </Row>

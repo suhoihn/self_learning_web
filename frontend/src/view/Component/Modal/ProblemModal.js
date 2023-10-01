@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { Modal, Button, Steps, Checkbox, message, Input,
+import { Modal, Button, Spin, Checkbox, message, Input,
           Row, Col, Tabs, Divider, Image, Space, Typography } from 'antd'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import UndefinedImage from './undefinedImage'
@@ -22,7 +22,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
   );
 
   // Data fetched from the backend
-  let {data, steps} = useSelector((state) => {
+  let {data, steps, isLoading} = useSelector((state) => {
     let data = state.data.data;
     let returnData = new Array(data.length);
     
@@ -44,7 +44,9 @@ export default function ProblemModal({open, onClosed, onCleared}) {
         content: <UndefinedImage/> 
       },] : returnData
     
-    return { steps: returnData, data: data}
+    let isLoading = state.data.loadingData;
+
+    return { steps: returnData, data: data, isLoading: isLoading}
   }, shallowEqual)
 
   const [current, setCurrent] = useState(0);
@@ -103,7 +105,6 @@ export default function ProblemModal({open, onClosed, onCleared}) {
                           data[current2].question.subQuestion[0].specificQuestionId : 
                           undefined
     }))
-
 
     // Update the checkbox state according to the bookmark state
   }
@@ -172,8 +173,12 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     setWrongCountList(new Array(MAX_QUESTIONS).fill(0));
   }
 
-  const next = () => { updateAnswer(current + 1); }
-  const prev = () => { updateAnswer(current - 1); }
+  const next = () => { 
+    updateAnswer(current + 1); 
+  }
+  const prev = () => { 
+    updateAnswer(current - 1); 
+  }
   const done = () => {
     console.log(currentAnswer);
     message.success('All problems cleared!');
@@ -216,21 +221,22 @@ export default function ProblemModal({open, onClosed, onCleared}) {
   // Actual page
   return ( data &&
     <Modal title="Problems" open={open} onCancel={onModalClosed} footer={footer} width={1000}>
-      <Row span={24}>
-        <Col span={24}>
-          <Row span={24}>
-            <Col span={24}>
-              <Tabs size='small' style={{ height: '100%'}}
-                items={tabsItems} activeKey={current} onChange={onTabsChanged}/>
-            </Col>
-          </Row>
-          <Divider/>
-          <Row span={24}>
-            <Col span={24}> {steps[current].content} </Col>
-          </Row>
-        </Col>
-      </Row>
-      <Divider/>
+      {isLoading ? <Spin /> : <> 
+        <Row span={24}>
+          <Col span={24}>
+            <Row span={24}>
+              <Col span={24}>
+                <Tabs size='small' style={{ height: '100%'}}
+                  items={tabsItems} activeKey={current} onChange={onTabsChanged}/>
+              </Col>
+            </Row>
+            <Divider/>
+            <Row span={24}>
+              <Col span={24}> {steps[current].content} </Col>
+            </Row>
+          </Col>
+        </Row>
+        <Divider/>
         {answerData[0] && console.log("Hi: ",current,answerData[0],"length:",answerData[0].answer.answerSubscripts.length)}
         {answerData[0] && answerData[0].answer.answerSubscripts.map((i, idx) => (
         steps[current].title !== "quesiton does not exist" && answerData[0].answer.answerValues[0] != "None" && <Row>
@@ -251,7 +257,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
         </Row>
         <Divider/>
       </>}
-      
+    </>}
       
     </Modal>
   )

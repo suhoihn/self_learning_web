@@ -10,7 +10,6 @@ export default function Bookmark () {
     
     return (
         <>
-        <b>This is history page</b>
         <HistoryList onItemClicked={()=>setIsBookmarkModalOpen(true)} setModalContent={setModalContent}/>
         <BookmarkModal open={isBookmarkModalOpen} onClosed={closeBookmarkModal} modalContent = {modalContent}/>
         </>

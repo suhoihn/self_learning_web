@@ -8,7 +8,7 @@ export default function BookmarkModal ({open, onClosed, modalContent}) {
     const onModalOk = () => {onClosed()};
 
     return (
-    <Modal title="Basic Modal" open={open} onCancel = {onModalClosed} onOk = {onModalOk}>
+    <Modal title="Problems" open={open} onCancel = {onModalClosed} onOk = {onModalOk}>
         {modalContent}
     </Modal>
     )

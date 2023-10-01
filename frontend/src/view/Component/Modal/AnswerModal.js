@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Typography, Modal, Button, Switch, Row, Col, Tabs, Divider, Image } from 'antd'
+import { Typography, Spin, Modal, Button, Switch, Row, Col, Tabs, Divider, Image } from 'antd'
 import { useSelector, shallowEqual } from 'react-redux'
 import undefinedImage from './undefinedImage';
 const {Text} = Typography
@@ -7,12 +7,14 @@ const {Text} = Typography
 export default function AnswerModal({open, onClosed, onCleared }) { 
 
   // steps(data fetched by useSelector
-  const steps = useSelector((state) => {
+  const {steps, isLoading} = useSelector((state) => {
     //console.log("STATE IS ", state);
     let data = state.data.answers;
+    let isLoading = state.data.isLoading;
     console.log("AnswerModal answers:", data);
     if(data === undefined) { data = []; }
-    return data;
+
+    return {steps: data, isLoading: isLoading}
   }, shallowEqual)
 
   const questionSteps = useSelector((state) => {
@@ -74,32 +76,32 @@ export default function AnswerModal({open, onClosed, onCleared }) {
   return (
     <Modal title="Answers" open={open} onCancel={onModalClosed}
             width={1000} footer={footer}>
-      <Row span={24}>
-        <Col span={24}>
-          <Row span={24}>
-            <Col span={24}>
-              <Tabs size='small' style={{ height: '100%'}}
-                  items={tabsItems} activeKey={current} onChange={onTabsChanged}
-              />
-            </Col>
-          </Row>
-          <Row span={24}>
-            <Col span={20} style={{textAlign: 'right'}}>
-              Question : <Switch Checked={false} onChange={onQuestionSwitchChanged} /> 
-            </Col>
-            <Col span= {4} style={{textAlign: 'right'}}>
-              Answer : <Switch defaultChecked onChange={onAnswerSwitchChanged} /> 
-            </Col>
-          </Row>
-          <Divider/>
-          <Row span={24}>
-            { isAnswer &&  steps.length > 0 && 
+      { isLoading ? <Spin /> : <>
+        <Row span={24}>
+          <Col span={24}>
+            <Row span={24}>
+              <Col span={24}>
+                <Tabs size='small' style={{ height: '100%'}}
+                    items={tabsItems} activeKey={current} onChange={onTabsChanged}/>
+              </Col>
+            </Row>
+            <Row span={24}>
+              <Col span={20} style={{textAlign: 'right'}}>
+                Question : <Switch Checked={false} onChange={onQuestionSwitchChanged} /> 
+              </Col>
+              <Col span= {4} style={{textAlign: 'right'}}>
+                Answer : <Switch defaultChecked onChange={onAnswerSwitchChanged} /> 
+              </Col>
+            </Row>
+            <Divider/>
+            <Row span={24}>
+              { isAnswer &&  steps.length > 0 && 
               <Col span={24}>   
                 <Text>Answer: </Text><br />
                 <Image src={`data:image/png;base64, ${steps[current].answer.answerImage.image}`} />
               </Col>
-            }
-            { isQuestion && questionSteps.length > 0 && 
+              }
+              { isQuestion && questionSteps.length > 0 && 
               <Col span={24}>
                 <Divider />
                 <Text>Question: </Text> <br />
@@ -110,11 +112,12 @@ export default function AnswerModal({open, onClosed, onCleared }) {
                   && <Image src={`data:image/png;base64, ${questionSteps[current].question.subQuestion[0].subQuestionImage.image}`} />
                 }
               </Col>
-            }
-          </Row>
-        </Col>
-      </Row>
-      <Divider/>
+              }
+            </Row>
+          </Col>
+        </Row>
+        <Divider/>
+      </>}
     </Modal>
   )
 }

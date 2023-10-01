@@ -1,7 +1,7 @@
 import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Button, Input, List, Space, Typography, Image, Divider, Row, Col } from 'antd';
+import { Spin, Button, Input, List, Space, Typography, Image, Divider, Row, Col } from 'antd';
 import { useDispatch } from 'react-redux'
 import { Actions as dataAction } from '../../../store/actions/dataActions'
 
@@ -23,9 +23,14 @@ export default function BookmarkedList ({onItemClicked, setModalContent}) {
     }))
   }, [])
 
-  const { data } = useSelector((state) => {
+  const { data, isLoading } = useSelector((state) => {
     let data = state.data;
-    return { data: data ? data : undefined, }
+    let isLoading = state.data.isLoading
+
+    return { 
+      data: data ? data : undefined, 
+      isLoading: isLoading
+    }
   }, shallowEqual)
 
   const { answerData } = useSelector((state) => {
@@ -130,6 +135,8 @@ export default function BookmarkedList ({onItemClicked, setModalContent}) {
 
   return (
     data && <>
+    {
+      isLoading ? <Spin /> : <>
       <List itemLayout="vertical" size="large" dataSource={data.data}
               pagination={{
               onChange: (page) => { console.log(page); },
@@ -144,5 +151,7 @@ export default function BookmarkedList ({onItemClicked, setModalContent}) {
               renderItem={onRenderListItem}
       />
       </>
+    }
+    </>
   )
 }

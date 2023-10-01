@@ -1,7 +1,7 @@
 import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Button, Input, List, Space, Typography, Image } from 'antd';
+import { Spin, Button, Input, List, Space, Typography, Image } from 'antd';
 import { useDispatch } from 'react-redux'
 import { Actions as dataAction } from '../../../store/actions/dataActions'
 
@@ -11,9 +11,13 @@ export default function RecommendedList({onItemClicked, setModalContent, listCon
   const dispatch = useDispatch();
 
   let { data } = useSelector((state) => {
-    console.log("STATE", state)
     let data = state.data;
-    return { data: data ? data : undefined, }
+    let isLoading = state.data.isLoading
+
+    return { 
+      data: data ? data : undefined, 
+      isLoading: isLoading
+    }
   }, shallowEqual)
 
   const { answerData } = useSelector((state) => {
