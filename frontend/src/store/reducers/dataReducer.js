@@ -65,7 +65,8 @@ const DataReducer = (state = initialState, action) => {
             break;
         case Types.GET_SAVE_QUESTION:
             console.log('reducer get save question received')
-            state = {...state, loadingData: true};
+            // Changed here due to reload issues in Bookmark list
+            state = {...state, loadingData: false};
             break;
         case Types.GET_SAVE_QUESTION_SUCCESS:
             console.log('reducer get save question success')

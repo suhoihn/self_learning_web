@@ -6,9 +6,10 @@ import { Actions as dataAction } from '../../../store/actions/dataActions'
 const { Text } = Typography
 
 
-export default function BookmarkedList ({onItemClicked, setModalContent}) {
+export default function GeneralDisplayList ({onItemClicked, setModalContent}) {
   /*
-    Bookmarked list, or any other list components, fetches the data and displays them with "Start" button and a bookmark checkbox
+    This list component fetches the data from the store and displays them with "Start" button and a bookmark checkbox
+    (used instead of BookmarkList, HistoryList, RecommendedList)
   */
 
   const dispatch = useDispatch();

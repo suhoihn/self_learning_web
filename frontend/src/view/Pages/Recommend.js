@@ -1,20 +1,27 @@
 import React, {useState, useEffect} from "react"
 import RecommendList from '../Component/List/RecommendList'
-import BookmarkModal from "../Component/Modal/BookmarkModal"
 import OptionCard from "../Component/Card/OptionCard"
 import { Card, Row, Col, Button, Alert, Typography } from "antd"
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { Actions as dataAction } from '../../store/actions/dataActions'
+import IndividualQModal from "../Component/Modal/IndividualQModal";
+import IndividualAModal from "../Component/Modal/IndividualAModal";
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 export default function Recommend () {
-  const [isBookmarkModalOpen, setIsRecommendationModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState(<></>);
   const [wrongCount, setWrongCount] = useState(0);
-  const closeBookmarkModal = () => {setIsRecommendationModalOpen(false)};
   const [listContent, setListContent] = useState([]);
   const [problemNumber, setProblemNumber] = useState(1); 
+
+  const [isProblemModalOpen, setIsProblemModalOpen] = useState(false);
+  const [isAnswerModalOpen, setIsAnswerModalOpen] = useState(false);
+
+  // In a form of {data, item}, it stores the information about the question
+  const [modalContent, setModalContent] = useState({});
+  const openAnswerModal = () => {console.log("Open me please!!!!!!!!!!!!!!!!!!!!"); setIsAnswerModalOpen(true)}
+  const closeAnswerModal = () => {console.log("Close me"); setIsAnswerModalOpen(false);}
+  
 
   const MAX_PROBLEM = 50;
 
@@ -82,8 +89,11 @@ export default function Recommend () {
       </Card>
       <Row span={24}>
         <Col span={24}>
-          <RecommendList onItemClicked={()=>setIsRecommendationModalOpen(true)} setModalContent={setModalContent} listContent = {listContent}/>
-          <BookmarkModal open={isBookmarkModalOpen} onClosed={closeBookmarkModal} modalContent = {modalContent}/>
+          <RecommendList onItemClicked={()=>setIsProblemModalOpen(true)} setModalContent={setModalContent} listContent = {listContent}/>
+          <>
+            {isProblemModalOpen && <IndividualQModal open={isProblemModalOpen} onClosed={() => {setIsProblemModalOpen(false)}} onCleared={openAnswerModal} definedContent={modalContent}/>}
+            {isAnswerModalOpen && <IndividualAModal open={isAnswerModalOpen} onClosede={() => {closeAnswerModal()}} question={modalContent} />}
+          </>
         </Col>
       </Row>
     

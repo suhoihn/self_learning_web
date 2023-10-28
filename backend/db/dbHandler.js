@@ -6,7 +6,7 @@ const fs = require("fs");
 const fileConvert = require("./data/utils/fileConvert")
 const CSV = require("./data/utils/handleCSV")
 const db = require('./db.js'); // db 불러오기
-const { disconnect } = require("process");
+const { disconnect, hasUncaughtExceptionCaptureCallback } = require("process");
 
 const DataFolder = "./data/";
 
@@ -54,6 +54,8 @@ module.exports.getQuestions = async (infos) => {
       'timezone' : {$in: infos.timezone },
       'paper' : {$in: infos.paper},
       'wrong' : {$gte: infos.wrong},
+      // Debug
+      //'question.questionType': "userMultiAns",
   }).then((docs) => {
     let result = filterByChapter(docs, infos.chapter)
     if (infos.bookmarked !== undefined) result = filterByBookmark(result, infos.bookmarked)
@@ -119,7 +121,21 @@ module.exports.saveQuestion = async (infos) => {
   var myquery = { 
     "questionId": infos.questionId,
   };
-  var newvalues = { $set: {bookmarked: infos.bookmarked, wrong: infos.wrong} };
+  
+  var anyUndefined = false;
+  // When infos.wrong is undefined, leave wrongCount as it is
+  if(infos.wrong === undefined){
+    console.log("In save question, wrong is undefined");
+    anyUndefined = true;
+    var newvalues = { $set: {bookmarked: infos.bookmarked} }; 
+  }
+  if(infos.bookmarked === undefined){
+    console.log("In save question, bookmarked is undefined");
+    anyUndefined = true;
+    var newvalues = { $set: {wrong: infos.wrong} }; 
+  }
+  
+  if(!anyUndefined){var newvalues = { $set: {bookmarked: infos.bookmarked, wrong: infos.wrong} };}
 
   Collections.questions.updateOne(myquery, newvalues).then(() => {console.log("SAVE QUESTION WORKING")});
 };

@@ -1,7 +1,7 @@
 import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Spin, Button, Input, List, Space, Typography, Image } from 'antd';
+import { Spin, Button, Input, List, Space, Typography, Image, Checkbox } from 'antd';
 import { useDispatch } from 'react-redux'
 import { Actions as dataAction } from '../../../store/actions/dataActions'
 
@@ -25,70 +25,76 @@ export default function RecommendedList({onItemClicked, setModalContent, listCon
 
     return data;
   }, shallowEqual)
-
-
-  const IconText = ({ icon, text }) => (
-    <Space>
-      {React.createElement(icon)}
-      {text}
-    </Space>
-  );        
-
-  let text = ''
-  const onInputChange = (e) => {
-    // setInputText(e.target.value)
-    text = e.target.value
-  }
+      
   const onSubmitClicked = (item) => {
     console.log(item.questionId, item.question.subQuestion)
     dispatch(dataAction.getRefAnswer({
       answerID: item.questionId,
       specificAnswerID: item.question.subQuestion[0].specificQuestionId
     }))
-
-    console.log("The Input is ", text);
-    // const { data } = useSelector((state) => {
-    //   let answerData = state.data.refAnswer;  
-      
-    //   console.log('DATA IN USESELECTOR:', answerData);
-    //   return { data: data ? data : undefined, }
-    // }, shallowEqual)
-
   }
+
+  const callAnswer = (item) => {
+    console.log("Get Ref Answer called in recommended list");
+    dispatch(dataAction.getRefAnswer({
+      answerId: item.questionId ? item.questionId: undefined,
+      specificAnswerId: item.question.subQuestion[0].specificQuestionId ?
+      item.question.subQuestion[0].specificQuestionId : undefined
+    }))
+  }
+
+  const openQuestion = (item) => {
+    callAnswer(item);
+
+    setModalContent({
+      data: [item],
+      item: item,
+    }); 
+  }
+  
+  const toggleBookmark = (checkState, item) => {
+    console.log("Change?! It's changing to", checkState);
+    
+    // this action should not change loadingData because rerendered
+    dispatch(dataAction.getSaveQuestion({
+      questionId: item.questionId,
+      bookmarked: checkState,
+    }));
+  }       
+
+
 
   const onRenderListItem = (item) => (
     <List.Item
       key={item.title}
-      onClick={() => {
-        setModalContent(
-          <>
-            <p>Question {item.questionId}</p>
-            <Image src={`data:image/png;base64, ${item.question.questionImage.image}`} />
-            <Image src={`data:image/png;base64, ${item.question.subQuestion[0].subQuestionImage.image}`} />
-            {console.log("Answer Data: ", answerData)}
+      // onClick={() => {
+        // setModalContent(
+        //   <>
+        //     <p>Question {item.questionId}</p>
+        //     <Image src={`data:image/png;base64, ${item.question.questionImage.image}`} />
+        //     <Image src={`data:image/png;base64, ${item.question.subQuestion[0].subQuestionImage.image}`} />
+        //     {console.log("Answer Data: ", answerData)}
 
-            { answerData && answerData[0].answerSubscripts.map((answerSubscript) => (
-              <Space>    
-                <Space.Compact style={{ width: '100%',}}>
-                  <Text>{answerSubscript}</Text>
-                  <Input placeholder="Write your answer here." onChange={onInputChange}/>
-                  <Button type="primary" onClick={onSubmitClicked(item)}>Submit</Button>
-                </Space.Compact>
-              </Space>
-            ))}
+        //     { answerData && answerData[0].answerSubscripts.map((answerSubscript) => (
+        //       <Space>    
+        //         <Space.Compact style={{ width: '100%',}}>
+        //           <Text>{answerSubscript}</Text>
+        //           <Input placeholder="Write your answer here." onChange={onInputChange}/>
+        //           <Button type="primary" onClick={onSubmitClicked(item)}>Submit</Button>
+        //         </Space.Compact>
+        //       </Space>
+        //     ))}
 
-          </>
-        );
-        onItemClicked()
-      }}
-      actions={[<IconText icon={StarOutlined} text="for something" key="list-vertical-star-o" />,]}
-      extra={
-        <img
-            width={272}
-            alt="logo"
-            src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-        />
+        //   </>
+        // );
+      // }}
+      actions={
+        [// This is added to prevent sim. click of button & list item
+        <Button onClick={() => openQuestion(item)}>Start this question</Button>,
+        <Checkbox defaultChecked={true} onChange={(e) => {toggleBookmark(e.target.checked, item)}}>Bookmarked</Checkbox>,
+        ]
       }
+      extra={<Image src={`data:image/png;base64, ${item.question.questionImage.image}`} />}
     >
       <List.Item.Meta
           title={<a href={item.href}>{item.title}</a>}
@@ -109,16 +115,6 @@ export default function RecommendedList({onItemClicked, setModalContent, listCon
     // Updated when button is pressed
     data && <>
       <List itemLayout="vertical" size="large" dataSource={listContent}
-              pagination={{
-              onChange: (page) => { console.log(page); },
-              pageSize: 3,
-              }}
-              
-              footer={
-              <div>
-                  <b>ant design</b> footer part
-              </div>
-              }
               renderItem={onRenderListItem}
       />
       </>
