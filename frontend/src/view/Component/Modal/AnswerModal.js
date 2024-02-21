@@ -1,35 +1,34 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react';
 import { Typography, Spin, Modal, Button, Switch, Row, Col, Tabs, Divider, Image } from 'antd'
 import { useSelector, shallowEqual } from 'react-redux'
-import undefinedImage from './undefinedImage';
-const {Text} = Typography
+const { Text } = Typography;
 
-export default function AnswerModal({open, onClosed, onCleared }) { 
+export default function AnswerModal({ open, onClosed }) { 
 
-  // steps(data fetched by useSelector)
-  const {steps, isLoading} = useSelector((state) => {
-    //console.log("STATE IS ", state);
+  // Answer steps (data fetched by useSelector)
+  const { steps, isLoading } = useSelector((state) => {
     let data = state.data.answers;
     let isLoading = state.data.isLoading;
     console.log("AnswerModal answers:", data);
     if(data === undefined) { data = []; }
 
-    return {steps: data, isLoading: isLoading}
-  }, shallowEqual)
+    return { steps: data, isLoading: isLoading };
+  }, shallowEqual);
 
+  // Question steps
   const questionSteps = useSelector((state) => {
     let data = state.data.data;
-    console.log("AnswerModal Questions:", data);
+    console.log("AnswerModal questions:", data);
     if(data === undefined) { data = []; }
     return data;
-  }, shallowEqual)
+  }, shallowEqual);
 
   const [current, setCurrent] = useState(0);
   const next = () => setCurrent(current + 1);
   const prev = () => setCurrent(current - 1);
   const done = () => { onClosed(); }
 
-  // tabs
+  // Tabs
   const tabsItems = steps.map((_, i) => {
     const id = String(i + 1);
     return {
@@ -38,16 +37,13 @@ export default function AnswerModal({open, onClosed, onCleared }) {
     }
   })
     
-  const onTabsChanged = (key) => setCurrent(key)
+  const onTabsChanged = (key) => setCurrent(key);
 
   // Switch
-  const [isQuestion, setIsQuestion] = useState(false)
-  const [isAnswer, setIsAnswer] = useState(true)
-  const onQuestionSwitchChanged = () => setIsQuestion(!isQuestion)
-  const onAnswerSwitchChanged = () => setIsAnswer(!isAnswer)
-
-  // Modal
-  const onModalClosed = ()=> { onClosed() }
+  const [isQuestion, setIsQuestion] = useState(false);
+  const [isAnswer, setIsAnswer] = useState(true);
+  const onQuestionSwitchChanged = () => setIsQuestion(!isQuestion);
+  const onAnswerSwitchChanged = () => setIsAnswer(!isAnswer);
 
   const footer = 
     <div style={{ marginTop: 24, display: 'flex'}}>
@@ -74,7 +70,7 @@ export default function AnswerModal({open, onClosed, onCleared }) {
     </div>
 
   return (
-    <Modal title="Answers" open={open} onCancel={onModalClosed}
+    <Modal title="Answers" open={open} onCancel={onClosed}
             width={1000} footer={footer}>
       { isLoading ? <Spin /> : <>
         <Row span={24}>

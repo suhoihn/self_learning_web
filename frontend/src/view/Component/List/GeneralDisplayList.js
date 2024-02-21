@@ -1,12 +1,11 @@
-import { useSelector, shallowEqual } from 'react-redux';
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import { Spin, Button, List, Typography, Image, Checkbox } from 'antd';
-import { useDispatch } from 'react-redux'
-import { Actions as dataAction } from '../../../store/actions/dataActions'
+import { Actions as dataAction } from '../../../store/actions/dataActions';
 
-const { Text } = Typography
+const { Text } = Typography;
 
 
-export default function GeneralDisplayList ({onItemClicked, setModalContent}) {
+export default function GeneralDisplayList ({onItemClicked, setQuestionData}) {
   /*
     This list component fetches the data from the store and displays them with "Start" button and a bookmark checkbox
     (used instead of BookmarkList, HistoryList, RecommendedList)
@@ -14,6 +13,7 @@ export default function GeneralDisplayList ({onItemClicked, setModalContent}) {
 
   const dispatch = useDispatch();
 
+  // Get the question data from the store (after the action is dispatched)
   const { data, isLoading } = useSelector((state) => {
     let data = state.data;
     let isLoading = state.data.loadingData;
@@ -25,71 +25,40 @@ export default function GeneralDisplayList ({onItemClicked, setModalContent}) {
   }, shallowEqual);
 
   const toggleBookmark = (checkState, item) => {
-    console.log("Bookmark state changing to", checkState);
-    
-    // this action should not change loadingData because the page gets re-rendered
+
+    // This action should not change loadingData because the page gets re-rendered
     dispatch(dataAction.getSaveQuestion({
+      userEmail: localStorage.getItem('userEmail'),
       questionId: item.questionId,
       bookmarked: checkState,
     }));
-  }       
+  }; 
 
   const openQuestion = (item) => {
-    console.log("openQuestion!!!",item);
+    console.log("openQuestion called for ", item);
 
     // This is used for definning the state used in the Individual Question Modal
-    setModalContent({
+    setQuestionData({
       data: [item],
       item: item,
     });
 
-    callAnswer(item);
-
-    // Close the modal and open the answer modal
-    onItemClicked();
-
-    // setModalContent(
-    //   <>
-    //     <p>Question {item.questionId}</p>
-    //     <>   
-    //       {item.question.questionImage.image && <Image src={`data:image/png;base64, ${item.question.questionImage.image}`} />}
-    //       {item.question.subQuestion[0].subQuestionImage.image && <Image src={`data:image/png;base64, ${item.question.subQuestion[0].subQuestionImage.image}`} />}
-    //     </>
-    //     <Divider/>
-    //     {answerData && answerData[0].answer.answerSubscripts.map((i, idx) => (
-    //     answerData[0].answer.answerValues[0] != "None" && <Row>
-    //         <Col span={4}>
-    //           <Text>{(i == "None") ? "Answer: " : i}</Text>
-    //         </Col>
-    //         <Col span={20}>
-    //           <Input key={idx} value={text} placeholder="Write your answer here." onChange={(e) => {onInputChange(e,idx)}}/>
-    //         </Col>
-    //       </Row>
-    //     ))}
-    //   {answerData && answerData[0].answer.answerValues[0] != "None" && <>
-    //     <Row style={{marginTop: 10}}>
-    //       <Col span={24} style={{textAlign: 'right'}}>
-    //           {<Button type="primary" onClick={answerSubmit}>Submit</Button>}
-    //         </Col>
-    //     </Row>
-    //     <Divider/>
-    //   </>}
-
-    //   </>
-    // );
-    
-  }
-
-  // Ref Answer is needed so that the question modal displays relevant information (e.g. answerSubscripts)
-  
-  const callAnswer = (item) => {
-    console.log("Get Ref Answer called");
+    // RefAnswer is needed so that the question modal displays relevant information (e.g. answerSubscripts)
     dispatch(dataAction.getRefAnswer({
-      answerId: item.questionId ? item.questionId: undefined,
-      specificAnswerId: item.question.subQuestion[0].specificQuestionId ?
-      item.question.subQuestion[0].specificQuestionId : undefined
-    }))
-  }
+      answerId: item.questionId,
+      specificAnswerId: item.question.subQuestion[0].specificQuestionId,
+    }));
+
+    // REDUNDANT CODE
+    // dispatch(dataAction.getRefAnswer({
+    //   answerId: item.questionId ? item.questionId: undefined,
+    //   specificAnswerId: item.question.subQuestion[0].specificQuestionId ?
+    //   item.question.subQuestion[0].specificQuestionId : undefined
+    // }));
+
+    // Open the question modal
+    onItemClicked();
+  };
 
   const onRenderListItem = (item) => (
     <List.Item
@@ -115,23 +84,17 @@ export default function GeneralDisplayList ({onItemClicked, setModalContent}) {
           }
       />          
     </List.Item>
-  )
+  );
 
   return (
     data && <>
     {
       isLoading ? <Spin /> : <>
         <List itemLayout="vertical" size="large" dataSource={data.data}
-            // Pagination temporarily disabled due to critical bug
-
-            // pagination={{
-            //   onChange: (page) => { console.log(page); },
-            //   pageSize: 3,
-            // }}
             renderItem={onRenderListItem}
         />
       </>
     }
     </>
-  )
-}
+  );
+};

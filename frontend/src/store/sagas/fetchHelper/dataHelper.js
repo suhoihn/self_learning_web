@@ -1,4 +1,4 @@
-import { get } from "./http/api"
+import { get } from "./http/api";
 const { Urls } = require("./http/url");
 
 export const getData = (id) => get(Urls.GET_EXAMPLEDATA, {params: {id: id}});
@@ -8,3 +8,4 @@ export const getReloadDBQuestion = () => get(Urls.GET_RELOAD_DB_QUESTION);
 export const getReloadDBAnswer = () => get(Urls.GET_RELOAD_DB_ANSWER);
 export const getSaveQuestion = (info) => get(Urls.GET_SAVE_QUESTION, {params: {infos: info}});
 export const getAnswers = (info) => get(Urls.GET_ANSWERS, {params: {infos: info}});
+export const getUserDetails = (info) => get(Urls.GET_USER_DETAILS, {params: {infos: info}});

@@ -1,13 +1,11 @@
-import { Types } from "../actions/dataActions"
+import { Types } from "../actions/dataActions";
 
 const initialState = {
-    data: [],
+    data: [], // For questions
     loadingData: false,
-    error: {
-        message: "",
-    },
-    refAnswer: '',
-    answers: []
+    error: { message: "", },
+    refAnswer: '', // For reference answers
+    answers: [], // For multiple answers
 };
 
 const DataReducer = (state = initialState, action) => {
@@ -23,6 +21,8 @@ const DataReducer = (state = initialState, action) => {
         case Types.GET_DATA_FAIL:
             state = {...state, error: { message: "ERROR" }, loadingData: false};
             break;
+
+        // Get Questions
         case Types.GET_QUESTIONS:
             console.log("reducer get quetions received");
             state = {...state, loadingData: true};
@@ -35,6 +35,8 @@ const DataReducer = (state = initialState, action) => {
             console.log("reducer get quetions failed");
             state = {...state, error: { message: "ERROR" }, loadingData: false};
             break;
+        
+        // Get Reference Answers
         case Types.GET_REF_ANSWER:
             console.log("reducer get answer received")
             state = {...state, loadingData: true}
@@ -47,6 +49,8 @@ const DataReducer = (state = initialState, action) => {
             console.log('reducer get answer failed')
             state = {...state, error: { message: "ERROR" }, loadingData: false};
             break;
+
+        // Get Reload DB
         case Types.GET_RELOAD_DB:
             console.log("reducer get reload received")
             state = {...state, reloadDB: true}
@@ -59,6 +63,8 @@ const DataReducer = (state = initialState, action) => {
             console.log('reducer get reload failed')
             state = {...state, error: { message: "ERROR" }, reloadDB: false};
             break;
+
+        // Get Save Question
         case Types.GET_SAVE_QUESTION_FAIL:
             console.log('reducer get save question failed')
             state = {...state, error: { message: "ERROR" }, loadingData: false};
@@ -86,6 +92,21 @@ const DataReducer = (state = initialState, action) => {
             console.log('reducer get answers success', action.payload);
             state = {...state, loadingData: false, answers: action.payload};
             break;
+
+        // Get user details
+        case Types.GET_ANSWERS_FAIL:
+            console.log('reducer get details failed')
+            state = {...state, error: { message: "ERROR" }, loadingData: false};
+            break;
+        case Types.GET_ANSWERS:
+            console.log('reducer get details received')
+            state = {...state, loadingData: true};
+            break;
+        case Types.GET_ANSWERS_SUCCESS:
+            console.log('reducer get details success', action.payload);
+            state = {...state, loadingData: false, data: action.payload};
+            break;
+
 
         default:
             state = {...state};

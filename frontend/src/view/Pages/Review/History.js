@@ -4,9 +4,16 @@ import IndividualQModal from "../../Component/Modal/IndividualQModal";
 import IndividualAModal from "../../Component/Modal/IndividualAModal";
 import { Actions as dataAction } from '../../../store/actions/dataActions'
 import GeneralDisplayList from "../../Component/List/GeneralDisplayList";
+import { useNavigate } from 'react-router-dom';
 
 
 export default function History () {
+    const navigate = useNavigate();
+  
+    useEffect(() => {
+      !localStorage.getItem("authToken")? navigate("/login") : navigate("/Review/History");
+    },[]);
+
     const [isProblemModalOpen, setIsProblemModalOpen] = useState(false);
     const [isAnswerModalOpen, setIsAnswerModalOpen] = useState(false);
 

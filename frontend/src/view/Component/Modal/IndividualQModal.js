@@ -27,6 +27,12 @@ export default function IndividualQModal({open, onClosed, onCleared, definedCont
   const [sliderValue, setSliderValue] = useState(1);
 
   // definedContent: { data, item }
+  
+  // **********************************
+  // TODO: REMOVE STEPS FROM HERE ALSO
+  // ALSO UPDATE THE CURRENT! IT'S UNUSED!!
+  // **********************************
+
   let {data, steps, isLoading} = {
     // This should be a single LIST!!!! [item]
     data: definedContent.data ? definedContent.data : undefined,
@@ -78,6 +84,7 @@ export default function IndividualQModal({open, onClosed, onCleared, definedCont
 
     // The bookmark status is saved before updating "current"
     dispatch(dataAction.getSaveQuestion({
+      userEmail: localStorage.getItem('userEmail'),
       questionId: data[current].questionId,
       bookmarked: bookmarkState,
       wrong: wrongCount,

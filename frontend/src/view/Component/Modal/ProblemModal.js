@@ -1,20 +1,23 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Spin, Checkbox, message, Input,
-          Row, Col, Tabs, Divider, Image, Typography, Slider } from 'antd'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
-import UndefinedImage from './undefinedImage'
+          Row, Col, Tabs, Divider, Image, Typography, Slider } from 'antd';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import UndefinedImage from './undefinedImage';
 
-import {Actions as dataAction} from '../../../store/actions/dataActions'
+import { Actions as dataAction } from '../../../store/actions/dataActions';
 
-const {Text} = Typography
+const { Text } = Typography;
 export default function ProblemModal({open, onClosed, onCleared}) { 
   const dispatch = useDispatch();
 
   // Maximum questions that can be loaded in this modal
   const MAX_QUESTIONS = 100;
 
+
   // Bookmark state and wrong count for bookmark and history pages
   // This is assuming there are maximum of 100 questions!
+
+  // TODO: simply this and make it more stable (not working well if there is only 1 question!!)
   const [bookmarkState, setBookmarkState] = useState(new Array(MAX_QUESTIONS).fill(false));
   const [wrongCountList, setWrongCountList] = useState(new Array(MAX_QUESTIONS).fill(0));
   
@@ -24,42 +27,33 @@ export default function ProblemModal({open, onClosed, onCleared}) {
 
   // Stores the current number of question
   const [current, setCurrent] = useState(0);
-  
+
   // For UserMultiAns questions
   const [sliderValue, setSliderValue] = useState(1);
 
+  // Whenever the bookmarkState or current changes, the checkbox is also updated
+  useEffect(() => { 
+    setBookmarkCheckbox(
+      <Checkbox checked={bookmarkState[current]} onChange={() => {toggleBookmark()}}>Bookmark</Checkbox>
+    );
+  }, [bookmarkState, current]);
+
+  const toggleBookmark = () => {
+    setBookmarkState(bookmarkState.map((q,idx) =>
+      idx === current ? !bookmarkState[current] : bookmarkState[idx]
+    ));
+  };
+  
   // Question data fetched from the backend (anything in the state, so must be dispatched before opening this modal)
-  // Only when there is no defined question (when called from Bookmark, History, or Recommended)
-
-  let {data, steps, isLoading} = useSelector((state) => {
+  // Only when there is no defined question (only in Main, not when called from Bookmark, History, or Recommended)
+  let { data, isLoading } = useSelector((state) => {
     let data = state.data.data;
-    let returnData = new Array(data.length);
-    
-    console.log("data info from useSelector", data);
-
-    // Generating format used in the actual modal display
-    for(let i = 0; i < data.length; i++) {
-      let generalQuestionImage = data[i].question.questionImage.image
-      let subQuestionImage = data[i].question.subQuestion[0].subQuestionImage.image
-      returnData[i] = {
-        title: "Problem " + (i+1),
-        content: <>
-          {generalQuestionImage && <Image src={`data:image/png;base64, ${generalQuestionImage}`} />}
-          {subQuestionImage && <Image src={`data:image/png;base64, ${subQuestionImage}`} />}
-        </>
-      }
-    }
-
-    // In case when no questions were found
-    returnData = (returnData.length == 0) ? [{
-        title: 'quesiton does not exist',
-        content: <UndefinedImage/> 
-      },] : returnData
-    
     let isLoading = state.data.loadingData;
 
-    return { steps: returnData, data: data, isLoading: isLoading}
-  }, shallowEqual)
+    return { data: data, isLoading: isLoading };
+  }, shallowEqual);
+
+
 
   // Always 1 answerData exists bc unique
   // (NOTE: Can be extended later to include main Q and subQ at once)
@@ -67,9 +61,11 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     let data = state.data.refAnswer; // The answer unique to the single question
     console.log("Main(Problem Modal) refAnswer:", data);
     return data;
-  }, shallowEqual)
+  }, shallowEqual);
 
-  // When "data" changes, refAnswer is requested from backend
+
+
+  // When "data" changes, bookmark states and wrong counts are updated accordingly
   useEffect(() => {
     let returnBookmarkData = new Array(MAX_QUESTIONS).fill(false);
     let returnWrongCountList = new Array(MAX_QUESTIONS).fill(0);
@@ -80,53 +76,50 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     }
     setBookmarkState(returnBookmarkData);
     setWrongCountList(returnWrongCountList);
+    
 
-    console.log("Get Ref Answer called in ProblemModal through updateAnswer");
-    data.length > 0 &&
+    // This is called once when the data is loaded
     dispatch(dataAction.getRefAnswer({
-      answerId: data[current].questionId ? data[current].questionId: undefined,
+      answerId: data[current] ? data[current].questionId: undefined,
       specificAnswerId: data[current].question.subQuestion[0].specificQuestionId ?
                           data[current].question.subQuestion[0].specificQuestionId : 
                           undefined
-    }))
-  }, [data])
+    }));
+  }, [data]);
+
+
 
   // TODO: Why subQuestion[0] only?
   // Updates the question info through "getSaveQuestion" action
-  function updateAnswer(current2){
+  function updateAnswer(newCurrent){
+    if(data.length === 0){ return; }
+
     // Clear input from the modal
     clearInputs();
 
     // The bookmark status is saved before updating "current"
+    console.log("FJWIEOFJIOEJF", wrongCountList[current]);
     dispatch(dataAction.getSaveQuestion({
+      userEmail: localStorage.getItem('userEmail'),
+
       questionId: data[current].questionId,
       bookmarked: bookmarkState[current],
       wrong: wrongCountList[current],
-    }))
+    }));
 
-    // "current" is changed to "current2"
-    setCurrent(current2);
+    // "current" is changed to "newCurrent"
+    setCurrent(newCurrent);
     
     // Get new refAnswer for the loaded question
-    data.length > 0 &&
     dispatch(dataAction.getRefAnswer({
-      answerId: data[current2].questionId ? data[current2].questionId: undefined,
-      specificAnswerId: data[current2].question.subQuestion[0].specificQuestionId ?
-                          data[current2].question.subQuestion[0].specificQuestionId : 
-                          undefined
-    }))
-  }
+      answerId: data[newCurrent].questionId,
+      specificAnswerId: data[newCurrent].question.subQuestion[0].specificQuestionId
+    }));
+  };
 
-
-  // Whenever the bookmarkState or current changes, the checkbox is also updated
-  useEffect(() => { 
-    setBookmarkCheckbox(
-      <Checkbox checked={bookmarkState[current]} onChange={() => {toggleBookmark()}}>Bookmark</Checkbox>
-    );
-  }, [bookmarkState, current]);
 
   // Tabs for the modal
-  const tabsItems = steps.map((_, i) => {
+  const tabsItems = data.map((_, i) => {
     const id = String(i + 1);
     return {
       label: 'Problem' + id,
@@ -136,6 +129,8 @@ export default function ProblemModal({open, onClosed, onCleared}) {
   
   // When moved to a new tab, call updateAnswer
   const onTabsChanged = (key) => {updateAnswer(key);}
+  
+
   
   // Input with multiple answer subscripts
   const MAXINPUT = 10; // Maximum number of input fields possible
@@ -182,8 +177,9 @@ export default function ProblemModal({open, onClosed, onCleared}) {
       setWrongCountList(wrongCountList.map((q,idx) => (
         idx === current ? wrongCountList[current] + 1: wrongCountList[idx]
       )));
-    }
-  }
+    };
+    console.log("Your wrong count is " + wrongCountList[current]);
+  };
 
   // Modal management
   const onModalClosed = ()=> {
@@ -192,14 +188,15 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     setCurrent(0);
     setBookmarkState(new Array(MAX_QUESTIONS).fill(false));
     setWrongCountList(new Array(MAX_QUESTIONS).fill(0));
-  }
+  };
 
-  const next = () => { updateAnswer(current + 1); }
-  const prev = () => { updateAnswer(current - 1); }
+  const next = () => { updateAnswer(current + 1); };
+  const prev = () => { updateAnswer(current - 1); };
   const done = () => {
     if(!window.confirm('Check answer?')) return;
     onClosed();
     onCleared();
+    updateAnswer(current);
     setCurrent(0);
 
     console.log("Checking the data that is about to be sent to the backend via the getAnswers action: ", data);
@@ -216,26 +213,20 @@ export default function ProblemModal({open, onClosed, onCleared}) {
 
   }
 
-  const toggleBookmark = () => {
-    setBookmarkState(bookmarkState.map((q,idx) =>
-      idx === current ? !bookmarkState[current] : bookmarkState[idx]
-    ));
-  }
-
   const footer = 
   <div style={{ marginTop: 24, display: 'flex'}}>
     <div style={{textAlign: 'left'}}> 
-      {!isLoading && steps[current].title !== "quesiton does not exist" && bookmarkCheckbox}
+      {!isLoading && data.length !== 0 && bookmarkCheckbox}
     </div>
     <div style={{width: '100%', textAlign:'right'}}>
       {current > 0 && <Button style={{margin: '0 8px',}} onClick={() => prev()}> Previous </Button>}
-      {current < steps.length - 1 && <Button type="primary" onClick={() => next()}> Next </Button>}
-      {current === steps.length - 1 && <Button type="primary" onClick={done}> Done </Button>}
+      {current < data.length - 1 && <Button type="primary" onClick={() => next()}> Next </Button>}
+      {current === data.length - 1 && <Button type="primary" onClick={done}> Done </Button>}
     </div>
   </div>
 
   // Actual page
-  return ( data &&
+  return (
     <Modal title="Problems" open={open} onCancel={onModalClosed} footer={footer} width={1000}>
       {isLoading ? <Spin /> : <> 
         <Row span={24}>
@@ -248,14 +239,20 @@ export default function ProblemModal({open, onClosed, onCleared}) {
             </Row>
             <Divider/>
             <Row span={24}>
-              <Col span={24}> {steps[current].content} </Col>
+              <Col span={24}>
+                {data.length === 0 ? <>
+                  <UndefinedImage/>
+                  <Text>Question not found</Text>
+                </> : <>
+                  {data.length !== 0 && data[current].question.questionImage.image && <Image src={`data:image/png;base64, ${data[current].question.questionImage.image}`} />}
+                  {data.length !== 0 && data[current].question.subQuestion[0].subQuestionImage.image && <Image src={`data:image/png;base64, ${data[current].question.subQuestion[0].subQuestionImage.image}`} />}
+                </>}
+             </Col>
             </Row>
           </Col>
         </Row>
-        <Divider/>
-        {answerData[0] && console.log("Hi: ",current,answerData[0],"length:",answerData[0].answer.answerSubscripts.length)}
-        
-        {data[current] && data[current].question.questionType == "userMultiAns" ? 
+        <Divider/>        
+        {data.length !== 0 && data[current] && data[current].question.questionType == "userMultiAns" ? 
           <>
             <Row>
               <Col span = {24}>
@@ -264,7 +261,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
             </Row>
             <Row>
               {answerData[0] && [...Array(sliderValue)].map((_, idx) => (
-                steps[current].title !== "quesiton does not exist" && 
+                data.length !== 0 && 
                 <>
                   <Col span={4}>
                     <Text>
@@ -283,7 +280,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
           // Normal answering system
           <>
             {answerData[0] && answerData[0].answer.answerSubscripts.map((i, idx) => (
-              steps[current].title !== "quesiton does not exist" && answerData[0].answer.answerValues[0] != "None" && <Row>
+              data.length !== 0 && answerData[0].answer.answerValues[0] != "None" && <Row>
                   <Col span={4}>
                     <Text>{(i == "None") ? "Answer: " : i}</Text>
                   </Col>
@@ -298,8 +295,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
       {answerData[0] && answerData[0].answer.answerValues[0] != "None" && <>
         <Row style={{marginTop: 10}}>
           <Col span={24} style={{textAlign: 'right'}}>
-              {console.log(steps[current].title)}
-              {steps[current].title !== "quesiton does not exist" && <Button type="primary" onClick={answerSubmit}>Submit</Button>}
+              {data.length !== 0 && <Button type="primary" onClick={answerSubmit}>Submit</Button>}
             </Col>
         </Row>
         <Divider/>

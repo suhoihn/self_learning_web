@@ -9,12 +9,13 @@ const logger = require('morgan');
 // Additional modules
 var cors = require('cors');
 const db = require('./db/db.js'); // DB connection
-const dataRouter = require('./routes/data'); // Router
+const dataRouter = require("./routes/data.js"); // Router for question data
+const authRouter = require("./routes/auth.js"); // Router for authentication (user check)
+// const privateRouter = require("./routes/private"); // Router for private???
 
 
 // Create the app (backend)
 const app = express();
-
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,15 +28,19 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
-
 // Connect to DB
 db();
 
-
-// Use the router from routes/data.js
+// Use the routers from routes/ folder
 // The backend is accessed through address [PORT]://api/Data/[Address]
-app.use('/api/Data', dataRouter);
 
+app.use('/api/Data', dataRouter);
+app.use('/api/auth', authRouter);
+// app.use('/api/private', privateRouter);
+
+
+// I should have used this errorHandler to to something in the "return next() in the auth router"
+// app.use(errorHandler)
 
 // Default error handler
 app.use(function(req, res, next) {

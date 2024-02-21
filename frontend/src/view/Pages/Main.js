@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {useDispatch} from 'react-redux'
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 import { Row, Col, Button, Card, Alert, Radio, Typography, List } from 'antd';
@@ -7,11 +7,17 @@ import ProblemModal from '../Component/Modal/ProblemModal';
 import AnswerModal from '../Component/Modal/AnswerModal'
 
 import {Actions as dataAction} from '../../store/actions/dataActions'
+import { useNavigate } from 'react-router-dom';
 const { Text, Title } = Typography;
 
 
 export default function Main () {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    !localStorage.getItem("authToken")? navigate("/login") : navigate("/Main")
+  },[]);
 
   // Modal
   const [isProblemModalOpen, setIsProblemModalOpen] = useState(false);
@@ -82,56 +88,80 @@ export default function Main () {
   const style={margin: 10}
 
   return (
-    <div>
-    <Card title={<Text>Configuration</Text>}>
-      <Row span={24}>
-        <Col span={12}>
-          <Row span={24}>
-            <Col span={10} style={style}>
-              <OptionCard items={infos.chapterItems} title={'Chapter'} update={setChapterValue} 
-                          valueDisabled={[1,2,3,4,5,6,7,8,9,10,11,12]}/>
-            </Col>
-            <Col span={10} style={style}>
-              <OptionCard items={infos.difficultyItems} title={'Difficulty'} update={setDifficultyValue}
-                          valueDisabled={[1,2,3]}/>
-            </Col>
-          </Row>
-          <Row span={24}>
-            <Col span={10} style={style}>
-              <OptionCard items={infos.paperItems} title={'Paper'} update={setPaperValue}
-                          valueDisabled={[1,2]}/>
-            </Col>
-            <Col span={10} style={style}>
-              <OptionCard items={infos.timezoneItems} title={'Timezone'} update={setTimezoneValue}
-                          valueDisabled={[1,2,3]}/>
-            </Col>
-          </Row>
-          <Row span={24}>
-            <Col span={10} style={style}>
-              <OptionCard items={infos.problemNumItems} title={'Problem Number'} update={setProblemNumber} 
-                          isSingleSelect={true} useSwitch={false}/>
-            </Col>
-          </Row>
-        </Col>
-
-        <Col span={12}>
-          <Row span={24}> 
-            <Col span={23} style={style}>
-              <Alert message="Instruction" type="info" showIcon />   
-              <br />       
-              <Text>- You can customise your search using the categories in the dropdown</Text><br />
-              <Text>- If you do not want to filter on a specific category, turn off the switch.</Text><br />
-              <Text>- If you are ready, click the "Submit" button</Text>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-      <Row span={24}>
-        <Col span={24} style={{textAlign: 'right'}}>
-          <Button onClick={onSubmitClicked}>Submit</Button>
-        </Col>
-      </Row>
-    </Card>
+    <div style = {{ margin: 10 }}>
+      <div>
+        <Row span={24}>
+          <Col span={24}>
+            <div
+              style={{
+                justifyContent: 'center',
+                display: 'flex'
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: '#d0e2f3',
+                  padding: '5px 50px',
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                  borderRadius: 5,
+                  marginBottom: 50
+                }}
+              >
+                Instruction
+              </div>
+            </div>
+            <div
+              style={{
+                justifyContent: 'center',
+                display: 'flex',
+                fontSize: 15,
+                marginBottom: 80
+              }}
+            >
+              <ol>
+                <li>
+                  You can customise your search using the categories in the dropdown.
+                </li>
+                <li>
+                  If you do not want to filter on a specific category, turn off the switch.
+                </li>
+                <li>
+                  If you are ready, click the "Submit" button.
+                </li>
+              </ol>
+            </div>
+          </Col>
+        </Row>  
+        <Row span={24} justify={'space-around'}>
+          <Col span={4} style={style}>
+            <OptionCard items={infos.chapterItems} title={'Chapter'} update={setChapterValue} 
+                        valueDisabled={[1,2,3,4,5,6,7,8,9,10,11,12]}/>
+          </Col>
+          <Col span={4} style={style}>
+            <OptionCard items={infos.difficultyItems} title={'Difficulty'} update={setDifficultyValue}
+                        valueDisabled={[1,2,3]}/>
+          </Col>
+          <Col span={4} style={style}>
+            <OptionCard items={infos.paperItems} title={'Paper'} update={setPaperValue}
+                        valueDisabled={[1,2]}/>
+          </Col>
+          <Col span={4} style={style}>
+            <OptionCard items={infos.timezoneItems} title={'Timezone'} update={setTimezoneValue}
+                        valueDisabled={[1,2,3]}/>
+          </Col>
+          <Col span={4} style={style}>
+            <OptionCard items={infos.problemNumItems} title={'Problem Number'} update={setProblemNumber} 
+                        isSingleSelect={true} useSwitch={false}/>
+          </Col>
+        </Row>
+        <Row span={24} style={{marginTop: 100}}>
+          <Col span={24} style={{textAlign: 'center'}}>
+            <Button onClick={onSubmitClicked}>Submit</Button>
+          </Col>
+        </Row>
+      </div>
+     
     <ProblemModal open={isProblemModalOpen} onClosed={onProblemModalClosed} onCleared={onProblemCleared}/>
     <AnswerModal open={isAnswerModalOpen} onClosed={onAnswerModalClosed} />
     </div>    

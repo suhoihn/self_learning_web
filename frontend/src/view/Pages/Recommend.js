@@ -6,10 +6,17 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { Actions as dataAction } from '../../store/actions/dataActions'
 import IndividualQModal from "../Component/Modal/IndividualQModal";
 import IndividualAModal from "../Component/Modal/IndividualAModal";
+import { useNavigate } from 'react-router-dom';
 
 const { Text } = Typography;
 
 export default function Recommend () {
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    !localStorage.getItem("authToken")? navigate("/login") : navigate("/Recommended");
+  },[]);
+
   const [wrongCount, setWrongCount] = useState(0);
   const [listContent, setListContent] = useState([]);
   const [problemNumber, setProblemNumber] = useState(1); 
@@ -63,30 +70,68 @@ export default function Recommend () {
 
     return (
       <>
-      <Card title={<Text>Configuration</Text>}>
         <Row span={24}>
-          <Col span={12}>
-            <Row span={24}>
-              <Col span={10} style={style}>
-                <OptionCard useSwitch={false} items={problemNum} title={'Problem Number'} update={setProblemNumber} isSingleSelect={true}/>
-              </Col>
-              <Col span={10} style={style}>
-                <OptionCard useSwitch={false} items={wrongNum} title={'Wrongs'} update={setWrongCount} isSingleSelect={true}/>
-              </Col>
-            </Row>  
+          <Col span={24}>
+            <div
+              style={{
+                justifyContent: 'center',
+                display: 'flex'
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: '#d0e2f3',
+                  padding: '5px 50px',
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                  borderRadius: 5,
+                  marginBottom: 50
+                }}
+              >
+                Instruction
+              </div>
+            </div>
+            <div
+              style={{
+                justifyContent: 'center',
+                display: 'flex',
+                fontSize: 20,
+                marginBottom: 80
+              }}
+            >
+              Questions with wrong count higher than the input will be shown.
+            </div>
           </Col>
-          <Col span={12}>
-            <Alert message="Instruction" type="info" showIcon />   
-            <br />       
-            <Text>- Questions with wrong count higher than the input will be shown...for now</Text><br />
-          </Col>            
         </Row>
-        <Row>
-          <Col span={24} style={{textAlign: 'right'}}>
-            <Button onClick={onSubmitClicked}>Submit</Button>
+        <Row span={24} justify={'space-around'} align={'center'}
+          style={{
+            borderBottom: '1px solid #f0f0f0',
+            paddingBottom: 50
+          }}
+        >
+          <Col span={6} style={style}>
+            <OptionCard useSwitch={false} items={problemNum} title={'Problem Number'} update={setProblemNumber} isSingleSelect={true}/>
+          </Col>
+          <Col span={6} style={style}>
+            <OptionCard useSwitch={false} items={wrongNum} title={'Wrongs'} update={setWrongCount} isSingleSelect={true}/>
+          </Col>
+          <Col 
+            span={6} 
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <Button 
+              onClick={onSubmitClicked}
+              size="large"
+            >
+              Submit
+            </Button>
           </Col>
         </Row>
-      </Card>
+        
       <Row span={24}>
         <Col span={24}>
           <RecommendList onItemClicked={()=>setIsProblemModalOpen(true)} setModalContent={setModalContent} listContent = {listContent}/>
