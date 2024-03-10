@@ -1,7 +1,7 @@
 import { takeLatest, put, call } from "redux-saga/effects";
 import { Types, Actions as dataActions } from "../actions/dataActions";
 
-import { getData, getQuestions, getRefAnswer, getReloadDBAnswer, getReloadDBQuestion, getSaveQuestion, getAnswers, getUserDetails } from "./fetchHelper/dataHelper";
+import { getData, getQuestions, getRefAnswer, getReloadDBAnswer, getReloadDBQuestion, getSaveQuestion, getAnswers, getUserDetails, getUpdateQuestion, getRemoveQuestion } from "./fetchHelper/dataHelper";
 
 function* onGetData({payload: id}) {
     try {
@@ -82,6 +82,27 @@ function* onGetUserDetails({payload: info}) {
     }
 }
 
+function* onGetUpdateQuestion({payload: info}) {
+    try {
+        console.log("data saga get update question called");
+        yield call(getUpdateQuestion, info);
+        yield put(dataActions.getUpdateQuestionSuccess());
+    } catch (error) {
+        yield put(dataActions.getUpdateQuestionFail(error.response));
+    }
+}
+
+function* onGetRemoveQuestion({payload: info}) {
+    try {
+        console.log("data saga get remove question called");
+        yield call(getRemoveQuestion, info);
+        yield put(dataActions.getRemoveQuestionSuccess());
+    } catch (error) {
+        yield put(dataActions.getRemoveQuestionFail(error.response));
+    }
+}
+
+
 
 function* dataSaga() {
     yield takeLatest(Types.GET_DATA, onGetData);
@@ -91,6 +112,9 @@ function* dataSaga() {
     yield takeLatest(Types.GET_SAVE_QUESTION, onGetSaveQuestion);
     yield takeLatest(Types.GET_ANSWERS, onGetAnswers);
     yield takeLatest(Types.GET_USER_DETAILS, onGetUserDetails);
+    yield takeLatest(Types.GET_UPDATE_QUESTION, onGetUpdateQuestion);
+    yield takeLatest(Types.GET_REMOVE_QUESTION, onGetRemoveQuestion);
+
 }
 
 export default dataSaga;

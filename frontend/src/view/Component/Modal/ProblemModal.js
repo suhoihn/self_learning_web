@@ -46,11 +46,13 @@ export default function ProblemModal({open, onClosed, onCleared}) {
   
   // Question data fetched from the backend (anything in the state, so must be dispatched before opening this modal)
   // Only when there is no defined question (only in Main, not when called from Bookmark, History, or Recommended)
-  let { data, isLoading } = useSelector((state) => {
+  let { data, isLoading, bookmarkInfo, wrongCountInfo } = useSelector((state) => {
     let data = state.data.data;
     let isLoading = state.data.loadingData;
+    let bookmarkInfo = state.data.userData ? state.data.userData.bookmarkInfo : undefined;
+    let wrongCountInfo = state.data.userData ? state.data.userData.wrongCounInfo : undefined;
 
-    return { data: data, isLoading: isLoading };
+    return { data: data, isLoading: isLoading, bookmarkInfo: bookmarkInfo, wrongCountInfo: wrongCountInfo };
   }, shallowEqual);
 
 
@@ -69,11 +71,25 @@ export default function ProblemModal({open, onClosed, onCleared}) {
   useEffect(() => {
     let returnBookmarkData = new Array(MAX_QUESTIONS).fill(false);
     let returnWrongCountList = new Array(MAX_QUESTIONS).fill(0);
+
+
     for(let i = 0; i < data.length; i++) {
       // NOTE: data[i].bookmarked is not a boolean true, but a string "true"....
-      returnBookmarkData[i] = (data[i].bookmarked == "true");
-      returnWrongCountList[i] = data[i].wrong;
+      console.log(data[i], bookmarkInfo);
+      
+      let matchingItem = bookmarkInfo ? 
+      bookmarkInfo.find(item => item.questionId === data[i].questionId && item.question.subQuestion[0].specificQuestionId === item.question.subQuestion[0].specificQuestionId)
+      : undefined;
+
+      returnBookmarkData[i] = Boolean(matchingItem);
+      
+      matchingItem = wrongCountInfo ?
+      wrongCountInfo.find(item => item.questionId === data[i].questionId && item.question.subQuestion[0].specificQuestionId === item.question.subQuestion[0].specificQuestionId)
+      : undefined;
+      
+      returnWrongCountList[i] = matchingItem ? matchingItem.wrongCount : 0;
     }
+
     setBookmarkState(returnBookmarkData);
     setWrongCountList(returnWrongCountList);
     
@@ -81,7 +97,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     // This is called once when the data is loaded
     dispatch(dataAction.getRefAnswer({
       answerId: data[current] ? data[current].questionId: undefined,
-      specificAnswerId: data[current].question.subQuestion[0].specificQuestionId ?
+      specificAnswerId: data[current] ?
                           data[current].question.subQuestion[0].specificQuestionId : 
                           undefined
     }));
@@ -100,9 +116,12 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     // The bookmark status is saved before updating "current"
     console.log("FJWIEOFJIOEJF", wrongCountList[current]);
     dispatch(dataAction.getSaveQuestion({
-      userEmail: localStorage.getItem('userEmail'),
+      username: localStorage.getItem('username'),
 
       questionId: data[current].questionId,
+      specificQuestionId: data[current].question ?
+                          data[current].question.subQuestion[0].specificQuestionId : 
+                          undefined,
       bookmarked: bookmarkState[current],
       wrong: wrongCountList[current],
     }));
@@ -164,6 +183,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
       for(let i = 0; i < sortedArr1.length; i++){
         if(sortedArr1[i] != sortedArr2[i]){correct = false; break;}
       }
+      if(answerArray.length !== sliderValue){correct = false;}
     }
     else{
       for(let i = 0; i < answerArray.length; i++){
@@ -173,7 +193,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
 
     if(correct){message.success('Good job');}
     else{
-      message.success('Try again');
+      message.error('Try again');
       setWrongCountList(wrongCountList.map((q,idx) => (
         idx === current ? wrongCountList[current] + 1: wrongCountList[idx]
       )));
@@ -247,7 +267,9 @@ export default function ProblemModal({open, onClosed, onCleared}) {
                   {data.length !== 0 && data[current].question.questionImage.image && <Image src={`data:image/png;base64, ${data[current].question.questionImage.image}`} />}
                   {data.length !== 0 && data[current].question.subQuestion[0].subQuestionImage.image && <Image src={`data:image/png;base64, ${data[current].question.subQuestion[0].subQuestionImage.image}`} />}
                 </>}
+                
              </Col>
+             <Col span={24}><Text>{data.length !== 0 && (data[current].instruction === "None" ? "" : "Instruction: " + data[current].instruction)}</Text></Col>
             </Row>
           </Col>
         </Row>

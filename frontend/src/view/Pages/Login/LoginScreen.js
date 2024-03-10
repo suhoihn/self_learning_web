@@ -8,10 +8,11 @@ import "./css/vendor/css-hamburgers/hamburgers.min.css"
 import "./css/vendor/select2/select2.min.css"
 import "./css/css/util.css"
 import "./css/css/main.css"
+import { Divider } from 'antd';
 
 const LoginScreen = ({ history }) => {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -34,11 +35,13 @@ const LoginScreen = ({ history }) => {
       const { data } = await axios.post(
         //"https://suhoihn-backend-e4140594264a.herokuapp.com/api/auth/login",
         "http://localhost:3001/api/auth/login",
-        { email, password },
+        { username, password },
         config
       );
       localStorage.setItem('authToken', data.token);
-      localStorage.setItem('userEmail', email)
+      localStorage.setItem("username", data.username);
+      localStorage.setItem('userEmail', data.email);
+      console.log(data);
       navigate('/');
     } catch (error) {
       console.log("I am Error: ", error)
@@ -57,20 +60,18 @@ const LoginScreen = ({ history }) => {
         <div className="wrap-input100 validate-input">
           <input
             class="input100"
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Enter Email"
-            value={email}
-            tabIndex={1}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Enter Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
           <span class="focus-input100"></span>
           <span class="symbol-input100">
-            <i class="fa fa-envelope" aria-hidden="true"></i>
+            <i class="fa fa-user" aria-hidden="true"></i>
           </span>
-
         </div>
         <div className="wrap-input100 validate-input">
           <input
@@ -94,6 +95,10 @@ const LoginScreen = ({ history }) => {
         </button>
         <span className="txt2">
           Don't have an account? <Link to="/register" tabIndex={5}>Register</Link>
+        </span>
+        <p></p>
+        <span className="txt2">
+          Do you have amnesia? <Link to="/findpw" tabIndex={6}>Forgot Password?</Link>
         </span>
       </form>
       </div>

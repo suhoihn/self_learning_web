@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
+const multer = require("multer");
 
 // Import the functions
-const { uploadFilesQuestion, uploadFilesAnswer, getAnswers, getQuestions, saveQuestion, getMultipleAnswers, saveBookmark, deleteBookmark, getBookmarks } = require('../db/dbHandler');
+const { uploadFilesQuestion, uploadFilesAnswer, getAnswers, getQuestions, saveQuestion, getMultipleAnswers, saveBookmark, deleteBookmark, getBookmarks, getUserDetails, getUpdateQuestion, removeQuestion } = require('../db/dbHandler');
 
 // xxx.xxx.xxx.xxx:PORT/api/Data/<url>
 router.get('/', async (req, res) => {
@@ -133,6 +134,21 @@ router.get('/saveQuestion', async (req, res) => {
   };
 });
 
+router.get('/getUserDetails', async (req, res) => {
+  console.log('get user details called in backend. DATA: ', req.query);
+  try {
+    const data = await getUserDetails(req.query.infos);
+    console.log("data is sent: ", data);
+    res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      msg: error.message
+    });
+  };
+});
+
+
 const handleUnexpectedObj = (data) => {
   let returnData = [];
   for (const [key, value] of Object.entries(data)) returnData.push(value);
@@ -154,5 +170,38 @@ router.get('/getAnswers', async (req, res) => {
     });
   }
 });
+
+
+const upload = multer({ dest: "db/uploads/" });
+
+router.post('/getUpdateQuestion', upload.array("files"), async (req, res) => {
+  try{
+    console.log('get update question called in backend. Query: ');// req.query);
+    console.log(req.files);
+    console.log(req.body.info);
+
+    await getUpdateQuestion(req.files, JSON.parse(req.body.info));
+    res.status(200).json("OK!")
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).json("Bad job")
+  }
+});
+
+router.get('/getRemoveQuestion', async (req, res) => {
+  console.log('get remove question called in backend. Query: ', req.query);
+  try {
+    await removeQuestion(req.query);
+    res.status(200).json("Successful elimination");
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      msg: error.message
+    });
+  }
+});
+
+
 
 module.exports = router;

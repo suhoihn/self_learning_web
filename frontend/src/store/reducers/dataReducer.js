@@ -6,6 +6,7 @@ const initialState = {
     error: { message: "", },
     refAnswer: '', // For reference answers
     answers: [], // For multiple answers
+    userData: undefined,
 };
 
 const DataReducer = (state = initialState, action) => {
@@ -94,18 +95,47 @@ const DataReducer = (state = initialState, action) => {
             break;
 
         // Get user details
-        case Types.GET_ANSWERS_FAIL:
+        case Types.GET_USER_DETAILS:
             console.log('reducer get details failed')
             state = {...state, error: { message: "ERROR" }, loadingData: false};
             break;
-        case Types.GET_ANSWERS:
+        case Types.GET_USER_DETAILS_FAIL:
             console.log('reducer get details received')
             state = {...state, loadingData: true};
             break;
-        case Types.GET_ANSWERS_SUCCESS:
+        case Types.GET_USER_DETAILS_SUCCESS:
             console.log('reducer get details success', action.payload);
-            state = {...state, loadingData: false, data: action.payload};
+            state = {...state, loadingData: false, userData: action.payload};
             break;
+
+        // Get update question
+        case Types.GET_UPDATE_QUESTION_FAIL:
+            console.log('reducer get update question failed')
+            state = {...state, error: { message: "ERROR" }, loadingData: false};
+            break;
+        case Types.GET_UPDATE_QUESTION:
+            console.log('reducer get update question received')
+            state = {...state, loadingData: true};
+            break;
+        case Types.GET_UPDATE_QUESTION_SUCCESS:
+            console.log('reducer get update question success');
+            state = {...state, loadingData: false};
+            break;
+
+        // Get remove question
+        case Types.GET_REMOVE_QUESTION_FAIL:
+            console.log('reducer get details failed')
+            state = {...state, error: { message: "ERROR" }, loadingData: false};
+            break;
+        case Types.GET_REMOVE_QUESTION:
+            console.log('reducer get details received')
+            state = {...state, loadingData: true};
+            break;
+        case Types.GET_REMOVE_QUESTION_SUCCESS:
+            console.log('reducer get details success');
+            state = {...state, loadingData: false};
+            break;
+
 
 
         default:

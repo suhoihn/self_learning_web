@@ -6,12 +6,12 @@ const crypto = require('crypto');
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
-    
+    unique: true,
     required: [true, 'Please provide a username'],
   },
   email: {
     type: String,
-    unique: true,
+    //unique: true,
     required: [true, 'Please provide an email'],
     match: [
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -28,11 +28,14 @@ const UserSchema = new mongoose.Schema({
   resetPasswordExpire: Date,
 
   bookmarkInfo: [{ 
-    questionId: { type: Number, unqiue: true,},
+    questionId: { type: Number },
+    specificQuestionId: { type: String, default: "undefined" } // MongoDB cannot accept undefined type
   }],
 
   wrongCountInfo: [{
-    questionId: { type: Number, unique: true },
+    questionId: { type: Number },
+    specificQuestionId: { type: String, default: "undefined" },
+
     wrongCount: { type: Number },
   }]
 

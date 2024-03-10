@@ -26,15 +26,8 @@ export default function Bookmark () {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log('getQuestion called in Bookmarked Page and this is supposed to happen once!');
-        dispatch(dataAction.getQuestions({
-            difficulty: [1, 2, 3],
-            timezone: [1, 2, 3],
-            paper: [1, 2, 3],
-            chapter: [1,2,3,4,5,6,7,8,9,10,11,12],
-            wrong: -1,
-            bookmarked: 'true',
-            questionNumber: 100,
+        dispatch(dataAction.getUserDetails({
+            username: localStorage.getItem("username")
         }))
     },[]);
     
@@ -43,7 +36,7 @@ export default function Bookmark () {
             overflow: "scroll",
             height: "calc(100vh - 64px)"
         }}>
-            <GeneralDisplayList onItemClicked={() => {setIsProblemModalOpen(true)}} setQuestionData={setQuestionData}/>
+            <GeneralDisplayList onItemClicked={() => {setIsProblemModalOpen(true)}} setQuestionData={setQuestionData} mode="Bookmark"/>
             {isProblemModalOpen && <IndividualQModal open={isProblemModalOpen} onClosed={() => {setIsProblemModalOpen(false)}} onCleared={openAnswerModal} definedContent={questionData}/>}
             {isAnswerModalOpen && <IndividualAModal open={isAnswerModalOpen} onClosede={() => {closeAnswerModal()}} question={questionData} />}
         </div>

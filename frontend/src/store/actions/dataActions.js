@@ -28,7 +28,19 @@ export const Types = {
     // Get user details
     GET_USER_DETAILS: "GET_USER_DETAILS",
     GET_USER_DETAILS_SUCCESS: "GET_USER_DETAILS_SUCCESS",
-    GET_USER_DETAILS_FAIL: "GET_USER_DETAILS_FAIL"
+    GET_USER_DETAILS_FAIL: "GET_USER_DETAILS_FAIL",
+
+
+    // Get update question
+    GET_UPDATE_QUESTION: "GET_UPDATE_QUESTION",
+    GET_UPDATE_QUESTION_SUCCESS: "GET_UPDATE_QUESTION_SUCCESS",
+    GET_UPDATE_QUESTION_FAIL: "gET_UPDATE_QUEISTION_FAIL",
+
+    // Get remove question
+    GET_REMOVE_QUESTION: "GET_REMOVE_QUESTION",
+    GET_REMOVE_QUESTION_SUCCESS: "GET_REMOVE_QUESTION_SUCCESS",
+    GET_REMOVE_QUESTION_FAIL: "gET_REMOVE_QUEISTION_FAIL",
+    
 };
 
 // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
@@ -125,6 +137,35 @@ export const Actions = {
     getUserDetailsFail: (error) => {
         console.log("get user details failed: ", error)
         return {type: Types.GET_USER_DETAILS_FAIL, payload: error}
+    },
+
+    
+    // Get update question
+    getUpdateQuestion: (info) => {
+        console.log("get update question action")
+        return {type: Types.GET_UPDATE_QUESTION, payload: info}
+    },
+    getUpdateQuestionSuccess: () => {
+        console.log("get update question success");
+        return {type: Types.GET_UPDATE_QUESTION_SUCCESS}
+    },
+    getUpdateQuestionFail: (error) => {
+        console.log("get update question failed: ", error)
+        return {type: Types.GET_UPDATE_QUESTION_FAIL, payload: error}
+    },
+
+    // Get remove question
+    getRemoveQuestion: (info) => {
+        console.log("get remove question action")
+        return {type: Types.GET_REMOVE_QUESTION, payload: info}
+    },
+    getRemoveQuestionSuccess: () => {
+        console.log("get remove question success");
+        return {type: Types.GET_REMOVE_QUESTION_SUCCESS}
+    },
+    getRemoveQuestionFail: (error) => {
+        console.log("get remove question failed: ", error)
+        return {type: Types.GET_REMOVE_QUESTION_FAIL, payload: error}
     },
 
 };

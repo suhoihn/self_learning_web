@@ -25,7 +25,9 @@ export async function get(url, config){
 };
 
 export async function post(url, config){
-    return await axiosApi.post(url, {
-        ...config,
+    return await axiosApi.post(url, config, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
     }).then((response) => response.data);
 };

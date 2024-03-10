@@ -6,7 +6,9 @@ import { useDispatch } from 'react-redux'
 import { Actions as dataAction } from '../../../store/actions/dataActions'
 
 const { Text } = Typography
-
+/*
+    DECPRECATED: WILL BE REPLACED WITH GENERALDISPLAYLIST
+*/
 export default function HistoryList({onItemClicked, setModalContent}) {
   const dispatch = useDispatch();
 

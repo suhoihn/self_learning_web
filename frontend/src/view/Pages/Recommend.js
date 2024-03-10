@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react"
 import RecommendList from '../Component/List/RecommendList'
 import OptionCard from "../Component/Card/OptionCard"
-import { Card, Row, Col, Button, Alert, Typography } from "antd"
+import { Card, Row, Col, Button, Alert, Typography, Image } from "antd"
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { Actions as dataAction } from '../../store/actions/dataActions'
 import IndividualQModal from "../Component/Modal/IndividualQModal";
@@ -70,6 +70,9 @@ export default function Recommend () {
 
     return (
       <>
+        {/* <div style={{ overflow: 'hidden', height: '25%' }}>
+          <Image src="https://cdn.donmai.us/original/6f/87/6f87fa92a477f19799faee8ed6d5758c.png" style={{ width: '25%' }}/>
+        </div> */}
         <Row span={24}>
           <Col span={24}>
             <div
@@ -99,7 +102,7 @@ export default function Recommend () {
                 marginBottom: 80
               }}
             >
-              Questions with wrong count higher than the input will be shown.
+              Amazing! You found this page! Questions with wrong count higher than the input will be shown. (it was supposed to be :))
             </div>
           </Col>
         </Row>

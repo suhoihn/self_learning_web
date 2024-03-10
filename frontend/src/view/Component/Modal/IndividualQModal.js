@@ -83,9 +83,13 @@ export default function IndividualQModal({open, onClosed, onCleared, definedCont
     clearInputs();
 
     // The bookmark status is saved before updating "current"
+    
     dispatch(dataAction.getSaveQuestion({
-      userEmail: localStorage.getItem('userEmail'),
+      username: localStorage.getItem('username'),
       questionId: data[current].questionId,
+      specificQuestionId: data[current].question ?
+                          data[current].question.subQuestion[0].specificQuestionId : 
+                          undefined,
       bookmarked: bookmarkState,
       wrong: wrongCount,
     }))
