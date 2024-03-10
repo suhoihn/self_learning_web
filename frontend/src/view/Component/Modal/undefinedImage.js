@@ -1,5 +1,3 @@
-import { Button, Input, List, Space, Typography, Image } from 'antd';
-
 export default function undefinedImage() {
     return (
         <div>

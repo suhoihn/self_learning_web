@@ -1,23 +1,22 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Typography, Space, Row, Layout, Col } from 'antd'
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Typography, Row, Layout, Col } from 'antd';
 
-import Menu from './Menu/Menu'
-// import logo from '../././'
+import Menu from './Menu/Menu';
 
-const { Sider } = Layout
-const { Title } = Typography
+const { Sider } = Layout;
+const { Title } = Typography;
 
 export default function DefaultSlider({color}) {
     
-    const [sideWide, setSiderWide] = useState(false)
+    const [sideWide, setSiderWide] = useState(false);
 
-    const onCollapse = (collapsed, type) => setSiderWide(collapsed)
+    const onCollapse = (collapsed, type) => setSiderWide(collapsed);
 
     return (
         <Sider
             breakpoint='lg'
-            collapsible
+            collapsible={true}
             onCollapse={onCollapse}
             width={250}
             style={{backgroundColor: color}}
@@ -37,5 +36,5 @@ export default function DefaultSlider({color}) {
                 </Link>
                 <Menu />
         </Sider>
-    )
-}
+    );
+};

@@ -23,6 +23,12 @@ export const Types = {
     GET_ANSWERS: "GET_ANSWERS",
     GET_ANSWERS_SUCCESS: "GET_ANSWERS_SUCCESS",
     GET_ANSWERS_FAIL: "GET_ANSWERS_FAIL",
+
+
+    // Get user details
+    GET_USER_DETAILS: "GET_USER_DETAILS",
+    GET_USER_DETAILS_SUCCESS: "GET_USER_DETAILS_SUCCESS",
+    GET_USER_DETAILS_FAIL: "GET_USER_DETAILS_FAIL"
 };
 
 // infos = { questionType: String, difficulty: Array, chapter, paper: Array, timezone: Array, }
@@ -30,15 +36,15 @@ export const Types = {
 export const Actions = {
     getData: (id) => {
         console.log("get data action"); 
-        return {type: Types.GET_DATA, payload: id}
+        return { type: Types.GET_DATA, payload: id };
     },
     getDataSuccess: (data) => {
         console.log("get data success: ", data); 
-        return {type: Types.GET_DATA_SUCCESS, payload: data}
+        return { type: Types.GET_DATA_SUCCESS, payload: data };
     },
     getDataFail: (error) => {
         console.log("get data failed: ", error); 
-        return {type: Types.GET_DATA_FAIL, payload: error}
+        return { type: Types.GET_DATA_FAIL, payload: error };
     },
 
     getQuestions: (info) => {
@@ -106,4 +112,19 @@ export const Actions = {
         console.log("get answers failed: ", error)
         return {type: Types.GET_ANSWERS_FAIL, payload: error}
     },
+
+    // Get user details
+    getUserDetails: (info) => {
+        console.log("get user details action")
+        return {type: Types.GET_USER_DETAILS, payload: info}
+    },
+    getUserDetailsSuccess: (data) => {
+        console.log("get user details success", data);
+        return {type: Types.GET_USER_DETAILS_SUCCESS, payload: data}
+    },
+    getUserDetailsFail: (error) => {
+        console.log("get user details failed: ", error)
+        return {type: Types.GET_USER_DETAILS_FAIL, payload: error}
+    },
+
 };

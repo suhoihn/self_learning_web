@@ -1,7 +1,7 @@
-import { takeLatest, put, call } from "redux-saga/effects"
-import { Types, Actions as dataActions } from "../actions/dataActions"
+import { takeLatest, put, call } from "redux-saga/effects";
+import { Types, Actions as dataActions } from "../actions/dataActions";
 
-import { getData, getQuestions, getRefAnswer, getReloadDBAnswer, getReloadDBQuestion, getSaveQuestion, getAnswers } from "./fetchHelper/dataHelper"
+import { getData, getQuestions, getRefAnswer, getReloadDBAnswer, getReloadDBQuestion, getSaveQuestion, getAnswers, getUserDetails } from "./fetchHelper/dataHelper";
 
 function* onGetData({payload: id}) {
     try {
@@ -71,13 +71,26 @@ function* onGetAnswers({payload: info}) {
     }
 }
 
+function* onGetUserDetails({payload: info}) {
+    try {
+        console.log("data saga get user details called");
+        const response = yield call(getUserDetails, info);
+        console.log("response: ", response);
+        yield put(dataActions.getUserDetailsSuccess(response));
+    } catch (error) {
+        yield put(dataActions.getUserDetailsFail(error.response));
+    }
+}
+
+
 function* dataSaga() {
-    yield takeLatest(Types.GET_DATA, onGetData)
-    yield takeLatest(Types.GET_QUESTIONS, onGetQuestions)
-    yield takeLatest(Types.GET_REF_ANSWER, onGetRefAnswer)
-    yield takeLatest(Types.GET_RELOAD_DB, onGetReloadDB)
+    yield takeLatest(Types.GET_DATA, onGetData);
+    yield takeLatest(Types.GET_QUESTIONS, onGetQuestions);
+    yield takeLatest(Types.GET_REF_ANSWER, onGetRefAnswer);
+    yield takeLatest(Types.GET_RELOAD_DB, onGetReloadDB);
     yield takeLatest(Types.GET_SAVE_QUESTION, onGetSaveQuestion);
     yield takeLatest(Types.GET_ANSWERS, onGetAnswers);
+    yield takeLatest(Types.GET_USER_DETAILS, onGetUserDetails);
 }
 
 export default dataSaga;

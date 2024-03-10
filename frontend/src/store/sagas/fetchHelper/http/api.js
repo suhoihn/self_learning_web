@@ -1,23 +1,23 @@
-import axios from "axios"
+import axios from "axios";
 
 const API_HOST = "http://localhost:3001";
+//const API_HOST = "https://suhoihn-backend-e4140594264a.herokuapp.com/";
 
 const axiosApi = axios.create({
     baseURL: API_HOST,
     timeout: 10000
-})
+});
 
+// // Intercepts the request and does something (but nothing is done as the config is returned right away)
+// axios.interceptors.request.use(function (config){
+//     return config;
+// });
 
-axios.interceptors.request.use(function (config){
-    return config;
-})
+// axiosApi.interceptors.response.use(
+//     (response) => response,
+//     (error) => Promise.reject(error)
+// );
 
-axiosApi.interceptors.response.use(
-    (response) => response,
-    (error) => Promise.reject(error)
-);
-
-// url: /users/register, /users/save
 export async function get(url, config){
     return await axiosApi.get(url, {
         ...config,
@@ -27,5 +27,5 @@ export async function get(url, config){
 export async function post(url, config){
     return await axiosApi.post(url, {
         ...config,
-    }).then((response) => response.data)
+    }).then((response) => response.data);
 };
