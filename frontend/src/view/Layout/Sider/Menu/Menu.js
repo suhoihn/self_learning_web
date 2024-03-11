@@ -30,7 +30,7 @@ export default function SiderMenu () {
             ]),
             getItem('/Reference', 'Resources', <UnorderedListOutlined />),
             //getItem('/Recommended', 'Recommended', <LikeOutlined />),
-            //getItem('/Feedback', 'Feedback', <MessageOutlined />)
+            getItem('/Feedback', 'Feedback', <MessageOutlined />)
         ];
 
         if(localStorage.getItem("userEmail") === "Ihnsuho0819@gmail.com"){ data.push(getItem('/Admin', 'Admin', <ToolOutlined />)); }

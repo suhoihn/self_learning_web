@@ -2,11 +2,10 @@ import React, {useState, useEffect} from 'react'
 import { Modal, Button, Spin, Checkbox, message, Input,
           Row, Col, Tabs, Divider, Image, Typography, Slider } from 'antd'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
-import UndefinedImage from './undefinedImage'
 
 import {Actions as dataAction} from '../../../store/actions/dataActions'
 
-const {Text} = Typography
+const { Text } = Typography
 export default function IndividualQModal({open, onClosed, onCleared, definedContent}) { 
   const dispatch = useDispatch();
 
@@ -53,28 +52,6 @@ export default function IndividualQModal({open, onClosed, onCleared, definedCont
     console.log("Main(Problem Modal) refAnswer:", data);
     return data;
   }, shallowEqual)
-
-  // // When "data" changes, refAnswer is requested from backend
-  // useEffect(() => {
-  //   let returnBookmarkData = new Array(MAX_QUESTIONS).fill(false);
-  //   let returnWrongCountList = new Array(MAX_QUESTIONS).fill(0);
-  //   for(let i = 0; i < data.length; i++) {
-  //     // NOTE: data[i].bookmarked is not a boolean true, but a string "true"....
-  //     returnBookmarkData[i] = (data[i].bookmarked == "true");
-  //     returnWrongCountList[i] = data[i].wrong;
-  //   }
-  //   setBookmarkState(returnBookmarkData);
-  //   setWrongCountList(returnWrongCountList);
-
-  //   console.log("Get Ref Answer called in ProblemModal through updateAnswer");
-  //   data.length > 0 &&
-  //   dispatch(dataAction.getRefAnswer({
-  //     answerId: data[current].questionId ? data[current].questionId: undefined,
-  //     specificAnswerId: data[current].question.subQuestion[0].specificQuestionId ?
-  //                         data[current].question.subQuestion[0].specificQuestionId : 
-  //                         undefined
-  //   }))
-  // }, [data])
 
   // TODO: Why subQuestion[0] only?
   // Updates the question info through "getSaveQuestion" action

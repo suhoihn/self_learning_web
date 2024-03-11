@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Spin, Checkbox, message, Input,
           Row, Col, Tabs, Divider, Image, Typography, Slider } from 'antd';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import UndefinedImage from './undefinedImage';
 
 import { Actions as dataAction } from '../../../store/actions/dataActions';
 
 const { Text } = Typography;
-export default function ProblemModal({open, onClosed, onCleared}) { 
+export default function ProblemModal({open, onClosed, onCleared, definedContent=undefined}) { 
   const dispatch = useDispatch();
 
   // Maximum questions that can be loaded in this modal
@@ -114,7 +113,6 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     clearInputs();
 
     // The bookmark status is saved before updating "current"
-    console.log("FJWIEOFJIOEJF", wrongCountList[current]);
     dispatch(dataAction.getSaveQuestion({
       username: localStorage.getItem('username'),
 
@@ -261,7 +259,6 @@ export default function ProblemModal({open, onClosed, onCleared}) {
             <Row span={24}>
               <Col span={24}>
                 {data.length === 0 ? <>
-                  <UndefinedImage/>
                   <Text>Question not found</Text>
                 </> : <>
                   {data.length !== 0 && data[current].question.questionImage.image && <Image src={`data:image/png;base64, ${data[current].question.questionImage.image}`} />}

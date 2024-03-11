@@ -6,7 +6,7 @@ const initialState = {
     error: { message: "", },
     refAnswer: '', // For reference answers
     answers: [], // For multiple answers
-    userData: undefined,
+    userData: undefined, // For bookmarked and history info
 };
 
 const DataReducer = (state = initialState, action) => {
