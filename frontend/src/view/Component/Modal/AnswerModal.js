@@ -3,7 +3,7 @@ import { Typography, Spin, Modal, Button, Switch, Row, Col, Tabs, Divider, Image
 import { useSelector, shallowEqual } from 'react-redux'
 const { Text } = Typography;
 
-export default function AnswerModal({ open, onClosed }) { 
+export default function AnswerModal({ open, onClosed, definedContent=undefined }) { 
 
   // Answer steps (data fetched by useSelector)
   const { steps, isLoading } = useSelector((state) => {
@@ -20,6 +20,7 @@ export default function AnswerModal({ open, onClosed }) {
     let data = state.data.data;
     console.log("AnswerModal questions:", data);
     if(data === undefined) { data = []; }
+    if(definedContent !== undefined) { data = [definedContent]}
     return data;
   }, shallowEqual);
 
@@ -77,7 +78,7 @@ export default function AnswerModal({ open, onClosed }) {
           <Col span={24}>
             <Row span={24}>
               <Col span={24}>
-                <Tabs size='small' style={{ height: '100%'}}
+                <Tabs size='small' style={{ height: '100%' }}
                     items={tabsItems} activeKey={current} onChange={onTabsChanged}/>
               </Col>
             </Row>

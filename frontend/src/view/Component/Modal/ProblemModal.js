@@ -45,14 +45,46 @@ export default function ProblemModal({open, onClosed, onCleared, definedContent=
   
   // Question data fetched from the backend (anything in the state, so must be dispatched before opening this modal)
   // Only when there is no defined question (only in Main, not when called from Bookmark, History, or Recommended)
-  let { data, isLoading, bookmarkInfo, wrongCountInfo } = useSelector((state) => {
+
+  
+  const { data: dataFromStore, isLoading: isLoadingFromStore, bookmarkInfo: bookmarkInfoFromStore, wrongCountInfo: wrongCountInfoFromStore } = useSelector((state) => {
     let data = state.data.data;
     let isLoading = state.data.loadingData;
-    let bookmarkInfo = state.data.userData ? state.data.userData.bookmarkInfo : undefined;
-    let wrongCountInfo = state.data.userData ? state.data.userData.wrongCounInfo : undefined;
+    let bookmarkInfo = state.data.userData ? state.data.userData.bookmarkInfo : [];
+    let wrongCountInfo = state.data.userData ? state.data.userData.wrongCountInfo : [];
 
     return { data: data, isLoading: isLoading, bookmarkInfo: bookmarkInfo, wrongCountInfo: wrongCountInfo };
   }, shallowEqual);
+
+  const [data, setData] = useState(dataFromStore);
+  const [isLoading, setIsLoading] = useState(isLoadingFromStore);
+  const [bookmarkInfo, setBookmarkInfo] = useState(bookmarkInfoFromStore);
+  const [wrongCountInfo, setWrongCountInfo] = useState(wrongCountInfoFromStore);
+
+  useEffect(() => { setData(dataFromStore) }, [dataFromStore]);
+  useEffect(() => { setIsLoading(isLoadingFromStore) }, [isLoadingFromStore]);
+  useEffect(() => { setBookmarkInfo(bookmarkInfoFromStore) }, [bookmarkInfoFromStore]);
+  useEffect(() => { setWrongCountInfo(wrongCountInfoFromStore) }, [wrongCountInfoFromStore]);
+
+  useEffect(() => {
+    console.log("YEETETETETE", data, bookmarkInfo, wrongCountInfo, definedContent);
+    if(definedContent !== undefined){
+      console.log("Using Problem Modal for individual questions! Defined Content: ", definedContent);
+
+      setData([definedContent]);
+      console.log(data);
+      if(definedContent.bookmarked) { setBookmarkInfo([definedContent]); }
+      if(definedContent.wrongCount > 0) { setWrongCountInfo([definedContent]); }
+
+
+      setBookmarkState([definedContent.bookmarked, bookmarkState.slice(1)]);
+      setWrongCountList([definedContent.wrongCount, wrongCountList.slice(1)]);
+
+      console.log("USEEFFECT IS MY LOVE", data);
+  
+    }
+
+  }, [open, definedContent])
 
 
 
@@ -74,7 +106,7 @@ export default function ProblemModal({open, onClosed, onCleared, definedContent=
 
     for(let i = 0; i < data.length; i++) {
       // NOTE: data[i].bookmarked is not a boolean true, but a string "true"....
-      console.log(data[i], bookmarkInfo);
+      console.log("Shitty bookmark", bookmarkInfo);
       
       let matchingItem = bookmarkInfo ? 
       bookmarkInfo.find(item => item.questionId === data[i].questionId && item.question.subQuestion[0].specificQuestionId === item.question.subQuestion[0].specificQuestionId)

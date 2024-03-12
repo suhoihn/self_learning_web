@@ -4,8 +4,6 @@ import OptionCard from "../Component/Card/OptionCard"
 import { Card, Row, Col, Button, Alert, Typography, Image } from "antd"
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { Actions as dataAction } from '../../store/actions/dataActions'
-import IndividualQModal from "../Component/Modal/IndividualQModal";
-import IndividualAModal from "../Component/Modal/IndividualAModal";
 import { useNavigate } from 'react-router-dom';
 
 const { Text } = Typography;
@@ -139,8 +137,8 @@ export default function Recommend () {
         <Col span={24}>
           <RecommendList onItemClicked={()=>setIsProblemModalOpen(true)} setModalContent={setModalContent} listContent = {listContent}/>
           <>
-            {isProblemModalOpen && <IndividualQModal open={isProblemModalOpen} onClosed={() => {setIsProblemModalOpen(false)}} onCleared={openAnswerModal} definedContent={modalContent}/>}
-            {isAnswerModalOpen && <IndividualAModal open={isAnswerModalOpen} onClosede={() => {closeAnswerModal()}} question={modalContent} />}
+            {/* {isProblemModalOpen && <IndividualQModal open={isProblemModalOpen} onClosed={() => {setIsProblemModalOpen(false)}} onCleared={openAnswerModal} definedContent={modalContent}/>}
+            {isAnswerModalOpen && <IndividualAModal open={isAnswerModalOpen} onClosede={() => {closeAnswerModal()}} question={modalContent} />} */}
           </>
         </Col>
       </Row>

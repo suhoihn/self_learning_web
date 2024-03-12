@@ -60,8 +60,9 @@ export default function GeneralDisplayList ({onItemClicked, setQuestionData, mod
 
     // This is used for definning the state used in the Individual Question Modal
     setQuestionData({
-      data: [item],
-      item: item,
+      ...item,
+      bookmarked: item.bookmarked,
+      wrongCount: item.wrongCount
     });
 
     // RefAnswer is needed so that the question modal displays relevant information (e.g. answerSubscripts)
@@ -76,7 +77,7 @@ export default function GeneralDisplayList ({onItemClicked, setQuestionData, mod
 
   const onRenderListItem = (item) => (
     <List.Item
-      key={"fuck my mom"}
+      key={""}
       actions={
         [// This is added to prevent simultaneous click of button & list item
         <Button onClick={() => openQuestion(item)}>Start this question</Button>,

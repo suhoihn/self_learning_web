@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import IndividualQModal from "../../Component/Modal/IndividualQModal";
-import IndividualAModal from "../../Component/Modal/IndividualAModal";
 import { Actions as dataAction } from '../../../store/actions/dataActions'
 import GeneralDisplayList from "../../Component/List/GeneralDisplayList";
 import { useNavigate } from 'react-router-dom';
+import ProblemModal from "../../Component/Modal/ProblemModal";
+import AnswerModal from "../../Component/Modal/AnswerModal";
 
 
 export default function History () {
@@ -34,9 +34,9 @@ export default function History () {
     
     return (
         <>
-            <GeneralDisplayList onItemClicked={() => {setIsProblemModalOpen(true)}} setModalContent={setModalContent} mode="History"/>
-            {isProblemModalOpen && <IndividualQModal open={isProblemModalOpen} onClosed={() => {setIsProblemModalOpen(false)}} onCleared={openAnswerModal} definedContent={modalContent}/>}
-            {isAnswerModalOpen && <IndividualAModal open={isAnswerModalOpen} onClosede={() => {closeAnswerModal()}} question={modalContent} />}
+            <GeneralDisplayList onItemClicked={() => {setIsProblemModalOpen(true)}} setQuestionData={setModalContent} mode="History"/>
+            {isProblemModalOpen && <ProblemModal open={isProblemModalOpen} onClosed={() => {setIsProblemModalOpen(false)}} onCleared={openAnswerModal} definedContent={modalContent}/>}
+            {isAnswerModalOpen && <AnswerModal open={isAnswerModalOpen} onClosed={() => {closeAnswerModal()}} question={modalContent} />}
         </>
     )
 }
