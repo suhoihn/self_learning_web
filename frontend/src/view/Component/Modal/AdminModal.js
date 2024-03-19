@@ -8,11 +8,11 @@ import { Actions as dataAction } from '../../../store/actions/dataActions';
 
 const { Text } = Typography;
 
-const MAXINPUT = 10;
+
 
 export default function AnswerModal({ open, onClosed, existingContent, mode }) { 
   const dispatch = useDispatch();
-
+  const MAXINPUT = 10;
   const chaptersList = [
     {value: 1, label: "Chapter 1: Functions"},
     {value: 2, label: "Chapter 2: Quadratic Functions"},
@@ -49,17 +49,15 @@ export default function AnswerModal({ open, onClosed, existingContent, mode }) {
     { value: "multiAns", label: "Multiple Answers", },
     { value: "singleAns", label: "Single Answer", },
     { value: "userMultiAns", label: "User Multiple Answers", },
-    //{ value: "range", label: "Range"},
     { value: "unscorable", label: "Unscorable"}
   ];
-  console.log(existingContent);
 
 
-  const [chapter123, setChapter123] = useState([]);
-  const [difficulty123, setDifficulty123] = useState(1);
-  const [paper123, setPaper123] = useState(1);
-  const [timezone123, setTimezone123] = useState(1);
-  const [questionType123, setQuestionType123] = useState("singleAns");
+  const [chapter, setChapter] = useState([]);
+  const [difficulty, setDifficulty] = useState(1);
+  const [paper, setPaper] = useState(1);
+  const [timezone, setTimezone] = useState(1);
+  const [questionType, setQuestionType] = useState("singleAns");
   const [sQid, setSQid] = useState(""); 
   const [instruction, setInstruction] = useState("");
   const [numAns, setNumAns] = useState(1); 
@@ -68,12 +66,12 @@ export default function AnswerModal({ open, onClosed, existingContent, mode }) {
   const [aImg, setAImg] = useState("");
 
   useEffect(() => {
-    console.log("I am open! I am free!");
-    setChapter123(existingContent === undefined ? []: existingContent.chapter);
-    setDifficulty123(existingContent === undefined ? 1: existingContent.difficulty);
-    setPaper123(existingContent === undefined ? 1: existingContent.paper);
-    setTimezone123(existingContent === undefined ? 1: existingContent.timezone);
-    setQuestionType123(existingContent === undefined ? "singleAns": existingContent.question.questionType);
+    console.log("Modal is now open!");
+    setChapter(existingContent === undefined ? []: existingContent.chapter);
+    setDifficulty(existingContent === undefined ? 1: existingContent.difficulty);
+    setPaper(existingContent === undefined ? 1: existingContent.paper);
+    setTimezone(existingContent === undefined ? 1: existingContent.timezone);
+    setQuestionType(existingContent === undefined ? "singleAns": existingContent.question.questionType);
     setSQid(existingContent === undefined ? "": existingContent.question.subQuestion[0].specificQuestionId);
     setInstruction(existingContent === undefined ? "": existingContent.instruction);
     setNumAns(existingContent === undefined ? 1: existingContent.question.subQuestion[0].numAns);
@@ -82,37 +80,34 @@ export default function AnswerModal({ open, onClosed, existingContent, mode }) {
 
   },[open, existingContent]);
 
-  const [textArray, setTextArray] = useState(Array(MAXINPUT).fill('')); // Creates an array of empty strings
+  const [answerSubscriptArray, setAnswerSubscriptArray] = useState(Array(MAXINPUT).fill('')); // Creates an array of empty strings
   const [answerArray, setAnswerArray] = useState(Array(MAXINPUT).fill('')); // Creates an array of empty strings
+  
+  const [questionImages, setQuestionImages] = useState([]);
+  const [answerImages, setAnswerImages] = useState([]);
   
   
   const answerData = useSelector((state) => {
     const data = state.data.refAnswer[0];
-    console.log("yuhu!", data);
-
-
     return data; // The answer unique to the single question
   }, shallowEqual);
+
 
   useEffect(() => {
     if(answerData !== undefined){
       console.log(answerData)
       setAImg(answerData.answer.answerImage.image);
-      setTextArray([...answerData.answer.answerSubscripts.slice(0,numAns),...textArray.slice(numAns)]);
+      setAnswerSubscriptArray([...answerData.answer.answerSubscripts.slice(0,numAns),...answerSubscriptArray.slice(numAns)]);
       setAnswerArray([...answerData.answer.answerValues.slice(0,numAns),...answerArray.slice(numAns)]);
 
     }
   }, [answerData]);
 
 
-
-  
-
-
   const onInputChange_AS = (e, index) => {
-    const newValues = [...textArray];
+    const newValues = [...answerSubscriptArray];
     newValues[index] = e.target.value;
-    setTextArray(newValues);
+    setAnswerSubscriptArray(newValues);
   };
 
   const onInputChange_A = (e, index) => {
@@ -123,26 +118,24 @@ export default function AnswerModal({ open, onClosed, existingContent, mode }) {
 
 
   const submitQuestionInfo = () => {
-    console.log(mode)
     const data = {
-      uploadType: mode, // add or modify
+      uploadType: mode, // "add" or "modify"
       questionId: mode == "modify" ? existingContent.questionId : undefined,
       specificQuestionId: sQid === "" ? "None" : sQid,
 
-      chapter: chapter123,
-      difficulty: difficulty123,
-      paper: paper123,
-      timezone: timezone123,
+      chapter: chapter,
+      difficulty: difficulty,
+      paper: paper,
+      timezone: timezone,
       
-
       // Sub question
-      questionType: questionType123, //"singleAns",
+      questionType: questionType, // "singleAns", "multiAns", "userMultiAns", "unscorable"
       subQuestionImage: "", // This does not exist! (For simplicity)
       numAns: numAns,
       unit: "cm", // This doesn't matter right now
-      marks: 3, // this is actually insignficant here
+      marks: 3, // This is actually insignficant here
       instruction: instruction,
-      answerSubscripts: textArray,
+      answerSubscripts: answerSubscriptArray,
 
       answerValue: answerArray,      
     };
@@ -154,28 +147,17 @@ export default function AnswerModal({ open, onClosed, existingContent, mode }) {
     }
     ultimateFormData.append("info",JSON.stringify(data));
     
-    console.log(questionImages, answerImages)
-    if(mode == "add" && (questionImages.length === 0 || answerImages.length === 0)){
-      message.error('Images are missing');
-      return;
-    }
+    if(mode == "add" && (questionImages.length === 0 || answerImages.length === 0)){ message.error('Images are missing'); return; }
 
-    if(chapter123.length === 0){
-      message.error("Chapters are missing");
-      return;
-    }
+    if(chapter.length === 0){ message.error("Chapters are missing"); return; }
 
-
-    dispatch(dataAction.getUpdateQuestion(
-      ultimateFormData
-    ));
+    dispatch(dataAction.getUpdateQuestion( ultimateFormData ));
 
     if(mode == "add"){
-      message.success('Successfully added the question')
+      message.success('Successfully added the question');
     }
     else if(mode == "modify"){
-      message.success('Successfully modified the question')
-
+      message.success('Successfully modified the question');
     }
   }
 
@@ -209,8 +191,6 @@ export default function AnswerModal({ open, onClosed, existingContent, mode }) {
     </>)
   }
 
-  const [questionImages, setQuestionImages] = useState([]);
-  const [answerImages, setAnswerImages] = useState([]);
 
   return (
     <Modal title={(mode==="modify") ? "Modify this question" : "Add a new question"} open={open} onCancel={onClosed}
@@ -219,29 +199,29 @@ export default function AnswerModal({ open, onClosed, existingContent, mode }) {
           <Col span={24}>
             
             {mode === "add" ? <>
-              <label>Question Image: </label>
-              <input type="file" onChange={(e) => setQuestionImages(e.target.files[0])}/>
+                <label>Question Image: </label>
+                <input type="file" onChange={(e) => setQuestionImages(e.target.files[0])}/>
 
-              <label>Answer Image: </label>
-              <input type="file" onChange={(e) => setAnswerImages(e.target.files[0])}/>
+                <label>Answer Image: </label>
+                <input type="file" onChange={(e) => setAnswerImages(e.target.files[0])}/>
               </> : <>
-              <br/>
-              <b>Due to implementation limitations, you cannot modify the images of the questions in the database.</b>
-              <br/>
-              <b>Quesiton Image: </b>
-              <Image src={`data:image/png;base64, ${qImg}`}/><br/>
+                <br/>
+                <b>Due to implementation limitations, you cannot modify the images of the questions in the database.</b>
+                <br/>
+                <b>Quesiton Image: </b>
+                <Image src={`data:image/png;base64, ${qImg}`}/><br/>
 
-              <b>Answer Image: </b>
-              <Image src={`data:image/png;base64, ${aImg}`}/><br/>
-
+                <b>Answer Image: </b>
+                <Image src={`data:image/png;base64, ${aImg}`}/><br/>
               </>
             }
             <br/>
-            <Selection t={"Chapter: "} l={chaptersList} setFunc={setChapter123} dv={chapter123} mode={"multiple"}/>
-            <Selection t={"Difficulty: "} l={difficultyList} setFunc={setDifficulty123} dv={difficulty123}/>
-            <Selection t={"Paper: "} l={paperList} setFunc={setPaper123} dv={paper123}/>
-            <Selection t={"Timezone: "} l={timezoneList} setFunc={setTimezone123} dv={timezone123}/>
-            <Selection t={"Question Type: "} l={questionTypeList} setFunc={setQuestionType123} dv={questionType123}/>
+            
+            <Selection t={"Chapter: "} l={chaptersList} setFunc={setChapter} dv={chapter} mode={"multiple"}/>
+            <Selection t={"Difficulty: "} l={difficultyList} setFunc={setDifficulty} dv={difficulty}/>
+            <Selection t={"Paper: "} l={paperList} setFunc={setPaper} dv={paper}/>
+            <Selection t={"Timezone: "} l={timezoneList} setFunc={setTimezone} dv={timezone}/>
+            <Selection t={"Question Type: "} l={questionTypeList} setFunc={setQuestionType} dv={questionType}/>
             
             <Text>Instruction: </Text>
             <Input value={instruction} placeholder="Instruction needed to solve this question" onChange={(e) => {setInstruction(e.target.value)}}/>
@@ -250,8 +230,8 @@ export default function AnswerModal({ open, onClosed, existingContent, mode }) {
             <Input value={sQid} placeholder="Specific Question Id of the question (e.g. 1a, 2)" onChange={(e) => {setSQid(e.target.value)}}/>
             <br/>
             
-            {questionType123 === "unscorable" ? <></> : <>
-              {questionType123 === "singleAns" ? <></> : <>
+            {questionType === "unscorable" ? <></> : <>
+              {questionType === "singleAns" ? <></> : <>
                 <Text>Number of answers: </Text>
                 <Slider min = {1} max = {MAXINPUT} defaultValue={numAns} onChange = {setNumAns}/>
                 <br/>
@@ -263,7 +243,7 @@ export default function AnswerModal({ open, onClosed, existingContent, mode }) {
                     <Text>Answer details for answer {idx + 1}</Text>
                     <br/>
                     <Col span={20}>
-                      <Input key={idx} value={textArray[idx]} placeholder="Write your answer subscript here." onChange={(e) => {onInputChange_AS(e,idx)}}/>
+                      <Input key={idx} value={answerSubscriptArray[idx]} placeholder="Write your answer subscript here." onChange={(e) => {onInputChange_AS(e,idx)}}/>
                       <Input key={idx} value={answerArray[idx]} placeholder="Write your answer here." onChange={(e) => {onInputChange_A(e,idx)}}/>
                     </Col>
                     <br/>

@@ -44,7 +44,7 @@ const LoginScreen = ({ history }) => {
       console.log(data);
       navigate('/');
     } catch (error) {
-      console.log("I am Error: ", error)
+      console.log("Error: ", error)
       setError(error.response.data);
       // setTimeout(() => {
       //   setError('');
@@ -98,7 +98,7 @@ const LoginScreen = ({ history }) => {
         </span>
         <p></p>
         <span className="txt2">
-          Do you have amnesia? <Link to="/findpw" tabIndex={6}>Forgot Password?</Link>
+          Forgot password? <Link to="/findpw" tabIndex={6}>Forgot Password?</Link>
         </span>
       </form>
       </div>

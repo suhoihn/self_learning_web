@@ -26,7 +26,7 @@ const RegisterScreen = ({ history }) => {
   }, [history]);
 
   const registerHandler = async (e) => {
-    console.log("Let's register!");
+    console.log("Register!");
 
     e.preventDefault();
     const config = {

@@ -33,10 +33,10 @@ export default function SiderMenu () {
             getItem('/Feedback', 'Feedback', <MessageOutlined />)
         ];
 
-        if(localStorage.getItem("userEmail") === "Ihnsuho0819@gmail.com"){ data.push(getItem('/Admin', 'Admin', <ToolOutlined />)); }
+        if(localStorage.getItem("username") === "admin"){ data.push(getItem('/Admin', 'Admin', <ToolOutlined />)); }
         setItems(data);
         
-    }, [localStorage.getItem("userEmail")]);
+    }, [localStorage.getItem("username")]);
 
     let pathSnippets = Location.pathname.split('/');
     const handleMenuClick = (e) => {

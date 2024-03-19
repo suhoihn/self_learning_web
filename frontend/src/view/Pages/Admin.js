@@ -48,12 +48,10 @@ export default function Admin () {
       newData.push(newItem);
     }
 
-    console.log("huh?", newData);
     return { data: newData };
   }, shallowEqual);
 
   const modifyQuestion = (item) => {
-    console.log("Welcome!", item);
     setModalMode("modify");
 
     dispatch(dataAction.getRefAnswer({

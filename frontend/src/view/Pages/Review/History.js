@@ -36,7 +36,7 @@ export default function History () {
         <>
             <GeneralDisplayList onItemClicked={() => {setIsProblemModalOpen(true)}} setQuestionData={setModalContent} mode="History"/>
             {isProblemModalOpen && <ProblemModal open={isProblemModalOpen} onClosed={() => {setIsProblemModalOpen(false)}} onCleared={openAnswerModal} definedContent={modalContent}/>}
-            {isAnswerModalOpen && <AnswerModal open={isAnswerModalOpen} onClosed={() => {closeAnswerModal()}} question={modalContent} />}
+            {isAnswerModalOpen && <AnswerModal open={isAnswerModalOpen} onClosed={() => {closeAnswerModal()}} definedContent={modalContent} />}
         </>
     )
 }

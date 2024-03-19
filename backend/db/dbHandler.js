@@ -19,25 +19,13 @@ function filterByChapter(docs, array){
   return returnArray;
 }
 
-
-// Gets questions that are bookmarked or not
-function filterByBookmark(docs, bookmarked) {
-  let returnArray = [];
-  docs.forEach((element) => {
-    if(element.bookmarked === bookmarked) returnArray.push(element);
-  })
-
-  return returnArray;
-}
-
-
 // Get "num" random elements from array "arr"
 function getMultipleRandom(arr, num) {
   const shuffeld = [...arr].sort(() => 0.5 - Math.random());
   return shuffeld.slice(0, num);
 }
 
-
+// NOT USED
 module.exports.saveBookmark = async(infos) => {
   console.log('getBookmark, infos: ', infos)
   /*
@@ -52,6 +40,7 @@ module.exports.saveBookmark = async(infos) => {
   catch (error) { return false; }
 }
 
+// NOT USED
 module.exports.deleteBookmark = async(infos) => {
   console.log('getBookmark, infos: ', infos)
   try {
@@ -64,6 +53,7 @@ module.exports.deleteBookmark = async(infos) => {
   }
 }
 
+// NOT USED
 module.exports.getBookmarks = async(infos) => {
   console.log('getBookmark, infos: ', infos)
   /*
@@ -84,6 +74,7 @@ module.exports.getBookmarks = async(infos) => {
     return false
   }
 }
+
 
 module.exports.getUserDetails = async(infos) => {
   console.log('getUserDetails, infos: ', infos)
@@ -166,10 +157,8 @@ module.exports.getQuestions = async (infos) => {
       'difficulty': { $in: infos.difficulty },
       'timezone' : { $in: infos.timezone },
       'paper' : { $in: infos.paper },
-      //'wrong' : { $gte: infos.wrong },
   }).then((docs) => {
     let result = filterByChapter(docs, infos.chapter);
-    if (infos.bookmarked !== undefined) result = filterByBookmark(result, infos.bookmarked);
     return result;
   });
 
@@ -229,17 +218,11 @@ module.exports.saveQuestion = async (infos) => {
   // Enforce the field types!
   if(infos.specificQuestionId === undefined){ infos.specificQuestionId = "undefined"; }
 
-  console.log("save question called in background", infos);  
-
-
   const userDoc = await Collections.users.findOne({username: infos.username});
-  console.log("user detail", userDoc);
 
   if(infos.wrong !== undefined && infos.wrong > 0){
     const exists = userDoc.wrongCountInfo.find((item) => item.questionId === +infos.questionId && item.specificQuestionId === infos.specificQuestionId);
-
     if (exists) {
-      console.log("YES");
       // If it exists, update the num field
       await Collections.users.updateOne(
         { _id: userDoc._id, "wrongCountInfo.questionId": +infos.questionId, "wrongCountInfo.specificQuestionId": infos.specificQuestionId },
@@ -251,7 +234,6 @@ module.exports.saveQuestion = async (infos) => {
       ).then(r => console.log(r)).catch(err => console.error(err));
 
     } else {
-      console.log("NO");
       // If it doesn't exist, add the new object
       await Collections.users.updateOne(
         { _id: userDoc._id },
@@ -269,7 +251,6 @@ module.exports.saveQuestion = async (infos) => {
   }
 
   if(infos.bookmarked === "true"){
-    console.log("I am called here", { questionId: +infos.questionId, specificQuestionId: infos.specificQuestionId })
     const exists = userDoc.bookmarkInfo.some((item) => item.questionId === +infos.questionId && item.specificQuestionId === infos.specificQuestionId);
 
     if (!exists) {
@@ -285,7 +266,6 @@ module.exports.saveQuestion = async (infos) => {
 
   }
   else if(infos.bookmarked === "false"){
-    console.log("yuhu~!")
     await Collections.users.updateOne(
       {_id: userDoc._id },
       {
@@ -293,7 +273,7 @@ module.exports.saveQuestion = async (infos) => {
           bookmarkInfo: { questionId: +infos.questionId, specificQuestionId: infos.specificQuestionId }
         }
       },
-    ).then((do2c) => {console.log("DOCDOC: ",do2c,userDoc)}).catch(err => console.error(err));
+    ).then((do2c) => {console.log("DOC: ",do2c,userDoc)}).catch(err => console.error(err));
   }
 };
 

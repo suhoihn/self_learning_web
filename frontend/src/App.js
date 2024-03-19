@@ -34,7 +34,6 @@ function App() {
                         <Route exact path="/Review/Bookmark" element={<Bookmark />}/>
                         <Route exact path="/Review/History" element={<History />}/>
                         <Route exact path="/Reference" element={<Reference/>}/>
-                        <Route exact path="/Recommended" element={<Recommend />}/>
                         
                         {/* Handle invalid addresses */}
                         <Route path="*" element={<Navigate replace to="/Main"/>}/>

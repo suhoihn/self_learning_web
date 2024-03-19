@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    //unique: true,
+    unique: true,
     required: [true, 'Please provide an email'],
     match: [
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -35,10 +35,8 @@ const UserSchema = new mongoose.Schema({
   wrongCountInfo: [{
     questionId: { type: Number },
     specificQuestionId: { type: String, default: "undefined" },
-
     wrongCount: { type: Number },
   }]
-
 });
 
 UserSchema.pre('save', async function (next) {

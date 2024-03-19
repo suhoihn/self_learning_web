@@ -55,15 +55,6 @@ export default function Reference () {
             </>
           ))}
         </Row>
-
-       
-        {/* <Col span={24}>
-          <a href="https://www.cambridgeinternational.org/Images/414438-2020-2022-syllabus.pdf">- 2020-2022 IGCSE Additional Mathematics Syllabus</a><br/>
-          <a href="https://bestexamhelp.com/exam/cambridge-igcse/mathematics-additional-0606/index.php">  - bestexamhelp.com (Collection of past papers)</a> <br/>
-          <a href="https://www.blitznotes.org/ig/addmath/index.html#matrices">  - Blitznotes Add math notes (Notes based on the old syllabus)</a> <br/>
-          <a href="https://mmerevise.co.uk/gcse-maths-revision/">  - MME revise website (Contains past papers and notes)</a> <br/>
-          <a href="https://papers.xtremepape.rs/index.php?dirpath=./CAIE/IGCSE/Mathematics+-+Additional+%280606%29/&order=0"> - Xtremepapers (Collection of past papers)</a> <br/>
-        </Col> */}
       </div>
     </>
     );

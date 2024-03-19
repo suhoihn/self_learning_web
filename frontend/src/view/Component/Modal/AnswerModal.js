@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Spin, Modal, Button, Switch, Row, Col, Tabs, Divider, Image } from 'antd'
-import { useSelector, shallowEqual } from 'react-redux'
+import { useSelector, shallowEqual,  } from 'react-redux'
 const { Text } = Typography;
 
 export default function AnswerModal({ open, onClosed, definedContent=undefined }) { 
@@ -9,20 +9,35 @@ export default function AnswerModal({ open, onClosed, definedContent=undefined }
   const { steps, isLoading } = useSelector((state) => {
     let data = state.data.answers;
     let isLoading = state.data.isLoading;
-    console.log("AnswerModal answers:", data);
     if(data === undefined) { data = []; }
 
     return { steps: data, isLoading: isLoading };
   }, shallowEqual);
 
   // Question steps
-  const questionSteps = useSelector((state) => {
+  const dataFromStore = useSelector((state) => {
     let data = state.data.data;
-    console.log("AnswerModal questions:", data);
     if(data === undefined) { data = []; }
-    if(definedContent !== undefined) { data = [definedContent]}
+    if(definedContent !== undefined) { data = [definedContent]; }
+
+    console.log("Answermodal questions: ",definedContent, data)
     return data;
   }, shallowEqual);
+
+  const [questionSteps, setQuestionSteps] = useState(dataFromStore);
+
+  useEffect(() => { setQuestionSteps(dataFromStore) }, [dataFromStore]);
+
+  useEffect(() => {
+    if(definedContent !== undefined){
+      console.log("Using Problem Modal for individual questions! Defined Content: ", definedContent);
+
+      setQuestionSteps([definedContent]);  
+    }
+
+  }, [open, definedContent])
+
+
 
   const [current, setCurrent] = useState(0);
   const next = () => setCurrent(current + 1);

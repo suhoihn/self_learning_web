@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react"
-import RecommendList from '../Component/List/RecommendList'
+// import RecommendList from '../Component/List/RecommendList'
 import OptionCard from "../Component/Card/OptionCard"
 import { Card, Row, Col, Button, Alert, Typography, Image } from "antd"
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
@@ -135,7 +135,7 @@ export default function Recommend () {
         
       <Row span={24}>
         <Col span={24}>
-          <RecommendList onItemClicked={()=>setIsProblemModalOpen(true)} setModalContent={setModalContent} listContent = {listContent}/>
+          {/* <RecommendList onItemClicked={()=>setIsProblemModalOpen(true)} setModalContent={setModalContent} listContent = {listContent}/> */}
           <>
             {/* {isProblemModalOpen && <IndividualQModal open={isProblemModalOpen} onClosed={() => {setIsProblemModalOpen(false)}} onCleared={openAnswerModal} definedContent={modalContent}/>}
             {isAnswerModalOpen && <IndividualAModal open={isAnswerModalOpen} onClosede={() => {closeAnswerModal()}} question={modalContent} />} */}

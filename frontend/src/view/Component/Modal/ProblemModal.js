@@ -16,7 +16,6 @@ export default function ProblemModal({open, onClosed, onCleared, definedContent=
   // Bookmark state and wrong count for bookmark and history pages
   // This is assuming there are maximum of 100 questions!
 
-  // TODO: simply this and make it more stable (not working well if there is only 1 question!!)
   const [bookmarkState, setBookmarkState] = useState(new Array(MAX_QUESTIONS).fill(false));
   const [wrongCountList, setWrongCountList] = useState(new Array(MAX_QUESTIONS).fill(0));
   
@@ -46,7 +45,6 @@ export default function ProblemModal({open, onClosed, onCleared, definedContent=
   // Question data fetched from the backend (anything in the state, so must be dispatched before opening this modal)
   // Only when there is no defined question (only in Main, not when called from Bookmark, History, or Recommended)
 
-  
   const { data: dataFromStore, isLoading: isLoadingFromStore, bookmarkInfo: bookmarkInfoFromStore, wrongCountInfo: wrongCountInfoFromStore } = useSelector((state) => {
     let data = state.data.data;
     let isLoading = state.data.loadingData;
@@ -67,7 +65,7 @@ export default function ProblemModal({open, onClosed, onCleared, definedContent=
   useEffect(() => { setWrongCountInfo(wrongCountInfoFromStore) }, [wrongCountInfoFromStore]);
 
   useEffect(() => {
-    console.log("YEETETETETE", data, bookmarkInfo, wrongCountInfo, definedContent);
+    console.log("useEffect initial data collections", data, bookmarkInfo, wrongCountInfo, definedContent);
     if(definedContent !== undefined){
       console.log("Using Problem Modal for individual questions! Defined Content: ", definedContent);
 
@@ -80,7 +78,7 @@ export default function ProblemModal({open, onClosed, onCleared, definedContent=
       setBookmarkState([definedContent.bookmarked, bookmarkState.slice(1)]);
       setWrongCountList([definedContent.wrongCount, wrongCountList.slice(1)]);
 
-      console.log("USEEFFECT IS MY LOVE", data);
+      console.log("Final data", data);
   
     }
 
@@ -106,7 +104,6 @@ export default function ProblemModal({open, onClosed, onCleared, definedContent=
 
     for(let i = 0; i < data.length; i++) {
       // NOTE: data[i].bookmarked is not a boolean true, but a string "true"....
-      console.log("Shitty bookmark", bookmarkInfo);
       
       let matchingItem = bookmarkInfo ? 
       bookmarkInfo.find(item => item.questionId === data[i].questionId && item.question.subQuestion[0].specificQuestionId === item.question.subQuestion[0].specificQuestionId)
@@ -136,7 +133,6 @@ export default function ProblemModal({open, onClosed, onCleared, definedContent=
 
 
 
-  // TODO: Why subQuestion[0] only?
   // Updates the question info through "getSaveQuestion" action
   function updateAnswer(newCurrent){
     if(data.length === 0){ return; }
@@ -260,6 +256,7 @@ export default function ProblemModal({open, onClosed, onCleared, definedContent=
       });
     }
     dispatch(dataAction.getAnswers(queryList));
+    
 
   }
 

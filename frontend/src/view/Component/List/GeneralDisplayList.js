@@ -19,21 +19,15 @@ export default function GeneralDisplayList ({onItemClicked, setQuestionData, mod
     let data = state.data.userData;
     let isLoading = state.data.loadingData;
 
-    // console.log( state );
-
     let returnData;
     if(mode == "Bookmark"){ returnData = data ? data.bookmarkInfo : []; }
     else if(mode == "History"){ returnData = data ? data.wrongCountInfo : []; }
 
-    // console.log("userdata", data);
     const qidSet = returnData.length == 0 ? new Set() : new Set(data.bookmarkInfo.map(item => item.questionId));
-       
-    // Suggestion: qid and sqid combined to one (e.g. 2-1a, 3-3)
     for(let i = 0; i < returnData.length; i++){
       returnData[i].bookmarked = qidSet.has(returnData[i].questionId);      
     }
 
-    console.log("Final outcome: ", mode, data, returnData);
     return { 
       data: returnData, 
       isLoading: isLoading
@@ -42,8 +36,6 @@ export default function GeneralDisplayList ({onItemClicked, setQuestionData, mod
 
 
   const toggleBookmark = (checkState, item) => {
-
-    // This action should not change loadingData because the page gets re-rendered
     dispatch(dataAction.getSaveQuestion({
       username: localStorage.getItem('username'),
       questionId: item.questionId,
@@ -51,21 +43,20 @@ export default function GeneralDisplayList ({onItemClicked, setQuestionData, mod
                           item.question.subQuestion[0].specificQuestionId : 
                           undefined,
 
-      bookmarked: String(checkState), // For some reason, it should be string
+      bookmarked: String(checkState),
     }));
   }; 
 
   const openQuestion = (item) => {
-    console.log("openQuestion called for ", item);
 
-    // This is used for definning the state used in the Individual Question Modal
+    // This is used for definning the state used in the Problem Modal for individual questions
     setQuestionData({
       ...item,
       bookmarked: item.bookmarked,
       wrongCount: item.wrongCount
     });
 
-    // RefAnswer is needed so that the question modal displays relevant information (e.g. answerSubscripts)
+    // Get the answer for the question to be attempted
     dispatch(dataAction.getRefAnswer({
       answerId: item.questionId,
       specificAnswerId: item.question.subQuestion[0].specificQuestionId,
