@@ -7,9 +7,6 @@ module.exports.Urls = {
     GET_SAVE_QUESTION: "/api/Data/saveQuestion",
     GET_ANSWERS: "/api/Data/getAnswers",
     GET_USER_DETAILS: "/api/Data/getUserDetails",
-
-    // Morano
-    GET_BOOKMARKS: "/api/Data/getBookmarks",
-    SAVE_BOOKMARKS: "/api/Data/saveBookmarks",
-    DELETE_BOOKMARK: "/api/Data/deleteBookmark"
+    GET_UPDATE_QUESTION: "/api/Data/getUpdateQuestion",
+    GET_REMOVE_QUESTION: "/api/Data/getRemoveQuestion",
 };

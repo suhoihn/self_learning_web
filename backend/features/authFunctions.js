@@ -17,15 +17,15 @@ module.exports.register = async (req, res, next) => {
     });
     sendToken(user, 201, res);
     console.log("Registration success");
+
   } catch (error) {
-    console.log("Oops! Error occured while creating the user: \n", error);
-    //next(error);
+    console.log("Error occured while creating the user: \n", error);
     const errorReturn = [];
 
 
-    // If the error is about duplicate emails
+    // If the error is about duplicate username
     if (error.code === 11000) {
-      errorReturn.push("Email overlaps");
+      errorReturn.push("Username overlaps");
     }
     else{
       if(error.errors.email){errorReturn.push(error.errors.email.properties.message);}
@@ -39,34 +39,30 @@ module.exports.register = async (req, res, next) => {
 
 
 module.exports.login = async (req, res, next) => {
-  const { email, password } = req.body;
-  console.log("Login called, email:", email, ", password:", password)
+  const { username, password } = req.body;
+  console.log("Login called, email:", username, ", password:", password)
 
-  // If no email or password is inputted (This won't happen naturally as input fields are "required")
-  if (!email || !password) {
-    //return next(new ErrorResponse('Please provide an email and password', 400));
+  // If no username or password is inputted (This won't happen naturally as input fields are "required")
+  if (!username || !password) {
     res.status(400).json("Please provide an email and password");
     return;
   }
 
   try {
-
     // Find the user in the database (if not existent, throw error)
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ username: username }).select('+password');
 
     console.log("User found in the login backend: ", user);
 
     if (!user) {
-      res.status(400).json("누구세요? 당신같은 사람은 없거든요");
+      res.status(400).json("No such username exists");
       return;
-      //return next(new ErrorResponse('Invalid Credentials', 401));
     }
 
     // Find if the password inputted is equal to the user's password
     const isMatch = await user.matchPasswords(password);
     if (!isMatch) {
-      res.status(400).json("ㅂㅅ 그걸 틀리누");
-      //return next(new ErrorResponse('Invalid Credentials', 401));
+      res.status(400).json("Wrong password");
     }
 
     sendToken(user, 200, res);
@@ -79,23 +75,26 @@ module.exports.login = async (req, res, next) => {
 
 
 module.exports.forgotPassword = async (req, res, next) => {
-  const { email } = req.body;
-  console.log("forgetPassword called, email:", email)
-
+  const { username, email } = req.body;
   try {
-    // Find the user by email
-    const user = await User.findOne({ email });
+    // Find the user by username
+    const user = await User.findOne({ username });
     if (!user) {
-      next(new ErrorResponse('Email cannot be sent', 404));
+      return res.status(404).json("No such user exists");
+    }
+
+    // if email doesn't match
+    if( user.email !== email ){
+      return res.status(404).json("Wrong Email");
     }
 
     const resetToken = user.getResetPasswordToken();
     await user.save();
-    const resetUrl = `https://suhoihn-frontend-d0d1edd8399f.herokuapp.com/passwordreset/${resetToken}`;
-    // const resetUrl = `http://localhost:3000/passwordreset/${resetToken}`;
-    
+    //const resetUrl = `https://suhoihn-frontend-d0d1edd8399f.herokuapp.com/passwordreset/${resetToken}`;
+    const resetUrl = `http://localhost:3000/resetscreen/${resetToken}`;
 
     const message = `<h1>You have requested a password reset</h1><p>Please go to this link to reset your password</p><a href=${resetUrl} clicktracking=off>${resetUrl}</a>`;
+
     try {
       // Send the email
       sendEmail({
@@ -109,16 +108,17 @@ module.exports.forgotPassword = async (req, res, next) => {
       user.resetPasswordToken = undefined;
       user.resetPasswordExpire = undefined;
       await user.save();
-      next(new ErrorResponse('Email cannot be sent', 404));
+      res.status(404).json("Email cannot be sent");
     }
   } catch (error) {
     console.log("error occured", error)
-    next(error);
+    res.status(500).json(error);
   }
 };
 
 
 module.exports.resetPassword = async (req, res, next) => {
+  console.log("reset password called with token");
   const resetPasswordToken = crypto
     .createHash('sha256')
     .update(req.params.resetToken)
@@ -130,18 +130,26 @@ module.exports.resetPassword = async (req, res, next) => {
       resetPasswordExpire: { $gt: Date.now() },
     });
     if (!user) {
-      return next(new ErrorResponse('Invalid reset token', 400));
+      console.log("Invalid reset token!");
+      res.status(400).json("Invalid reset token. This link is no longer valid");
+      return;
+      //return next(new ErrorResponse('Invalid reset token', 400));
     }
+
     user.password = req.body.password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save();
-    res.status(201).json({
-      success: true,
-      data: 'Password reset success',
-    });
+    const token = user.getSignedToken();
+    sendToken(user, 201, res);
+      // res.status(201).json({
+    //   success: true,
+    //   data: 'Password reset success',
+    // });
   } catch (error) {
-    next(error);
+    console.log(error);
+    res.status(500).json(error);
+    //next(error);
   }
 };
 
@@ -149,5 +157,10 @@ module.exports.resetPassword = async (req, res, next) => {
 // Send the token through the router
 const sendToken = (user, statusCode, res) => {
   const token = user.getSignedToken();
-  res.status(statusCode).json({ success: true, token });
+  res.status(statusCode).json({
+    success: true, 
+    username: user.username,
+    email: user.email,
+    token
+  });
 };

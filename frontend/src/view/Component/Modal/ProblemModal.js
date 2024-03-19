@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Spin, Checkbox, message, Input,
           Row, Col, Tabs, Divider, Image, Typography, Slider } from 'antd';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import UndefinedImage from './undefinedImage';
 
 import { Actions as dataAction } from '../../../store/actions/dataActions';
 
 const { Text } = Typography;
-export default function ProblemModal({open, onClosed, onCleared}) { 
+export default function ProblemModal({open, onClosed, onCleared, definedContent=undefined}) { 
   const dispatch = useDispatch();
 
   // Maximum questions that can be loaded in this modal
@@ -17,7 +16,6 @@ export default function ProblemModal({open, onClosed, onCleared}) {
   // Bookmark state and wrong count for bookmark and history pages
   // This is assuming there are maximum of 100 questions!
 
-  // TODO: simply this and make it more stable (not working well if there is only 1 question!!)
   const [bookmarkState, setBookmarkState] = useState(new Array(MAX_QUESTIONS).fill(false));
   const [wrongCountList, setWrongCountList] = useState(new Array(MAX_QUESTIONS).fill(0));
   
@@ -46,12 +44,45 @@ export default function ProblemModal({open, onClosed, onCleared}) {
   
   // Question data fetched from the backend (anything in the state, so must be dispatched before opening this modal)
   // Only when there is no defined question (only in Main, not when called from Bookmark, History, or Recommended)
-  let { data, isLoading } = useSelector((state) => {
+
+  const { data: dataFromStore, isLoading: isLoadingFromStore, bookmarkInfo: bookmarkInfoFromStore, wrongCountInfo: wrongCountInfoFromStore } = useSelector((state) => {
     let data = state.data.data;
     let isLoading = state.data.loadingData;
+    let bookmarkInfo = state.data.userData ? state.data.userData.bookmarkInfo : [];
+    let wrongCountInfo = state.data.userData ? state.data.userData.wrongCountInfo : [];
 
-    return { data: data, isLoading: isLoading };
+    return { data: data, isLoading: isLoading, bookmarkInfo: bookmarkInfo, wrongCountInfo: wrongCountInfo };
   }, shallowEqual);
+
+  const [data, setData] = useState(dataFromStore);
+  const [isLoading, setIsLoading] = useState(isLoadingFromStore);
+  const [bookmarkInfo, setBookmarkInfo] = useState(bookmarkInfoFromStore);
+  const [wrongCountInfo, setWrongCountInfo] = useState(wrongCountInfoFromStore);
+
+  useEffect(() => { setData(dataFromStore) }, [dataFromStore]);
+  useEffect(() => { setIsLoading(isLoadingFromStore) }, [isLoadingFromStore]);
+  useEffect(() => { setBookmarkInfo(bookmarkInfoFromStore) }, [bookmarkInfoFromStore]);
+  useEffect(() => { setWrongCountInfo(wrongCountInfoFromStore) }, [wrongCountInfoFromStore]);
+
+  useEffect(() => {
+    console.log("useEffect initial data collections", data, bookmarkInfo, wrongCountInfo, definedContent);
+    if(definedContent !== undefined){
+      console.log("Using Problem Modal for individual questions! Defined Content: ", definedContent);
+
+      setData([definedContent]);
+      console.log(data);
+      if(definedContent.bookmarked) { setBookmarkInfo([definedContent]); }
+      if(definedContent.wrongCount > 0) { setWrongCountInfo([definedContent]); }
+
+
+      setBookmarkState([definedContent.bookmarked, bookmarkState.slice(1)]);
+      setWrongCountList([definedContent.wrongCount, wrongCountList.slice(1)]);
+
+      console.log("Final data", data);
+  
+    }
+
+  }, [open, definedContent])
 
 
 
@@ -69,11 +100,24 @@ export default function ProblemModal({open, onClosed, onCleared}) {
   useEffect(() => {
     let returnBookmarkData = new Array(MAX_QUESTIONS).fill(false);
     let returnWrongCountList = new Array(MAX_QUESTIONS).fill(0);
+
+
     for(let i = 0; i < data.length; i++) {
       // NOTE: data[i].bookmarked is not a boolean true, but a string "true"....
-      returnBookmarkData[i] = (data[i].bookmarked == "true");
-      returnWrongCountList[i] = data[i].wrong;
+      
+      let matchingItem = bookmarkInfo ? 
+      bookmarkInfo.find(item => item.questionId === data[i].questionId && item.question.subQuestion[0].specificQuestionId === item.question.subQuestion[0].specificQuestionId)
+      : undefined;
+
+      returnBookmarkData[i] = Boolean(matchingItem);
+      
+      matchingItem = wrongCountInfo ?
+      wrongCountInfo.find(item => item.questionId === data[i].questionId && item.question.subQuestion[0].specificQuestionId === item.question.subQuestion[0].specificQuestionId)
+      : undefined;
+      
+      returnWrongCountList[i] = matchingItem ? matchingItem.wrongCount : 0;
     }
+
     setBookmarkState(returnBookmarkData);
     setWrongCountList(returnWrongCountList);
     
@@ -81,7 +125,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     // This is called once when the data is loaded
     dispatch(dataAction.getRefAnswer({
       answerId: data[current] ? data[current].questionId: undefined,
-      specificAnswerId: data[current].question.subQuestion[0].specificQuestionId ?
+      specificAnswerId: data[current] ?
                           data[current].question.subQuestion[0].specificQuestionId : 
                           undefined
     }));
@@ -89,7 +133,6 @@ export default function ProblemModal({open, onClosed, onCleared}) {
 
 
 
-  // TODO: Why subQuestion[0] only?
   // Updates the question info through "getSaveQuestion" action
   function updateAnswer(newCurrent){
     if(data.length === 0){ return; }
@@ -98,11 +141,13 @@ export default function ProblemModal({open, onClosed, onCleared}) {
     clearInputs();
 
     // The bookmark status is saved before updating "current"
-    console.log("FJWIEOFJIOEJF", wrongCountList[current]);
     dispatch(dataAction.getSaveQuestion({
-      userEmail: localStorage.getItem('userEmail'),
+      username: localStorage.getItem('username'),
 
       questionId: data[current].questionId,
+      specificQuestionId: data[current].question ?
+                          data[current].question.subQuestion[0].specificQuestionId : 
+                          undefined,
       bookmarked: bookmarkState[current],
       wrong: wrongCountList[current],
     }));
@@ -164,6 +209,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
       for(let i = 0; i < sortedArr1.length; i++){
         if(sortedArr1[i] != sortedArr2[i]){correct = false; break;}
       }
+      if(answerArray.length !== sliderValue){correct = false;}
     }
     else{
       for(let i = 0; i < answerArray.length; i++){
@@ -173,7 +219,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
 
     if(correct){message.success('Good job');}
     else{
-      message.success('Try again');
+      message.error('Try again');
       setWrongCountList(wrongCountList.map((q,idx) => (
         idx === current ? wrongCountList[current] + 1: wrongCountList[idx]
       )));
@@ -210,6 +256,7 @@ export default function ProblemModal({open, onClosed, onCleared}) {
       });
     }
     dispatch(dataAction.getAnswers(queryList));
+    
 
   }
 
@@ -241,13 +288,14 @@ export default function ProblemModal({open, onClosed, onCleared}) {
             <Row span={24}>
               <Col span={24}>
                 {data.length === 0 ? <>
-                  <UndefinedImage/>
                   <Text>Question not found</Text>
                 </> : <>
                   {data.length !== 0 && data[current].question.questionImage.image && <Image src={`data:image/png;base64, ${data[current].question.questionImage.image}`} />}
                   {data.length !== 0 && data[current].question.subQuestion[0].subQuestionImage.image && <Image src={`data:image/png;base64, ${data[current].question.subQuestion[0].subQuestionImage.image}`} />}
                 </>}
+                
              </Col>
+             <Col span={24}><Text>{data.length !== 0 && (data[current].instruction === "None" ? "" : "Instruction: " + data[current].instruction)}</Text></Col>
             </Row>
           </Col>
         </Row>

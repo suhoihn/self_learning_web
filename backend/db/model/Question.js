@@ -15,7 +15,6 @@ const questionInfoSchema = new mongoose.Schema({
         numAns: { type: Number }, // Number of answers to this question
         unit: { type: String }, // The unit of the question
         marks: { type: Number }, // Marks assigned to this question
-        instruction: { type: String }, // Special instruction to this question
         answerSubscripts: { type: Array }, // Answer subscripts (e.g. x, n, a)
     }],
 });
@@ -29,14 +28,16 @@ const QuestionSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    instruction: { type: String }, // Special instruction to this question
+
 
     question: questionInfoSchema,
     chapter: { type: Array },
     difficulty: { type: String }, // Easy, Normal, Hard
     paper: { type: String },
     timezone: { type: Number },
-    wrong: { type: Number }, // Number of wrongs in the question
-    bookmarked: { type: String }, // Whether or not the question is bookmarked ("true"/"false")
+    // wrong: { type: Number }, // Number of wrongs in the question
+    // bookmarked: { type: String }, // Whether or not the question is bookmarked ("true"/"false")
     
     // Unused for now
     season: { type: String } ,// W or S,

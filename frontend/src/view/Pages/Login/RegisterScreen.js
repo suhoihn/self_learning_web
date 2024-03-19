@@ -26,7 +26,7 @@ const RegisterScreen = ({ history }) => {
   }, [history]);
 
   const registerHandler = async (e) => {
-    console.log("Let's register!");
+    console.log("Register!");
 
     e.preventDefault();
     const config = {
@@ -45,7 +45,8 @@ const RegisterScreen = ({ history }) => {
         config
       );
       localStorage.setItem('authToken', data.token);
-      localStorage.setItem('userEmail', email);
+      localStorage.setItem("username", data.username);
+      localStorage.setItem('userEmail', data.email);
       navigate('/');
     } catch (e) {
       console.log("There is an error from backend: ", e);

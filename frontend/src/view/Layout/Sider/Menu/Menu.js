@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Menu } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { HomeOutlined, FormOutlined, UnorderedListOutlined, LikeOutlined, BookOutlined, HistoryOutlined } from '@ant-design/icons';
+import { HomeOutlined, FormOutlined, UnorderedListOutlined, LikeOutlined, BookOutlined, HistoryOutlined, MessageOutlined, ToolOutlined } from '@ant-design/icons';
 
 const getItem = (url, label, icon, children) => {
     return {
@@ -13,19 +13,31 @@ const getItem = (url, label, icon, children) => {
     };
 };
 
-const items = [
-    getItem('/Main', 'Main', <HomeOutlined/>),
-    getItem('/Review', 'Review', <FormOutlined/>, [
-        getItem("/Review/Bookmark","Bookmark", <BookOutlined />),
-        getItem("/Review/History","History", <HistoryOutlined />),
-    ]),
-    getItem('/Reference', 'Reference', <UnorderedListOutlined />),
-    getItem('/Recommended', 'Recommended', <LikeOutlined />)
-];
+
 
 export default function SiderMenu () {
     const navigate = useNavigate();
     const Location = useLocation();
+    const [items, setItems] = useState([]);
+
+
+    useEffect(() => { 
+        const data = [
+            getItem('/Main', 'Main', <HomeOutlined/>),
+            getItem('/Review', 'Review', <FormOutlined/>, [
+                getItem("/Review/Bookmark","Bookmark", <BookOutlined />),
+                getItem("/Review/History","History", <HistoryOutlined />),
+            ]),
+            getItem('/Reference', 'Resources', <UnorderedListOutlined />),
+            //getItem('/Recommended', 'Recommended', <LikeOutlined />),
+            getItem('/Feedback', 'Feedback', <MessageOutlined />)
+        ];
+
+        if(localStorage.getItem("username") === "admin"){ data.push(getItem('/Admin', 'Admin', <ToolOutlined />)); }
+        setItems(data);
+        
+    }, [localStorage.getItem("username")]);
+
     let pathSnippets = Location.pathname.split('/');
     const handleMenuClick = (e) => {
         switch(e.key) {

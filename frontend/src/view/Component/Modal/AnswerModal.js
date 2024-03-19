@@ -1,27 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Spin, Modal, Button, Switch, Row, Col, Tabs, Divider, Image } from 'antd'
-import { useSelector, shallowEqual } from 'react-redux'
+import { useSelector, shallowEqual,  } from 'react-redux'
 const { Text } = Typography;
 
-export default function AnswerModal({ open, onClosed }) { 
+export default function AnswerModal({ open, onClosed, definedContent=undefined }) { 
 
   // Answer steps (data fetched by useSelector)
   const { steps, isLoading } = useSelector((state) => {
     let data = state.data.answers;
     let isLoading = state.data.isLoading;
-    console.log("AnswerModal answers:", data);
     if(data === undefined) { data = []; }
 
     return { steps: data, isLoading: isLoading };
   }, shallowEqual);
 
   // Question steps
-  const questionSteps = useSelector((state) => {
+  const dataFromStore = useSelector((state) => {
     let data = state.data.data;
-    console.log("AnswerModal questions:", data);
     if(data === undefined) { data = []; }
+    if(definedContent !== undefined) { data = [definedContent]; }
+
+    console.log("Answermodal questions: ",definedContent, data)
     return data;
   }, shallowEqual);
+
+  const [questionSteps, setQuestionSteps] = useState(dataFromStore);
+
+  useEffect(() => { setQuestionSteps(dataFromStore) }, [dataFromStore]);
+
+  useEffect(() => {
+    if(definedContent !== undefined){
+      console.log("Using Problem Modal for individual questions! Defined Content: ", definedContent);
+
+      setQuestionSteps([definedContent]);  
+    }
+
+  }, [open, definedContent])
+
+
 
   const [current, setCurrent] = useState(0);
   const next = () => setCurrent(current + 1);
@@ -77,7 +93,7 @@ export default function AnswerModal({ open, onClosed }) {
           <Col span={24}>
             <Row span={24}>
               <Col span={24}>
-                <Tabs size='small' style={{ height: '100%'}}
+                <Tabs size='small' style={{ height: '100%' }}
                     items={tabsItems} activeKey={current} onChange={onTabsChanged}/>
               </Col>
             </Row>

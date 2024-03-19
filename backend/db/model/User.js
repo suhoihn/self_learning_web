@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
-    
+    unique: true,
     required: [true, 'Please provide a username'],
   },
   email: {
@@ -28,14 +28,15 @@ const UserSchema = new mongoose.Schema({
   resetPasswordExpire: Date,
 
   bookmarkInfo: [{ 
-    questionId: { type: Number, unqiue: true,},
+    questionId: { type: Number },
+    specificQuestionId: { type: String, default: "undefined" } // MongoDB cannot accept undefined type
   }],
 
   wrongCountInfo: [{
-    questionId: { type: Number, unique: true },
+    questionId: { type: Number },
+    specificQuestionId: { type: String, default: "undefined" },
     wrongCount: { type: Number },
   }]
-
 });
 
 UserSchema.pre('save', async function (next) {

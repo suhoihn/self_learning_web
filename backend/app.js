@@ -10,8 +10,7 @@ const logger = require('morgan');
 var cors = require('cors');
 const db = require('./db/db.js'); // DB connection
 const dataRouter = require("./routes/data.js"); // Router for question data
-const authRouter = require("./routes/auth.js"); // Router for authentication (user check)
-// const privateRouter = require("./routes/private"); // Router for private???
+const authRouter = require("./routes/auth.js"); // Router for authentication (user management)
 
 
 // Create the app (backend)
@@ -31,18 +30,17 @@ app.use(cors());
 // Connect to DB
 db();
 
-// Use the routers from routes/ folder
+// Use the routers from "routes/" folder
 // The backend is accessed through address [PORT]://api/Data/[Address]
 
 app.use('/api/Data', dataRouter);
 app.use('/api/auth', authRouter);
-// app.use('/api/private', privateRouter);
 
 
 // I should have used this errorHandler to to something in the "return next() in the auth router"
 // app.use(errorHandler)
 
-// Default error handler
+// Default error handler (Bad Request 404, or else 500 is returned! (I guess))
 app.use(function(req, res, next) {
   next(createError(404));
 });

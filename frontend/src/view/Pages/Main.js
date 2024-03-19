@@ -38,7 +38,6 @@ export default function Main () {
       timezone: Array.isArray(timezoneValue)? timezoneValue: new Array(timezoneValue),
       paper: Array.isArray(paperValue)? paperValue: new Array(paperValue),
       chapter: Array.isArray(chapterValue)? chapterValue: new Array(chapterValue),
-      wrong: 0, 
     }));
 
     setIsProblemModalOpen(true);
@@ -53,13 +52,25 @@ export default function Main () {
 
 
   // Define items to be used on the cards
-  const MAX_CHAPTER = 12;
+  const MAX_CHAPTER = 14;
   const MAX_PROBLEM = 50;
   
-  const chapter = [];
-  for(let i = 1; i <= MAX_CHAPTER; i++) {
-      chapter.push({ value: i, label: "Chapter " + i, })  
-  };
+  const chapter = [
+    {value: 1, label: "1. Functions"},
+    {value: 2, label: "2. Quadratic Functions"},
+    {value: 3, label: "3. Equations, inequalities and graphs"},
+    {value: 4, label: "4. Indices and surds"},
+    {value: 5, label: "5. Factors of polynomials"},
+    {value: 6, label: "6. Simultaneous equations"},
+    {value: 7, label: "7. Logarithmic and exponential functions"},
+    {value: 8, label: "8. Straight line graphs"},
+    {value: 9, label: "9. Circular measure"},
+    {value: 10, label: "10. Trigonometry"},
+    {value: 11, label: "11. Permutations and combinations"},
+    {value: 12, label: "12. Series"},
+    {value: 13, label: "13. Vectors in two dimensions"},
+    {value: 14, label: "14. Differentiation and integration"},
+  ];
 
   const problemNum = [];
   for(let i = 1; i <= MAX_PROBLEM; i++) {
@@ -86,11 +97,33 @@ export default function Main () {
   }
 
   const style={margin: 10}
+  let username = localStorage.getItem("username");
+  if(username == undefined){ username = "Undefined User (How did you get here anyway?)"; }
 
   return (
     <div style = {{ margin: 10 }}>
       <div>
         <Row span={24}>
+        <Col span={24}>
+            <div
+              style={{
+                justifyContent: 'center',
+                display: 'flex'
+              }}
+            >
+              <div
+                style={{
+                  padding: '5px 50px',
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                  borderRadius: 5,
+                  marginBottom: 50
+                }}
+              >
+                Welcome, {username}
+              </div>
+            </div>
+          </Col>
           <Col span={24}>
             <div
               style={{
@@ -121,6 +154,9 @@ export default function Main () {
             >
               <ol>
                 <li>
+                  Welcome to IGCSE Math Revision Website!
+                </li>
+                <li>
                   You can customise your search using the categories in the dropdown.
                 </li>
                 <li>
@@ -129,14 +165,17 @@ export default function Main () {
                 <li>
                   If you are ready, click the "Submit" button.
                 </li>
+                <li>
+                  (Note: all questions are from 2020-2022 Syllabus)
+                </li>
               </ol>
             </div>
           </Col>
         </Row>  
         <Row span={24} justify={'space-around'}>
-          <Col span={4} style={style}>
+          <Col span={6} style={style}>
             <OptionCard items={infos.chapterItems} title={'Chapter'} update={setChapterValue} 
-                        valueDisabled={[1,2,3,4,5,6,7,8,9,10,11,12]}/>
+                        valueDisabled={[1,2,3,4,5,6,7,8,9,10,11,12,13,14]} width={350}/>
           </Col>
           <Col span={4} style={style}>
             <OptionCard items={infos.difficultyItems} title={'Difficulty'} update={setDifficultyValue}
